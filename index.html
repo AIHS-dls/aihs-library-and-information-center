@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#102c3b">
-<meta name="description" content="Acharya Institute of Health Sciences Library and Information Center.">
+<meta name="description" content="Acharya Institute of Health Sciences Library and Information Center">
 <title>AIHS Library and Information Center</title>
 
 <style>
@@ -18,135 +18,186 @@
   --muted:#687780;
 }
 * { box-sizing:border-box; }
-html { scroll-behavior:smooth; scroll-padding-top:115px; }
+html { scroll-behavior:smooth; scroll-padding-top:140px; }
 body {
   margin:0;
   font-family:Arial,Helvetica,sans-serif;
   color:var(--ink);
-  line-height:1.65;
+  background:#fff;
+  line-height:1.7;
 }
 a { color:inherit; text-decoration:none; }
 img { max-width:100%; }
 
+/* HEADER */
 header {
   position:sticky;
   top:0;
   z-index:100;
   background:#fff;
-  border-bottom:1px solid #e5e9e8;
-  padding:12px 5%;
+  border-bottom:3px solid var(--gold);
+  box-shadow:0 4px 18px #102c3b12;
+  padding:13px 4%;
+}
+.header-top {
   display:flex;
   align-items:center;
-  justify-content:space-between;
-  gap:20px;
+  justify-content:center;
+  position:relative;
+  min-height:76px;
 }
 .brand {
   display:flex;
   align-items:center;
-  gap:12px;
+  justify-content:center;
+  gap:17px;
   color:var(--navy);
-  font-weight:800;
-  line-height:1.35;
-  min-width:0;
+  text-align:center;
+  width:100%;
 }
 .brand-logo {
-  width:58px;
-  height:58px;
+  width:72px;
+  height:72px;
   object-fit:contain;
   flex-shrink:0;
 }
-.brand-title { font-size:14px; }
+.brand-copy { text-align:center; }
+.brand-title {
+  display:block;
+  font-size:clamp(17px,2.1vw,25px);
+  font-weight:900;
+  line-height:1.3;
+  letter-spacing:.6px;
+  color:var(--navy);
+}
 .brand small {
   display:block;
-  color:var(--muted);
-  font-size:11px;
-  margin-top:4px;
-  letter-spacing:.6px;
+  font-size:14px;
+  font-weight:800;
+  letter-spacing:2px;
+  margin-top:5px;
+  color:var(--teal);
+}
+.menu-toggle {
+  display:none;
+  background:#fff;
+  border:1px solid #d8e0e0;
+  padding:10px 13px;
+  border-radius:7px;
+  font-weight:800;
+  color:var(--navy);
+  cursor:pointer;
 }
 .header-right {
   display:flex;
   flex-direction:column;
-  align-items:flex-end;
-  gap:10px;
+  align-items:center;
+  gap:12px;
+  margin-top:14px;
 }
 nav {
   display:flex;
   flex-wrap:wrap;
-  gap:13px;
+  justify-content:center;
   align-items:center;
-  font-size:12px;
-  font-weight:700;
+  gap:18px;
+  font-size:13px;
+  font-weight:800;
 }
-nav a:hover { color:var(--teal); }
-.header-actions { display:flex; gap:9px; align-items:center; }
-.menu-toggle {
-  display:none;
-  border:1px solid #d8e0e0;
-  background:white;
-  color:var(--navy);
-  padding:9px 12px;
-  border-radius:7px;
-  font-weight:700;
-  cursor:pointer;
+nav a {
+  padding:5px 0;
+  border-bottom:2px solid transparent;
+}
+nav a:hover {
+  color:var(--teal);
+  border-bottom-color:var(--gold);
+}
+.header-actions {
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  flex-wrap:wrap;
 }
 .btn,.nav-cta {
   display:inline-block;
-  padding:11px 16px;
+  padding:11px 17px;
   background:var(--teal);
   color:#fff;
   border:1px solid var(--teal);
   border-radius:7px;
-  font-weight:700;
   font-size:13px;
+  font-weight:800;
   cursor:pointer;
 }
 .nav-cta.outline {
   background:#fff;
   color:var(--navy);
-  border-color:#d8e0e0;
+  border-color:#cbd8d7;
 }
-.btn.secondary {
-  background:transparent;
-  border-color:#ffffffa0;
-  margin-left:8px;
+.btn:hover,.nav-cta:hover {
+  filter:brightness(.92);
 }
+
+/* HERO */
 .hero {
   min-height:550px;
   padding:80px 8%;
   display:flex;
   align-items:center;
-  color:#fff;
+  color:white;
   background:
-    linear-gradient(90deg,rgba(10,35,48,.92),rgba(10,35,48,.62),rgba(10,35,48,.22)),
+    linear-gradient(90deg,rgba(10,35,48,.93),rgba(10,35,48,.68),rgba(10,35,48,.25)),
     url("hero1.jpg") center/cover no-repeat;
 }
-.hero-content { max-width:690px; }
+.hero-content { max-width:700px; }
 .eyebrow {
-  font-size:12px;
+  font-size:13px;
   letter-spacing:3px;
-  font-weight:800;
+  font-weight:900;
   color:var(--gold);
   text-transform:uppercase;
 }
 h1 {
   font-family:Georgia,serif;
-  font-size:clamp(38px,6vw,70px);
-  line-height:1.1;
+  font-size:clamp(40px,6vw,70px);
+  line-height:1.12;
+  letter-spacing:-.7px;
+  font-weight:800;
   margin:20px 0;
 }
-.hero p { font-size:17px; color:#e4ebee; max-width:580px; }
+.hero p {
+  font-size:18px;
+  line-height:1.8;
+  font-weight:600;
+  color:#f0f4f5;
+  max-width:600px;
+}
+.btn.secondary {
+  background:transparent;
+  border-color:#fff;
+  margin-left:8px;
+}
 
-section { padding:70px 7%; }
-.section-head { max-width:760px; margin-bottom:30px; }
+/* GENERAL SECTIONS */
+section { padding:72px 7%; }
+.section-head {
+  max-width:780px;
+  margin-bottom:32px;
+}
 .section-head h2 {
   font-family:Georgia,serif;
   color:var(--navy);
-  font-size:clamp(29px,4vw,42px);
-  line-height:1.2;
+  font-size:clamp(30px,4vw,43px);
+  font-weight:800;
+  line-height:1.25;
   margin:10px 0;
 }
-.section-head p { color:var(--muted); }
-.search-band { padding:24px 7%; background:var(--cream); }
+.section-head p {
+  color:#4d5f68;
+  font-size:16px;
+  font-weight:500;
+}
+.search-band { padding:25px 7%; background:var(--cream); }
 .search-box {
   max-width:950px;
   margin:auto;
@@ -156,8 +207,8 @@ section { padding:70px 7%; }
 .search-box input {
   flex:1;
   min-width:0;
-  padding:14px;
-  border:1px solid #d7dfdf;
+  padding:15px;
+  border:1px solid #cbd8d7;
   border-radius:7px;
   font-size:15px;
 }
@@ -167,175 +218,256 @@ section { padding:70px 7%; }
   gap:20px;
 }
 .card {
-  border:1px solid #e5e9e8;
+  border:1px solid #e0e7e5;
   border-radius:13px;
   padding:24px;
-  background:#fff;
+  background:white;
   transition:transform .2s,box-shadow .2s;
 }
 .card:hover {
-  transform:translateY(-3px);
-  box-shadow:0 12px 30px #102c3b12;
+  transform:translateY(-4px);
+  box-shadow:0 14px 35px #102c3b14;
 }
 .card-icon {
-  width:48px;
-  height:48px;
+  width:49px;
+  height:49px;
   display:grid;
   place-items:center;
   background:#e7f2ef;
   color:var(--teal);
   border-radius:12px;
-  font-size:23px;
+  font-size:24px;
 }
-.card h3 { color:var(--navy); margin:16px 0 7px; }
-.card p { color:var(--muted); font-size:14px; margin:0; }
+.card h3 {
+  color:var(--navy);
+  margin:16px 0 7px;
+  font-weight:800;
+}
+.card p { font-size:14px; color:#53646b; margin:0; }
+.notice { font-size:12px; color:var(--muted); margin-top:20px; }
 
-.about {
-  background:var(--cream);
+/* ABOUT: LIBRARY IMAGE AS BACKGROUND */
+.about-section {
+  position:relative;
+  isolation:isolate;
+  background:
+    linear-gradient(120deg,rgba(8,30,42,.94),rgba(8,30,42,.82)),
+    url("https://images.unsplash.com/photo-1521587760476-6c12a4b040da?auto=format&fit=crop&w=1800&q=90")
+    center/cover no-repeat;
+  color:white;
+}
+.about-layout {
   display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:40px;
+  grid-template-columns:1fr 1.15fr;
+  gap:38px;
   align-items:start;
 }
-.about-photo {
-  width:100%;
-  height:360px;
-  object-fit:cover;
-  border-radius:15px;
+.about-section .section-head h2 {
+  color:#fff;
+  font-size:clamp(32px,4vw,45px);
 }
+.about-section .section-head p {
+  color:#f1f4f5;
+  font-size:17px;
+  font-weight:600;
+  line-height:1.9;
+}
+.about-section .eyebrow { color:var(--gold); }
 .hours {
-  background:var(--navy);
+  background:rgba(255,255,255,.10);
+  border:1px solid #ffffff65;
+  border-left:5px solid var(--gold);
+  border-radius:12px;
+  padding:25px;
+  margin-top:25px;
   color:white;
-  padding:23px;
-  border-radius:12px;
-  margin:20px 0;
+  font-size:16px;
+  font-weight:700;
 }
-.hours strong { color:var(--gold); }
+.hours strong {
+  display:block;
+  color:var(--gold);
+  font-size:19px;
+  font-weight:900;
+  margin-bottom:8px;
+}
+.hours p { margin:6px 0; }
 .rules-board {
-  padding:24px;
-  background:#fffdf7;
-  border:2px solid var(--gold);
-  border-radius:12px;
-  box-shadow:0 8px 24px #102c3b12;
+  background:rgba(255,255,255,.97);
+  color:var(--ink);
+  border:3px solid var(--gold);
+  border-radius:14px;
+  padding:26px;
+  box-shadow:0 12px 32px #0003;
 }
 .rules-heading {
   display:flex;
   align-items:center;
   gap:12px;
-  padding-bottom:14px;
-  margin-bottom:14px;
-  border-bottom:2px solid var(--gold);
+  padding-bottom:16px;
+  margin-bottom:12px;
+  border-bottom:3px solid var(--gold);
 }
-.rules-icon { font-size:27px; }
-.rules-heading h3 { color:var(--navy); font-size:17px; margin:0; }
-.rules-board ol { padding-left:23px; margin:0; }
-.rules-board li { padding:5px 0 5px 4px; font-size:14px; }
-.rules-board li::marker { color:var(--teal); font-weight:700; }
+.rules-icon { font-size:31px; }
+.rules-heading h3 {
+  color:var(--navy);
+  font-size:20px;
+  line-height:1.4;
+  font-weight:900;
+  margin:0;
+}
+.rules-board ol { padding-left:25px; margin:0; }
+.rules-board li {
+  padding:7px 0 7px 5px;
+  color:#20313a;
+  font-size:15px;
+  line-height:1.7;
+  font-weight:700;
+}
+.rules-board li::marker {
+  color:var(--teal);
+  font-weight:900;
+}
 
-.recognition { background:white; }
+/* BEST USERS */
+.recognition { background:#fff; }
 .user-card {
   background:var(--cream);
   border-radius:12px;
-  padding:22px;
-  border-top:3px solid var(--gold);
+  padding:23px;
+  border-top:4px solid var(--gold);
+  box-shadow:0 5px 20px #102c3b08;
 }
-.user-card h3 { color:var(--navy); margin:8px 0 0; }
-.user-card p { color:var(--muted); font-size:14px; margin:4px 0; }
+.user-card h3 {
+  margin:8px 0 0;
+  color:var(--navy);
+  font-size:19px;
+  font-weight:800;
+}
+.user-card p {
+  margin:4px 0;
+  color:#53646b;
+  font-size:14px;
+  font-weight:600;
+}
 .rank {
   color:var(--teal);
   font-size:13px;
-  font-weight:800;
+  font-weight:900;
   letter-spacing:1px;
 }
 hr { border:0; border-top:1px solid #d9dfdc; margin:16px 0; }
 
+/* FACULTY AND PLAGIARISM */
 .faculty-panel {
-  padding:28px;
+  padding:30px;
   border-radius:14px;
   background:linear-gradient(135deg,#102c3b,#167d78);
-  color:#fff;
+  color:white;
 }
-.faculty-panel h3 { margin-top:0; color:#fff; }
-.faculty-panel p { color:#e4ebee; }
-
+.faculty-panel h3 {
+  margin-top:0;
+  font-size:24px;
+  font-weight:900;
+}
+.faculty-panel p {
+  color:#f0f4f5;
+  font-size:16px;
+  font-weight:600;
+}
 .plagiarism-panel {
-  padding:30px;
-  background:white;
-  border:1px solid #e5e9e8;
+  background:#fff;
+  border:1px solid #e0e7e5;
   border-left:5px solid var(--teal);
   border-radius:13px;
+  padding:28px;
   box-shadow:0 8px 25px #102c3b0b;
 }
-.plagiarism-panel h3 { color:var(--navy); }
-
-.events-section { background:var(--cream); }
-.event-card {
-  max-width:1050px;
-  margin:auto;
-  background:white;
-  border:1px solid #e5e9e8;
-  border-radius:16px;
-  padding:28px;
-  box-shadow:0 10px 30px #102c3b0b;
-}
-.event-title { text-align:center; }
-.event-title h3 {
-  font-family:Georgia,serif;
+.plagiarism-panel h3 {
   color:var(--navy);
-  font-size:29px;
-  margin:6px 0;
+  font-size:22px;
+  font-weight:900;
 }
-.event-date { color:var(--teal); font-weight:800; }
-.event-slider {
-  position:relative;
-  margin:24px 0;
-  overflow:hidden;
-  border-radius:13px;
-  background:#e9eeee;
+
+/* EVENTS: ORIGINAL FORMAT - IMAGE LEFT, DETAILS RIGHT */
+.events-section { background:var(--cream); }
+.event {
+  display:grid;
+  grid-template-columns:1fr 1.2fr;
+  gap:35px;
+  align-items:center;
 }
-.event-slide {
-  display:none;
+.event-photo-frame {
   width:100%;
-  height:430px;
-  object-fit:contain;
-  background:#102c3b;
+  height:350px;
+  background:#e5eae8;
+  border-radius:15px;
+  overflow:hidden;
+  position:relative;
 }
-.event-slide.active { display:block; }
-.slider-controls {
+.event-photo {
+  width:100%;
+  height:100%;
+  display:none;
+  object-fit:cover;
+}
+.event-photo.active { display:block; }
+.event-photo-missing {
+  width:100%;
+  height:100%;
+  padding:25px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  color:#53646b;
+  font-weight:700;
+  background:#e5eae8;
+}
+.event-photo-missing strong {
+  font-size:20px;
+  color:var(--navy);
+  margin-bottom:8px;
+}
+.event-photo-controls {
   display:flex;
   align-items:center;
   justify-content:center;
-  gap:18px;
-  margin-top:12px;
+  gap:12px;
+  padding-top:12px;
 }
-.slider-btn {
+.event-photo-controls button {
   border:0;
   border-radius:50%;
-  width:40px;
-  height:40px;
+  width:36px;
+  height:36px;
   background:var(--navy);
-  color:white;
-  cursor:pointer;
+  color:#fff;
   font-size:20px;
-}
-.slider-dots { display:flex; gap:8px; }
-.slider-dot {
-  width:10px;
-  height:10px;
-  border:0;
-  padding:0;
-  border-radius:50%;
-  background:#b6c4c5;
   cursor:pointer;
 }
-.slider-dot.active { background:var(--teal); }
-.event-description { margin-top:24px; }
-.event-description h3 { color:var(--navy); }
-.event-description p { color:var(--muted); }
+.event-dots { display:flex; gap:8px; }
+.event-dot {
+  width:10px!important;
+  height:10px!important;
+  padding:0;
+  background:#b8c6c6!important;
+}
+.event-dot.active { background:var(--teal)!important; }
+.event h2 {
+  color:var(--navy);
+  font-family:Georgia,serif;
+  font-size:32px;
+  font-weight:800;
+}
+.event-date { color:var(--teal); font-weight:900; font-size:16px; }
+.event-details p { font-size:16px; font-weight:500; }
 
+/* SERVICES */
 .services-section { background:white; }
-.notice { font-size:12px; color:var(--muted); margin-top:20px; }
 
+/* FOOTER */
 footer {
   background:#0b222e;
   color:#dce6e9;
@@ -346,48 +478,51 @@ footer {
   grid-template-columns:2fr 1fr;
   gap:30px;
 }
-footer h3 { color:white; }
-footer p,footer a { font-size:14px; color:#c1d0d5; }
+footer h3 { color:white; font-weight:900; }
+footer p,footer a { font-size:14px; color:#d1dcdf; }
 footer .brand { color:white; }
-footer .brand small { color:#c1d0d5; }
+footer .brand-title { color:white; font-size:16px; }
+footer .brand small { color:#e0e8e9; font-size:11px; }
 .copyright {
   border-top:1px solid #ffffff25;
   margin-top:28px;
   padding-top:18px;
   font-size:12px;
 }
-.no-results {
-  display:none;
-  padding:15px;
-  color:#a33;
-}
+.no-results { display:none; color:#a33; font-size:14px; }
+
 @media(max-width:1100px) {
-  header { flex-wrap:wrap; }
-  .header-right { align-items:flex-start; width:100%; }
-  nav { gap:11px; }
+  .header-top { justify-content:flex-start; }
+  .brand { justify-content:flex-start; }
+  .brand-copy { text-align:left; }
   .grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  nav { gap:12px; }
 }
-@media(max-width:700px) {
+@media(max-width:760px) {
   header { padding:12px 5%; }
-  .brand-logo { width:47px; height:47px; }
-  .brand-title { font-size:11px; }
-  .brand small { font-size:9px; }
-  .menu-toggle { display:block; }
-  .header-right { display:none; }
+  .header-top { justify-content:space-between; gap:10px; }
+  .brand { width:auto; flex:1; gap:9px; }
+  .brand-logo { width:48px; height:48px; }
+  .brand-title { font-size:11px; letter-spacing:0; }
+  .brand small { font-size:9px; letter-spacing:.7px; }
+  .menu-toggle { display:block; flex-shrink:0; }
+  .header-right { display:none; align-items:flex-start; }
   .header-right.open { display:flex; }
-  nav { flex-direction:column; align-items:flex-start; width:100%; gap:12px; }
-  .header-actions { flex-wrap:wrap; }
+  nav { flex-direction:column; align-items:flex-start; width:100%; gap:8px; }
+  .header-actions { justify-content:flex-start; }
   section { padding:50px 6%; }
-  .hero { padding:55px 6%; min-height:470px; }
-  .grid,.about,.footer-grid { grid-template-columns:1fr; }
-  .about-photo { height:250px; }
+  .hero { min-height:470px; padding:55px 6%; }
+  .hero p { font-size:16px; }
+  .grid,.about-layout,.event,.footer-grid { grid-template-columns:1fr; }
   .search-box { flex-direction:column; }
   .search-box input,.search-box button { width:100%; }
   .btn.secondary { margin:10px 0 0; }
-  .rules-board { padding:17px; }
-  .event-card { padding:17px; }
-  .event-slide { height:260px; }
-  .event-title h3 { font-size:24px; }
+  .rules-board { padding:18px; }
+  .rules-board li { font-size:14px; }
+  .rules-heading h3 { font-size:17px; }
+  .event-photo-frame { height:260px; }
+  .event h2 { font-size:27px; }
+  .about-layout { gap:25px; }
 }
 </style>
 </head>
@@ -395,28 +530,29 @@ footer .brand small { color:#c1d0d5; }
 <body>
 
 <header>
-  <a class="brand" href="#home" aria-label="AIHS Library home">
-    <img class="brand-logo" src="logo.jpg" alt="AIHS Institute Logo">
-    <span class="brand-title">
-      ACHARYA INSTITUTE OF HEALTH SCIENCES
-      <small>LIBRARY &amp; INFORMATION CENTER</small>
-    </span>
-  </a>
-
-  <button class="menu-toggle" id="menuToggle"
-          aria-expanded="false" aria-controls="headerRight">
-    ☰ Menu
-  </button>
+  <div class="header-top">
+    <a class="brand" href="#home" aria-label="AIHS Library home">
+      <img class="brand-logo" src="logo.jpg" alt="AIHS Institute Logo">
+      <span class="brand-copy">
+        <span class="brand-title">ACHARYA INSTITUTE OF HEALTH SCIENCES</span>
+        <small>LIBRARY &amp; INFORMATION CENTER</small>
+      </span>
+    </a>
+    <button class="menu-toggle" id="menuToggle"
+            aria-expanded="false" aria-controls="headerRight">
+      ☰ Menu
+    </button>
+  </div>
 
   <div class="header-right" id="headerRight">
     <nav aria-label="Main navigation">
       <a href="#home">Home</a>
       <a href="#resources">Resources</a>
-      <a href="#about">About</a>
+      <a href="#about">About Library</a>
       <a href="#recognition">Best Users</a>
       <a href="#faculty">Faculty Excellence</a>
       <a href="#plagiarism">Plagiarism Check</a>
-      <a href="#events">Events</a>
+      <a href="#events">Library Events</a>
       <a href="#services">Services</a>
       <a href="#contact">Contact</a>
     </nav>
@@ -433,7 +569,7 @@ footer .brand small { color:#c1d0d5; }
   <div class="hero-content">
     <div class="eyebrow">Learn · Discover · Grow</div>
     <h1>Your gateway to knowledge and discovery.</h1>
-    <p>Explore academic resources, learning materials and research support in a welcoming space created for the AIHS community.</p>
+    <p>Explore academic resources, learning materials and research collections in a welcoming space created for the AIHS community.</p>
     <a class="btn" href="#resources">Explore the Library ↗</a>
     <a class="btn secondary" href="#about">Discover AIHS</a>
   </div>
@@ -442,21 +578,20 @@ footer .brand small { color:#c1d0d5; }
 <div class="search-band">
   <form class="search-box" id="searchForm">
     <input id="resourceSearch" type="search"
-           placeholder="Search E-Books, Study Notes, Question Papers..."
+           placeholder="What are you looking for?"
            aria-label="Search library resources">
     <button class="btn" type="submit">Search resources</button>
   </form>
-  <p id="searchMessage" class="no-results">No matching resource category found. Try another keyword.</p>
+  <p class="no-results" id="searchMessage">No matching resource category found. Try another keyword.</p>
 </div>
 
 <section id="resources">
   <div class="section-head">
     <div class="eyebrow">Explore the library</div>
     <h2>Resources for every step.</h2>
-    <p>Explore resource categories that support learning, coursework and academic research.</p>
+    <p>Discover academic materials that support learning, coursework and research.</p>
   </div>
-
-  <div class="grid" id="resourceGrid">
+  <div class="grid">
     <a class="card searchable" href="#contact">
       <div class="card-icon">▤</div>
       <h3>E-Books</h3>
@@ -481,18 +616,20 @@ footer .brand small { color:#c1d0d5; }
   <p class="notice">Online resource downloads and account access may require separate setup.</p>
 </section>
 
-<section class="about" id="about">
-  <div>
-    <div class="eyebrow">About the library</div>
-    <div class="section-head">
-      <h2>Knowledge should be easy to find.</h2>
-      <p>AIHS Library and Information Center supports students, faculty and researchers with a space dedicated to learning, discovery and academic growth.</p>
-    </div>
+<section class="about-section" id="about">
+  <div class="about-layout">
+    <div>
+      <div class="eyebrow">About the Library</div>
+      <div class="section-head">
+        <h2>Knowledge should be easy to find.</h2>
+        <p>AIHS Library and Information Center supports students, faculty and researchers with a welcoming environment dedicated to learning, discovery and academic excellence.</p>
+      </div>
 
-    <div class="hours">
-      <strong>LIBRARY WORKING HOURS</strong><br>
-      Monday – Saturday · 9:00 AM – 5:00 PM<br>
-      Sunday and government holidays · Closed
+      <div class="hours">
+        <strong>LIBRARY WORKING HOURS</strong>
+        <p>Monday – Saturday · 9:00 AM – 5:00 PM</p>
+        <p>Sunday and government holidays · Closed</p>
+      </div>
     </div>
 
     <div class="rules-board">
@@ -502,8 +639,8 @@ footer .brand small { color:#c1d0d5; }
       </div>
       <ol>
         <li>Maintain silence inside the library and respect other readers.</li>
-        <li>Mobile phones are <strong>not allowed</strong> inside the library.</li>
-        <li>Bags are <strong>not allowed</strong> inside the library.</li>
+        <li>Mobile phones are <strong>NOT ALLOWED</strong> inside the library.</li>
+        <li>Bags are <strong>NOT ALLOWED</strong> inside the library.</li>
         <li>Keep library books and other resources clean and in good condition.</li>
         <li>Do not write, underline, fold or damage library books.</li>
         <li>Return borrowed books and resources within the specified due date.</li>
@@ -514,18 +651,13 @@ footer .brand small { color:#c1d0d5; }
       </ol>
     </div>
   </div>
-
-  <img class="about-photo"
-       src="https://images.unsplash.com/photo-1521587760476-6c12a4b040da?auto=format&fit=crop&w=1200&q=85"
-       alt="Bookshelves in a library"
-       loading="lazy">
 </section>
 
 <section class="services-section" id="services">
   <div class="section-head">
-    <div class="eyebrow">Library services</div>
+    <div class="eyebrow">Library Services</div>
     <h2>One library. More possibilities.</h2>
-    <p>Services to support learning, teaching and research.</p>
+    <p>Resources and services to support learning, teaching and research.</p>
   </div>
   <div class="grid">
     <div class="card">
@@ -553,7 +685,7 @@ footer .brand small { color:#c1d0d5; }
 
 <section class="recognition" id="recognition">
   <div class="section-head">
-    <div class="eyebrow">Student recognition</div>
+    <div class="eyebrow">Student Recognition</div>
     <h2>Library Best Users</h2>
     <p>Recognising students for their excellent library engagement.</p>
   </div>
@@ -592,13 +724,13 @@ footer .brand small { color:#c1d0d5; }
 
 <section id="faculty">
   <div class="section-head">
-    <div class="eyebrow">Faculty scholarship</div>
+    <div class="eyebrow">Faculty Scholarship</div>
     <h2>Faculty Excellence</h2>
     <p>Articles, books, research, conference contributions and academic recognition from our faculty.</p>
   </div>
   <div class="faculty-panel">
     <h3>Celebrating Academic Contributions</h3>
-    <p>Faculty achievements and publications can be featured here as details and links are added.</p>
+    <p>Faculty achievements and publications will be featured here as details are added.</p>
   </div>
 </section>
 
@@ -611,70 +743,60 @@ footer .brand small { color:#c1d0d5; }
   <div class="plagiarism-panel">
     <div class="card-icon">✓</div>
     <h3>DrillBit Plagiarism Check</h3>
-    <p>Use the portal to sign in and access the plagiarism checking service available to you.</p>
+    <p>Open the login portal to access the plagiarism checking service available to you.</p>
     <p style="margin-top:22px">
       <a class="btn"
          href="https://www.drillbitplagiarismcheck.com/auth/login"
          target="_blank"
-         rel="noopener noreferrer">
-        Open DrillBit Login ↗
-      </a>
+         rel="noopener noreferrer">Open DrillBit Login ↗</a>
     </p>
   </div>
 </section>
 
 <section class="events-section" id="events">
   <div class="section-head">
-    <div class="eyebrow">Campus highlights</div>
+    <div class="eyebrow">Campus Highlights</div>
     <h2>Library Events</h2>
     <p>Celebrating learning, curiosity and academic community.</p>
   </div>
 
-  <article class="event-card">
-    <div class="event-title">
-      <div class="eyebrow">Library Event</div>
-      <h3>Quiz Competition</h3>
-      <p class="event-date">12 August 2026 · 9:30 AM</p>
-    </div>
-
-    <div class="event-slider" id="eventSlider"
-         aria-label="Quiz Competition photo gallery">
-      <img class="event-slide active"
-           src="events/quiz-competition-1.jpg"
-           alt="Quiz Competition photograph 1"
-           loading="lazy">
-      <img class="event-slide"
-           src="events/quiz-competition-2.jpg"
-           alt="Quiz Competition photograph 2"
-           loading="lazy">
-      <img class="event-slide"
-           src="events/quiz-competition-3.jpg"
-           alt="Quiz Competition photograph 3"
-           loading="lazy">
-    </div>
-
-    <div class="slider-controls" aria-label="Event photo controls">
-      <button class="slider-btn" id="prevEventPhoto"
-              type="button" aria-label="Previous photo">‹</button>
-      <div class="slider-dots">
-        <button class="slider-dot active" type="button"
-                aria-label="Show photo 1" data-slide="0"></button>
-        <button class="slider-dot" type="button"
-                aria-label="Show photo 2" data-slide="1"></button>
-        <button class="slider-dot" type="button"
-                aria-label="Show photo 3" data-slide="2"></button>
+  <div class="event">
+    <div>
+      <div class="event-photo-frame" id="eventPhotoFrame">
+        <img class="event-photo active"
+             src="events/quiz-competition-1.jpg"
+             alt="Original Quiz Competition photo 1">
+        <img class="event-photo"
+             src="events/quiz-competition-2.jpg"
+             alt="Original Quiz Competition photo 2">
+        <img class="event-photo"
+             src="events/quiz-competition-3.jpg"
+             alt="Original Quiz Competition photo 3">
+        <div class="event-photo-missing" id="eventPhotoMissing">
+          <strong>Library Event Photos</strong>
+          Upload your original event photos to the GitHub events folder.
+        </div>
       </div>
-      <button class="slider-btn" id="nextEventPhoto"
-              type="button" aria-label="Next photo">›</button>
+      <div class="event-photo-controls">
+        <button type="button" id="prevEventPhoto" aria-label="Previous photo">‹</button>
+        <div class="event-dots">
+          <button class="event-dot active" data-slide="0" type="button" aria-label="Photo 1"></button>
+          <button class="event-dot" data-slide="1" type="button" aria-label="Photo 2"></button>
+          <button class="event-dot" data-slide="2" type="button" aria-label="Photo 3"></button>
+        </div>
+        <button type="button" id="nextEventPhoto" aria-label="Next photo">›</button>
+      </div>
     </div>
 
-    <div class="event-description">
-      <h3>About the Event</h3>
+    <div class="event-details">
+      <div class="eyebrow">Library Event</div>
+      <h2>Quiz Competition</h2>
+      <p class="event-date">12 August 2026 · 9:30 AM</p>
       <p>A total of 21 final-year students participated in 7 teams. Winners received medals and certificates.</p>
       <p><strong>Status:</strong> Completed</p>
     </div>
-  </article>
-  <p class="notice">Upload your original event photos to the GitHub events folder using the exact filenames shown in this code.</p>
+  </div>
+  <p class="notice">Original photographs will appear here after you upload them to GitHub.</p>
 </section>
 
 </main>
@@ -684,8 +806,8 @@ footer .brand small { color:#c1d0d5; }
     <div>
       <a class="brand" href="#home">
         <img class="brand-logo" src="logo.jpg" alt="AIHS Logo">
-        <span class="brand-title">
-          ACHARYA INSTITUTE OF HEALTH SCIENCES
+        <span class="brand-copy">
+          <span class="brand-title">ACHARYA INSTITUTE OF HEALTH SCIENCES</span>
           <small>LIBRARY &amp; INFORMATION CENTER</small>
         </span>
       </a>
@@ -705,7 +827,7 @@ footer .brand small { color:#c1d0d5; }
 </footer>
 
 <script>
-/* Hero background slider */
+/* HERO IMAGE SLIDER */
 const heroImages = ["hero1.jpg", "hero2.jpg", "hero3.jpg"];
 let heroIndex = 0;
 const hero = document.querySelector(".hero");
@@ -713,18 +835,18 @@ const hero = document.querySelector(".hero");
 function changeHeroBackground() {
   heroIndex = (heroIndex + 1) % heroImages.length;
   hero.style.backgroundImage =
-    'linear-gradient(90deg,rgba(10,35,48,.92),rgba(10,35,48,.62),rgba(10,35,48,.22)),url("' +
+    'linear-gradient(90deg,rgba(10,35,48,.93),rgba(10,35,48,.68),rgba(10,35,48,.25)),url("' +
     heroImages[heroIndex] + '")';
 }
 setInterval(changeHeroBackground, 5000);
 
-/* Mobile navigation */
+/* MOBILE MENU */
 const menuToggle = document.getElementById("menuToggle");
 const headerRight = document.getElementById("headerRight");
 
 menuToggle.addEventListener("click", function() {
-  const opened = headerRight.classList.toggle("open");
-  menuToggle.setAttribute("aria-expanded", String(opened));
+  const open = headerRight.classList.toggle("open");
+  menuToggle.setAttribute("aria-expanded", String(open));
 });
 
 headerRight.querySelectorAll("nav a, .header-actions a").forEach(link => {
@@ -734,10 +856,9 @@ headerRight.querySelectorAll("nav a, .header-actions a").forEach(link => {
   });
 });
 
-/* Resource category search */
-document.getElementById("searchForm").addEventListener("submit", function(event) {
-  event.preventDefault();
-
+/* RESOURCE SEARCH */
+document.getElementById("searchForm").addEventListener("submit", function(e) {
+  e.preventDefault();
   const query = document.getElementById("resourceSearch").value.trim().toLowerCase();
   const cards = [...document.querySelectorAll(".searchable")];
   let found = 0;
@@ -754,53 +875,84 @@ document.getElementById("searchForm").addEventListener("submit", function(event)
   document.getElementById("resources").scrollIntoView({behavior:"smooth"});
 });
 
-/* Library event photo slider */
-const eventSlides = [...document.querySelectorAll(".event-slide")];
-const eventDots = [...document.querySelectorAll(".slider-dot")];
+/* EVENT PHOTO SLIDER */
+const eventPhotos = [...document.querySelectorAll(".event-photo")];
+const eventDots = [...document.querySelectorAll(".event-dot")];
+const missingNotice = document.getElementById("eventPhotoMissing");
 let eventIndex = 0;
 let eventTimer;
 
-function showEventPhoto(index) {
-  eventIndex = (index + eventSlides.length) % eventSlides.length;
+function photoExists(img) {
+  return img.dataset.loaded === "yes";
+}
 
-  eventSlides.forEach((slide, i) => {
-    slide.classList.toggle("active", i === eventIndex);
+function showEventPhoto(index) {
+  eventIndex = (index + eventPhotos.length) % eventPhotos.length;
+
+  eventPhotos.forEach((img, i) => {
+    img.classList.toggle("active", i === eventIndex && photoExists(img));
   });
 
   eventDots.forEach((dot, i) => {
     dot.classList.toggle("active", i === eventIndex);
   });
+
+  const anyPhoto = eventPhotos.some(photoExists);
+  missingNotice.style.display = anyPhoto ? "none" : "flex";
+
+  if (!photoExists(eventPhotos[eventIndex]) && anyPhoto) {
+    const nextAvailable = eventPhotos.findIndex(photoExists);
+    if (nextAvailable >= 0) {
+      eventIndex = nextAvailable;
+      eventPhotos.forEach((img, i) => {
+        img.classList.toggle("active", i === eventIndex && photoExists(img));
+      });
+      eventDots.forEach((dot, i) => {
+        dot.classList.toggle("active", i === eventIndex);
+      });
+    }
+  }
 }
 
-function startEventSlider() {
+eventPhotos.forEach(img => {
+  img.addEventListener("load", function() {
+    img.dataset.loaded = "yes";
+    showEventPhoto(eventIndex);
+  });
+  img.addEventListener("error", function() {
+    img.dataset.loaded = "no";
+    img.classList.remove("active");
+    showEventPhoto(eventIndex);
+  });
+  if (img.complete && img.naturalWidth > 0) {
+    img.dataset.loaded = "yes";
+  }
+});
+
+function startEventTimer() {
   clearInterval(eventTimer);
-  eventTimer = setInterval(() => showEventPhoto(eventIndex + 1), 4000);
+  eventTimer = setInterval(() => {
+    if (eventPhotos.some(photoExists)) showEventPhoto(eventIndex + 1);
+  }, 4000);
 }
 
-document.getElementById("prevEventPhoto").addEventListener("click", () => {
+document.getElementById("prevEventPhoto").addEventListener("click", function() {
   showEventPhoto(eventIndex - 1);
-  startEventSlider();
+  startEventTimer();
 });
-
-document.getElementById("nextEventPhoto").addEventListener("click", () => {
+document.getElementById("nextEventPhoto").addEventListener("click", function() {
   showEventPhoto(eventIndex + 1);
-  startEventSlider();
+  startEventTimer();
 });
-
 eventDots.forEach(dot => {
-  dot.addEventListener("click", () => {
+  dot.addEventListener("click", function() {
     showEventPhoto(Number(dot.dataset.slide));
-    startEventSlider();
+    startEventTimer();
   });
 });
 
 showEventPhoto(0);
-startEventSlider();
-
-/* Pause event slider while the visitor hovers over the gallery */
-const eventSlider = document.getElementById("eventSlider");
-eventSlider.addEventListener("mouseenter", () => clearInterval(eventTimer));
-eventSlider.addEventListener("mouseleave", startEventSlider);
+startEventTimer();
 </script>
 
 </body>
