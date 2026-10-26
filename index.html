@@ -5,155 +5,319 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#102c3b">
-<meta name="description" content="AIHS Library and Information Center — learning, discovery and academic excellence.">
+<meta name="description" content="Acharya Institute of Health Sciences Library and Information Center — learning, discovery and academic excellence.">
 <title>AIHS Library and Information Center</title>
 
 <style>
 :root {
-  --navy:#102c3b;
-  --teal:#167d78;
-  --gold:#d7ad63;
-  --cream:#f7f5ef;
-  --ink:#20313a;
-  --muted:#687780;
+  --navy: #102c3b;
+  --teal: #167d78;
+  --gold: #d7ad63;
+  --cream: #f7f5ef;
+  --ink: #20313a;
+  --muted: #687780;
 }
-* {box-sizing:border-box}
-html {scroll-behavior:smooth;scroll-padding-top:110px}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 130px; }
 body {
-  margin:0;font-family:Arial,Helvetica,sans-serif;
-  color:var(--ink);background:#fff;line-height:1.65
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  color: var(--ink);
+  background: #fff;
+  line-height: 1.65;
 }
-a {color:inherit;text-decoration:none}
+a { color: inherit; text-decoration: none; }
 header {
-  position:sticky;top:0;z-index:20;background:#fff;
-  border-bottom:1px solid #e8eceb;
-  padding:12px 5%;display:flex;align-items:center;
-  justify-content:space-between;gap:18px;flex-wrap:wrap
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: #fff;
+  border-bottom: 1px solid #e8eceb;
+  padding: 12px 5%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  flex-wrap: wrap;
 }
 .brand {
-  display:flex;align-items:center;gap:12px;
-  color:var(--navy);font-weight:800;line-height:1.2
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--navy);
+  font-weight: 800;
+  line-height: 1.3;
+  min-width: 0;
 }
-.brand-mark {
-  width:52px;height:52px;flex-shrink:0;border-radius:12px;
-  background:var(--navy);color:var(--gold);
-  display:grid;place-items:center;font-size:17px;
-  letter-spacing:1px;border:2px solid var(--gold)
+.brand-logo {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+  flex-shrink: 0;
 }
-.brand-title {font-size:15px}
+.brand-title { font-size: 14px; }
 .brand small {
-  display:block;color:var(--muted);font-size:11px;
-  font-weight:600;margin-top:5px;letter-spacing:.7px
+  display: block;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 600;
+  margin-top: 4px;
+  letter-spacing: .7px;
 }
-.header-right {display:flex;flex-direction:column;align-items:flex-end;gap:10px}
-nav {display:flex;gap:16px;align-items:center;flex-wrap:wrap;font-size:12px;font-weight:700}
-nav a:hover {color:var(--teal)}
-.header-actions {display:flex;align-items:center;gap:9px}
-.nav-cta,.btn {
-  background:var(--teal);color:white;padding:11px 16px;
-  border-radius:7px;font-weight:700;display:inline-block;
-  border:1px solid var(--teal);cursor:pointer
+.header-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
 }
-.nav-cta.outline {background:#fff;color:var(--navy);border-color:#d8e0e0}
-.btn.secondary {background:transparent;border-color:#ffffff9c;margin-left:8px}
+nav {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  flex-wrap: wrap;
+  font-size: 12px;
+  font-weight: 700;
+}
+nav a:hover { color: var(--teal); }
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+.nav-cta, .btn {
+  background: var(--teal);
+  color: white;
+  padding: 11px 16px;
+  border-radius: 7px;
+  font-weight: 700;
+  display: inline-block;
+  border: 1px solid var(--teal);
+  cursor: pointer;
+  font-size: 13px;
+}
+.nav-cta.outline {
+  background: #fff;
+  color: var(--navy);
+  border-color: #d8e0e0;
+}
+.btn.secondary {
+  background: transparent;
+  border-color: #ffffffa0;
+  margin-left: 8px;
+}
 .hero {
-  min-height:560px;padding:80px 8%;display:flex;align-items:center;
-  color:white;background:
-  linear-gradient(90deg,rgba(10,35,48,.94),rgba(10,35,48,.72),rgba(10,35,48,.2)),
-  url('https://images.unsplash.com/photo-1507842217343-583bb7270b66?auto=format&fit=crop&w=2000&q=85') center/cover
+  min-height: 560px;
+  padding: 80px 8%;
+  display: flex;
+  align-items: center;
+  color: white;
+  background:
+    linear-gradient(90deg, rgba(10,35,48,.92), rgba(10,35,48,.62), rgba(10,35,48,.22)),
+    url("hero1.jpg") center/cover no-repeat;
 }
-.hero-content {max-width:690px}
+.hero-content { max-width: 690px; }
 .eyebrow {
-  font-size:12px;letter-spacing:3px;font-weight:800;
-  color:var(--gold);text-transform:uppercase
+  font-size: 12px;
+  letter-spacing: 3px;
+  font-weight: 800;
+  color: var(--gold);
+  text-transform: uppercase;
 }
 h1 {
-  font-family:Georgia,serif;font-size:clamp(40px,6vw,70px);
-  line-height:1.1;letter-spacing:-1px;margin:20px 0
+  font-family: Georgia, serif;
+  font-size: clamp(40px, 6vw, 70px);
+  line-height: 1.1;
+  letter-spacing: -1px;
+  margin: 20px 0;
 }
-.hero p {font-size:17px;color:#e4ebee;max-width:580px;margin-bottom:28px}
-section {padding:72px 7%}
-.section-head {max-width:720px;margin-bottom:32px}
+.hero p {
+  font-size: 17px;
+  color: #e4ebee;
+  max-width: 580px;
+  margin-bottom: 28px;
+}
+section { padding: 72px 7%; }
+.section-head { max-width: 720px; margin-bottom: 32px; }
 .section-head h2 {
-  font-family:Georgia,serif;color:var(--navy);
-  font-size:clamp(29px,4vw,42px);line-height:1.2;margin:10px 0
+  font-family: Georgia, serif;
+  color: var(--navy);
+  font-size: clamp(29px, 4vw, 42px);
+  line-height: 1.2;
+  margin: 10px 0;
 }
-.section-head p {color:var(--muted)}
-.search-band {padding:25px 7%;background:var(--cream)}
-.search-box {max-width:950px;margin:auto;display:flex;gap:12px}
+.section-head p { color: var(--muted); }
+.search-band { padding: 25px 7%; background: var(--cream); }
+.search-box {
+  max-width: 950px;
+  margin: auto;
+  display: flex;
+  gap: 12px;
+}
 .search-box input {
-  flex:1;min-width:0;padding:15px;border:1px solid #d7dfdf;
-  border-radius:7px;font-size:15px
+  flex: 1;
+  min-width: 0;
+  padding: 15px;
+  border: 1px solid #d7dfdf;
+  border-radius: 7px;
+  font-size: 15px;
 }
-.grid {display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 20px;
+}
 .card {
-  border:1px solid #e5e9e8;border-radius:13px;padding:24px;
-  background:#fff;transition:transform .2s,box-shadow .2s
+  border: 1px solid #e5e9e8;
+  border-radius: 13px;
+  padding: 24px;
+  background: #fff;
+  transition: transform .2s, box-shadow .2s;
 }
-.card:hover {transform:translateY(-4px);box-shadow:0 14px 35px #102c3b12}
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 35px #102c3b12;
+}
 .card-icon {
-  width:48px;height:48px;display:grid;place-items:center;
-  background:#e7f2ef;color:var(--teal);border-radius:12px;font-size:23px
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  background: #e7f2ef;
+  color: var(--teal);
+  border-radius: 12px;
+  font-size: 23px;
 }
-.card h3 {color:var(--navy);margin:16px 0 7px}
-.card p {font-size:14px;color:var(--muted);margin:0}
+.card h3 { color: var(--navy); margin: 16px 0 7px; }
+.card p { font-size: 14px; color: var(--muted); margin: 0; }
 .about {
-  background:var(--cream);display:grid;
-  grid-template-columns:1fr 1fr;gap:48px;align-items:center
+  background: var(--cream);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: start;
 }
-.about img,.event img {
-  width:100%;height:350px;object-fit:cover;border-radius:15px
+.about-photo {
+  width: 100%;
+  height: 350px;
+  object-fit: cover;
+  border-radius: 15px;
 }
-.hours {background:var(--navy);color:white;border-radius:12px;padding:23px;margin-top:20px}
-.hours strong {color:var(--gold)}
-.recognition {background:#fff}
+.hours {
+  background: var(--navy);
+  color: white;
+  border-radius: 12px;
+  padding: 23px;
+  margin-top: 20px;
+}
+.hours strong { color: var(--gold); }
+.rules-board {
+  margin-top: 24px;
+  padding: 24px;
+  background: #fffdf7;
+  border: 2px solid var(--gold);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(16,44,59,.08);
+}
+.rules-heading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 14px;
+  margin-bottom: 14px;
+  border-bottom: 2px solid var(--gold);
+}
+.rules-icon { font-size: 28px; }
+.rules-heading h3 {
+  color: var(--navy);
+  font-size: 17px;
+  line-height: 1.4;
+  margin: 0;
+}
+.rules-board ol { padding-left: 24px; margin: 0; }
+.rules-board li {
+  padding: 5px 0 5px 4px;
+  color: var(--ink);
+  font-size: 14px;
+}
+.rules-board li::marker { color: var(--teal); font-weight: 700; }
+.recognition { background: #fff; }
 .user-card {
-  background:var(--cream);border-radius:12px;padding:22px;
-  border-top:3px solid var(--gold)
+  background: var(--cream);
+  border-radius: 12px;
+  padding: 22px;
+  border-top: 3px solid var(--gold);
 }
-.user-card h3 {margin:8px 0 0;color:var(--navy)}
-.user-card p {margin:4px 0;color:var(--muted);font-size:14px}
-.rank {color:var(--teal);font-size:13px;font-weight:800;letter-spacing:1px}
-.event {display:grid;grid-template-columns:1fr 1.2fr;gap:35px;align-items:center}
-.event h2 {color:var(--navy);font-family:Georgia,serif}
-.event-date {color:var(--teal);font-weight:700}
-footer {background:#0b222e;color:#dce6e9;padding:45px 7% 20px}
-.footer-grid {display:grid;grid-template-columns:2fr 1fr;gap:30px}
-footer h3 {color:#fff}
-footer p,footer a {font-size:14px;color:#c1d0d5}
-.copyright {border-top:1px solid #ffffff25;margin-top:28px;padding-top:18px;font-size:12px}
-.notice {font-size:12px;color:var(--muted);margin-top:20px}
-hr {border:0;border-top:1px solid #d9dfdc;margin:16px 0}
+.user-card h3 { margin: 8px 0 0; color: var(--navy); }
+.user-card p { margin: 4px 0; color: var(--muted); font-size: 14px; }
+.rank {
+  color: var(--teal);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+hr { border: 0; border-top: 1px solid #d9dfdc; margin: 16px 0; }
+.event {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 35px;
+  align-items: center;
+}
+.event img {
+  width: 100%;
+  height: 330px;
+  object-fit: cover;
+  border-radius: 15px;
+}
+.event h2 { color: var(--navy); font-family: Georgia, serif; }
+.event-date { color: var(--teal); font-weight: 700; }
+footer {
+  background: #0b222e;
+  color: #dce6e9;
+  padding: 45px 7% 20px;
+}
+.footer-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 30px; }
+footer h3 { color: #fff; }
+footer p, footer a { font-size: 14px; color: #c1d0d5; }
+.copyright {
+  border-top: 1px solid #ffffff25;
+  margin-top: 28px;
+  padding-top: 18px;
+  font-size: 12px;
+}
+.notice { font-size: 12px; color: var(--muted); margin-top: 20px; }
 @media(max-width:1100px) {
-  header {align-items:flex-start}
-  .header-right {align-items:flex-start}
-  nav {gap:12px}
-  .grid {grid-template-columns:repeat(2,minmax(0,1fr))}
+  header { align-items: flex-start; }
+  .header-right { align-items: flex-start; width: 100%; }
+  .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  nav { gap: 12px; }
 }
 @media(max-width:650px) {
-  header {padding:12px 5%;gap:14px}
-  .brand-title {font-size:13px}
-  .brand-mark {width:44px;height:44px}
-  .header-right {width:100%}
-  nav {gap:10px;font-size:12px}
-  .header-actions {flex-wrap:wrap}
-  section {padding:52px 6%}
-  .hero {padding:60px 6%;min-height:480px}
-  .grid,.about,.event,.footer-grid {grid-template-columns:1fr}
-  .about img,.event img {height:250px}
-  .search-box {flex-direction:column}
-  .search-box input,.search-box button {width:100%}
-  .btn.secondary {margin:10px 0 0}
+  header { padding: 12px 5%; gap: 14px; }
+  .brand-title { font-size: 12px; }
+  .brand-logo { width: 48px; height: 48px; }
+  .header-right { width: 100%; }
+  nav { gap: 10px; font-size: 12px; }
+  .header-actions { flex-wrap: wrap; }
+  section { padding: 52px 6%; }
+  .hero { padding: 60px 6%; min-height: 480px; }
+  .grid, .about, .event, .footer-grid { grid-template-columns: 1fr; }
+  .about-photo, .event img { height: 250px; }
+  .search-box { flex-direction: column; }
+  .search-box input, .search-box button { width: 100%; }
+  .btn.secondary { margin: 10px 0 0; }
+  .rules-board { padding: 17px; }
+  .rules-heading h3 { font-size: 15px; }
 }
 </style>
 </head>
 
 <body>
+
 <header>
   <a class="brand" href="#home" aria-label="AIHS Library home">
-    <span class="brand-mark">AIHS</span>
+    <img class="brand-logo" src="logo.jpg" alt="AIHS Institute Logo">
     <span class="brand-title">
-      AIHS
+      ACHARYA INSTITUTE OF HEALTH SCIENCES
       <small>LIBRARY &amp; INFORMATION CENTER</small>
     </span>
   </a>
@@ -177,6 +341,7 @@ hr {border:0;border-top:1px solid #d9dfdc;margin:16px 0}
 </header>
 
 <main>
+
 <section class="hero" id="home">
   <div class="hero-content">
     <div class="eyebrow">Learn · Discover · Grow</div>
@@ -201,10 +366,26 @@ hr {border:0;border-top:1px solid #d9dfdc;margin:16px 0}
     <p>Discover collections that support your learning, coursework and academic research.</p>
   </div>
   <div class="grid" id="resourceGrid">
-    <a class="card searchable" href="#contact"><div class="card-icon">▤</div><h3>E-Books</h3><p>Digital books and learning references for your studies.</p></a>
-    <a class="card searchable" href="#contact"><div class="card-icon">✎</div><h3>Study Notes</h3><p>Organised notes and supporting study materials.</p></a>
-    <a class="card searchable" href="#contact"><div class="card-icon">▧</div><h3>Question Papers</h3><p>Previous papers and exam preparation resources.</p></a>
-    <a class="card searchable" href="#contact"><div class="card-icon">▦</div><h3>Collections</h3><p>Curated academic resources in one place.</p></a>
+    <a class="card searchable" href="#contact">
+      <div class="card-icon">▤</div>
+      <h3>E-Books</h3>
+      <p>Digital books and learning references for your studies.</p>
+    </a>
+    <a class="card searchable" href="#contact">
+      <div class="card-icon">✎</div>
+      <h3>Study Notes</h3>
+      <p>Organised notes and supporting study materials.</p>
+    </a>
+    <a class="card searchable" href="#contact">
+      <div class="card-icon">▧</div>
+      <h3>Question Papers</h3>
+      <p>Previous papers and exam preparation resources.</p>
+    </a>
+    <a class="card searchable" href="#contact">
+      <div class="card-icon">▦</div>
+      <h3>Collections</h3>
+      <p>Curated academic resources in one place.</p>
+    </a>
   </div>
   <p class="notice">Online resource files and account access will be configured in a later step.</p>
 </section>
@@ -216,13 +397,37 @@ hr {border:0;border-top:1px solid #d9dfdc;margin:16px 0}
       <h2>Knowledge should be easy to find.</h2>
       <p>AIHS Library and Information Center supports students, faculty and researchers with a space dedicated to learning, discovery and academic growth.</p>
     </div>
+
     <div class="hours">
       <strong>LIBRARY WORKING HOURS</strong><br>
       <span>Monday – Saturday · 9:00 AM – 5:00 PM</span><br>
       <span>Sunday and government holidays · Closed</span>
     </div>
+
+    <div class="rules-board">
+      <div class="rules-heading">
+        <span class="rules-icon">📚</span>
+        <h3>LIBRARY RULES AND REGULATIONS</h3>
+      </div>
+      <ol>
+        <li>Maintain silence inside the library and respect other readers.</li>
+        <li>Mobile phones are <strong>not allowed</strong> inside the library.</li>
+        <li>Bags are <strong>not allowed</strong> inside the library.</li>
+        <li>Keep library books and other resources clean and in good condition.</li>
+        <li>Do not write, underline, fold or damage library books.</li>
+        <li>Return borrowed books and resources within the specified due date.</li>
+        <li>Keep books in their proper place after use.</li>
+        <li>Replace chairs in their position when you leave your seat.</li>
+        <li>Food and beverages are not permitted inside the library.</li>
+        <li>Maintain cleanliness and cooperate with library staff.</li>
+      </ol>
+    </div>
   </div>
-  <img src="https://images.unsplash.com/photo-1521587760476-6c12a4b040da?auto=format&fit=crop&w=1200&q=85" alt="Bookshelves in a library" loading="lazy">
+
+  <img class="about-photo"
+       src="https://images.unsplash.com/photo-1521587760476-6c12a4b040da?auto=format&fit=crop&w=1200&q=85"
+       alt="Bookshelves in a library"
+       loading="lazy">
 </section>
 
 <section id="services">
@@ -232,10 +437,26 @@ hr {border:0;border-top:1px solid #d9dfdc;margin:16px 0}
     <p>Resources and services to support learning, teaching and research.</p>
   </div>
   <div class="grid">
-    <div class="card"><div class="card-icon">⌕</div><h3>Resource Discovery</h3><p>Find relevant categories for your academic interests.</p></div>
-    <div class="card"><div class="card-icon">◇</div><h3>Digital Learning</h3><p>Explore digital materials from your preferred device.</p></div>
-    <div class="card"><div class="card-icon">◎</div><h3>Academic Support</h3><p>A shared learning space for students and staff.</p></div>
-    <div class="card"><div class="card-icon">✧</div><h3>Research Support</h3><p>Encouraging curiosity, reading and academic research.</p></div>
+    <div class="card">
+      <div class="card-icon">⌕</div>
+      <h3>Resource Discovery</h3>
+      <p>Find relevant categories for your academic interests.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">◇</div>
+      <h3>Digital Learning</h3>
+      <p>Explore digital materials from your preferred device.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">◎</div>
+      <h3>Academic Support</h3>
+      <p>A shared learning space for students and staff.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">✧</div>
+      <h3>Research Support</h3>
+      <p>Encouraging curiosity, reading and academic research.</p>
+    </div>
   </div>
 </section>
 
@@ -248,25 +469,33 @@ hr {border:0;border-top:1px solid #d9dfdc;margin:16px 0}
   <div class="grid">
     <div class="user-card">
       <div class="rank">BPT · PHYSIOTHERAPY</div>
-      <h3>Harikrishna</h3><p>4th Year</p><strong>Rank 1</strong>
+      <h3>Harikrishna</h3>
+      <p>4th Year</p>
       <hr>
-      <h3>Aliya</h3><p>4th Year</p><strong>Rank 2</strong>
+      <h3>Aliya</h3>
+      <p>4th Year</p>
     </div>
     <div class="user-card">
       <div class="rank">BMLT</div>
-      <h3>Priya Darshini</h3><p>Medical Laboratory Technology · 3rd Year</p><strong>Rank 1</strong>
+      <h3>Priya Darshini</h3>
+      <p>Medical Laboratory Technology · 3rd Year</p>
       <hr>
-      <h3>Ekambaram Bhaskar</h3><p>Medical Laboratory Technology · 3rd Year</p><strong>Rank 2</strong>
+      <h3>Ekambaram Bhaskar</h3>
+      <p>Medical Laboratory Technology · 3rd Year</p>
     </div>
     <div class="user-card">
       <div class="rank">BMIT</div>
-      <h3>Nauman Kabir</h3><p>Medical Imaging Technology · 3rd Year</p><strong>Rank 1</strong>
+      <h3>Nauman Kabir</h3>
+      <p>Medical Imaging Technology · 3rd Year</p>
       <hr>
-      <h3>Falak Naaz</h3><p>Medical Imaging Technology · 3rd Year</p><strong>Rank 2</strong>
+      <h3>Falak Naaz</h3>
+      <p>Medical Imaging Technology · 3rd Year</p>
     </div>
     <div class="user-card">
       <div class="rank">MHA</div>
-      <h3>To be announced</h3><p>Master of Hospital Administration</p><strong>Updates coming soon</strong>
+      <h3>To be announced</h3>
+      <p>Master of Hospital Administration</p>
+      <p>Recognition updates coming soon.</p>
     </div>
   </div>
 </section>
@@ -291,7 +520,9 @@ hr {border:0;border-top:1px solid #d9dfdc;margin:16px 0}
     <p>Celebrating learning, curiosity and academic community.</p>
   </div>
   <div class="event">
-    <img src="https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?auto=format&fit=crop&w=1200&q=85" alt="Students collaborating at a campus event" loading="lazy">
+    <img src="https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?auto=format&fit=crop&w=1200&q=85"
+         alt="Students collaborating at a campus event"
+         loading="lazy">
     <div>
       <div class="eyebrow">Library event</div>
       <h2>Quiz Competition</h2>
@@ -301,14 +532,18 @@ hr {border:0;border-top:1px solid #d9dfdc;margin:16px 0}
     </div>
   </div>
 </section>
+
 </main>
 
 <footer id="contact">
   <div class="footer-grid">
     <div>
       <a class="brand" href="#home" style="color:white">
-        <span class="brand-mark">AIHS</span>
-        <span class="brand-title">AIHS<small>LIBRARY &amp; INFORMATION CENTER</small></span>
+        <img class="brand-logo" src="logo.jpg" alt="AIHS Logo">
+        <span class="brand-title">
+          ACHARYA INSTITUTE OF HEALTH SCIENCES
+          <small>LIBRARY &amp; INFORMATION CENTER</small>
+        </span>
       </a>
       <p>A welcoming space for learning, teaching and research.</p>
       <p>Acharya Institute of Health Sciences, Bengaluru</p>
@@ -320,28 +555,52 @@ hr {border:0;border-top:1px solid #d9dfdc;margin:16px 0}
       <p><a href="#home">Back to top ↑</a></p>
     </div>
   </div>
-  <div class="copyright">© 2026 AIHS Library and Information Center · Learn · Discover · Grow</div>
+  <div class="copyright">
+    © 2026 AIHS Library and Information Center · Learn · Discover · Grow
+  </div>
 </footer>
 
 <script>
-document.getElementById('searchForm').addEventListener('submit', function(event) {
+/* Automatically rotate the three local hero images. */
+const heroImages = ["hero1.jpg", "hero2.jpg", "hero3.jpg"];
+let heroIndex = 0;
+const hero = document.querySelector(".hero");
+
+function changeHeroBackground() {
+  heroIndex = (heroIndex + 1) % heroImages.length;
+  hero.style.backgroundImage =
+    "linear-gradient(90deg, rgba(10,35,48,.92), rgba(10,35,48,.62), rgba(10,35,48,.22)), " +
+    'url("' + heroImages[heroIndex] + '")';
+}
+
+setInterval(changeHeroBackground, 5000);
+
+/* Search the resource category cards. */
+document.getElementById("searchForm").addEventListener("submit", function(event) {
   event.preventDefault();
-  const query = document.getElementById('resourceSearch').value.trim().toLowerCase();
-  const cards = [...document.querySelectorAll('.searchable')];
+
+  const query = document.getElementById("resourceSearch")
+    .value.trim().toLowerCase();
+
+  const cards = [...document.querySelectorAll(".searchable")];
   let found = 0;
 
   cards.forEach(card => {
-    const match = !query || card.innerText.toLowerCase().includes(query);
-    card.style.display = match ? '' : 'none';
+    const match = !query ||
+      card.innerText.toLowerCase().includes(query);
+
+    card.style.display = match ? "" : "none";
     if (match) found++;
   });
 
-  document.getElementById('resources').scrollIntoView({behavior:'smooth'});
+  document.getElementById("resources")
+    .scrollIntoView({ behavior: "smooth" });
 
   if (query && !found) {
-    alert('No matching category found. Try E-Books, Study Notes, Question Papers or Collections.');
+    alert("No matching category found. Try E-Books, Study Notes, Question Papers or Collections.");
   }
 });
 </script>
+
 </body>
 </html>
