@@ -1340,7 +1340,31 @@ if (headerSearchBtn) {
   });
 }
 
-</script>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+  import {
+    getAuth,
+    GoogleAuthProvider,
+    signInWithPopup
+  } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
 
+  const firebaseConfig = {
+    apiKey: "AIzaSyBjRud7T49JmDfhkwUrNLeY1IcvXqW_W1Y",
+    authDomain: "aihs-digital-library.firebaseapp.com",
+    projectId: "aihs-digital-library",
+    storageBucket: "aihs-digital-library.firebasestorage.app",
+    messagingSenderId: "1032446713158",
+    appId: "1:1032446713158:web:4f679abd8787cc759e9947"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const googleProvider = new GoogleAuthProvider();
+
+  window.libraryAuth = auth;
+  window.libraryGoogleProvider = googleProvider;
+  window.librarySignInWithPopup = signInWithPopup;
+</script>
 </body>
 </html>
+
