@@ -1,0 +1,218 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Self Registration | AIHS Digital Library</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 24px;
+      font-family: Arial, sans-serif;
+      background: #eef3f8;
+      color: #18324d;
+    }
+    main {
+      max-width: 520px;
+      margin: 20px auto;
+      padding: 28px;
+      background: white;
+      border-radius: 14px;
+      box-shadow: 0 8px 28px #18324d18;
+    }
+    h1 { font-size: 25px; margin-top: 0; }
+    p { color: #5d6b7a; line-height: 1.5; }
+    label {
+      display: block;
+      margin: 15px 0 6px;
+      font-weight: 600;
+    }
+    input, select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 7px;
+      font-size: 15px;
+    }
+    button {
+      width: 100%;
+      margin-top: 22px;
+      padding: 13px;
+      background: #155e75;
+      color: white;
+      border: 0;
+      border-radius: 7px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:disabled { opacity: .6; }
+    #message { overflow-wrap: anywhere; }
+    a { color: #155e75; }
+  </style>
+</head>
+<body>
+<main>
+  <h1>Self Registration</h1>
+  <p>Register for access to AIHS Digital Library. Your account requires administrator approval.</p>
+
+  <form id="registerForm">
+    <label for="fullName">Full Name</label>
+    <input id="fullName" required maxlength="100" autocomplete="name">
+
+    <label for="role">Account Type</label>
+    <select id="role" required>
+      <option value="">Select account type</option>
+      <option value="student">Student</option>
+      <option value="staff">Staff</option>
+    </select>
+
+    <label for="rollNumber">Roll Number / Staff ID</label>
+    <input id="rollNumber" required maxlength="40" autocomplete="username">
+
+    <label for="email">Email Address</label>
+    <input id="email" type="email" required autocomplete="email">
+
+    <label for="department">Department</label>
+    <input id="department" required maxlength="100">
+
+    <label for="password">Create Password</label>
+    <input id="password" type="password" required minlength="8"
+      autocomplete="new-password">
+
+    <label for="confirmPassword">Confirm Password</label>
+    <input id="confirmPassword" type="password" required minlength="8"
+      autocomplete="new-password">
+
+    <button id="submitButton" type="submit">Submit Registration</button>
+  </form>
+
+  <p id="message" role="status" aria-live="polite"></p>
+  <p><a href="login.html">Already registered? Sign in</a></p>
+  <p><a href="index.html">Back to Home</a></p>
+</main>
+
+<script type="module">
+  import { initializeApp } from
+    "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+
+  import {
+    getAuth,
+    createUserWithEmailAndPassword,
+    deleteUser
+  } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+
+  import {
+    getFirestore,
+    doc,
+    getDoc,
+    setDoc,
+    serverTimestamp
+  } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBjRud7T49JmDfhkwUrNLeY1IcvXqW_W1Y",
+    authDomain: "aihs-digital-library.firebaseapp.com",
+    projectId: "aihs-digital-library",
+    storageBucket: "aihs-digital-library.firebasestorage.app",
+    messagingSenderId: "1032446713158",
+    appId: "1:1032446713158:web:4f679abd8787cc759e9947"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  const form = document.getElementById("registerForm");
+  const button = document.getElementById("submitButton");
+  const message = document.getElementById("message");
+
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    const fullName = document.getElementById("fullName").value.trim();
+    const role = document.getElementById("role").value;
+    const rollNumber = document.getElementById("rollNumber").value.trim();
+    const email = document.getElementById("email").value.trim().toLowerCase();
+    const department = document.getElementById("department").value.trim();
+    const password = document.getElementById("password").value;
+    const confirmPassword = document.getElementById("confirmPassword").value;
+
+    if (password !== confirmPassword) {
+      message.textContent = "Passwords do not match.";
+      return;
+    }
+
+    if (password.length < 8) {
+      message.textContent = "Password must be at least 8 characters.";
+      return;
+    }
+
+    button.disabled = true;
+    message.textContent = "Submitting registration...";
+
+    let credential = null;
+    let requestSaved = false;
+
+    try {
+      // Roll number must be unique; enforce uniqueness with trusted
+      // backend logic before production deployment.
+      const normalizedRoll = rollNumber.toUpperCase();
+      const rollRef = doc(db, "registrationRollNumbers", normalizedRoll);
+      const rollSnap = await getDoc(rollRef);
+
+      if (rollSnap.exists()) {
+        throw new Error("This Roll Number / Staff ID is already registered.");
+      }
+
+      credential = await createUserWithEmailAndPassword(
+        auth, email, password
+      );
+
+      await setDoc(doc(db, "registrations", credential.user.uid), {
+        uid: credential.user.uid,
+        fullName,
+        role,
+        rollNumber: normalizedRoll,
+        email,
+        department,
+        status: "pending",
+        createdAt: serverTimestamp()
+      });
+
+      requestSaved = true;
+
+      // This reservation document needs restrictive Firestore rules.
+      await setDoc(rollRef, {
+        uid: credential.user.uid,
+        status: "pending",
+        createdAt: serverTimestamp()
+      });
+
+      await auth.signOut();
+
+      message.textContent =
+        "Registration submitted. Your account is pending administrator approval.";
+      form.reset();
+
+    } catch (error) {
+      console.error(error);
+
+      if (credential && !requestSaved) {
+        try {
+          await deleteUser(credential.user);
+        } catch (cleanupError) {
+          console.error("Account cleanup needs administrator review.", cleanupError);
+        }
+      }
+
+      message.textContent =
+        error.message || "Registration failed. Please contact the administrator.";
+    } finally {
+      button.disabled = false;
+    }
+  });
+</script>
+</body>
+</html>
