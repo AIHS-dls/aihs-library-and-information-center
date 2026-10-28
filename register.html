@@ -173,7 +173,7 @@
       await setDoc(doc(db, "registrations", credential.user.uid), {
         uid: credential.user.uid,
         fullName,
-        role,
+        requestedRole: role,
         rollNumber: normalizedRoll,
         email,
         department,
