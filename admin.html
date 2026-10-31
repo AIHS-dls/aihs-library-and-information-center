@@ -1,7 +1,7 @@
 <!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Admin | AIHS Library</title><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700&family=Manrope:wght@500;700;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="app.css"><script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 <body><div class="top"><img src="logo.jpg" alt=""><div><b>AIHS Library Admin</b><small id="who"></small></div><span class="sp"></span><a href="index.html" class="btn">Website</a> <button class="out" id="out">Sign out</button></div>
-<div class="wrap"><div class="mt" id="mt"><button data-t="users" class="on" id="tu">Registrations</button><button data-t="res" id="tr">Resources</button><button data-t="ev">Events</button><button data-t="bu">Best Users</button><button data-t="ab">About Library</button><button data-t="at">Attendance</button></div>
+<div class="wrap"><div class="mt" id="mt"><button data-t="users" class="on" id="tu">Registrations</button><button data-t="res" id="tr">Resources</button><button data-t="ev">Events</button><button data-t="bu">Best Users</button><button data-t="ab">About Library</button><button data-t="at">Attendance</button><button data-t="nu">Add Users</button></div>
 
 <div class="panel" id="p-users"><h2>Registrations</h2><p style="margin:0;color:#5b6b75">Approve students and staff. Use Make admin to add another admin.</p>
 <div class="tabs" id="tabs"></div><input id="q" placeholder="Search name, ID, department or email" style="margin-bottom:12px">
@@ -20,12 +20,12 @@
 <div class="panel" style="margin-top:18px"><h2>All resources <span id="rc" style="font-size:14px;color:#5b6b75"></span></h2>
 <input id="rq" placeholder="Search resources" style="margin:10px 0 12px">
 <div class="tw"><table><thead><tr><th>Title</th><th>Category</th><th>Dept / Class</th><th>Action</th></tr></thead><tbody id="rr"></tbody></table></div></div></div>
-<div id="p-ev" hidden></div><div id="p-bu" hidden></div><div id="p-ab" hidden></div><div id="p-at" hidden></div></div>
+<div id="p-ev" hidden></div><div id="p-bu" hidden></div><div id="p-ab" hidden></div><div id="p-at" hidden></div><div id="p-nu" hidden></div></div>
 
 <script type="module">
-import {auth,db,profile,go,signOut,onAuthStateChanged,collection,onSnapshot,doc,updateDoc,deleteDoc,addDoc,getDoc,setDoc,query,where,serverTimestamp,esc} from "./fb.js";
+import {auth,db,profile,go,signOut,onAuthStateChanged,collection,onSnapshot,doc,updateDoc,deleteDoc,addDoc,getDoc,setDoc,query,where,serverTimestamp,esc,mail,createAccount,idEmail,genPass} from "./fb.js";
 const $=id=>document.getElementById(id);
-let rows=[],res=[],tab="pending",me=null,editId=null;
+let rows=[],res=[],tab="pending",me=null,editId=null,links={};
 $("out").onclick=async()=>{await signOut(auth);location.href="index.html";};
 onAuthStateChanged(auth,async u=>{
   if(!u){location.href="index.html";return;}
@@ -34,8 +34,9 @@ onAuthStateChanged(auth,async u=>{
   me=u.uid;$("who").textContent=p.name;initContent();
   onSnapshot(collection(db,"users"),s=>{rows=s.docs.map(d=>({id:d.id,...d.data()}));drawU();});
   onSnapshot(collection(db,"resources"),s=>{res=s.docs.map(d=>({id:d.id,...d.data()}));drawR();});
+  onSnapshot(collection(db,"resourceLinks"),s=>{links={};s.docs.forEach(d=>{links[d.id]=d.data().link;});drawR();});
 });
-$("mt").onclick=e=>{const t=e.target.dataset.t;if(!t)return;["users","res","ev","bu","ab","at"].forEach(k=>{$("p-"+k).hidden=k!==t;});[].forEach.call($("mt").children,b=>{b.className=b.dataset.t===t?"on":"";});};
+$("mt").onclick=e=>{const t=e.target.dataset.t;if(!t)return;["users","res","ev","bu","ab","at","nu"].forEach(k=>{$("p-"+k).hidden=k!==t;});[].forEach.call($("mt").children,b=>{b.className=b.dataset.t===t?"on":"";});};
 
 /* ---------- registrations ---------- */
 $("q").oninput=()=>drawU();
@@ -51,10 +52,10 @@ function drawU(){
     const c=tr.lastChild;
     function btn(txt,cls,fn){const b=document.createElement("button");b.textContent=txt;b.className=cls;b.onclick=fn;c.appendChild(b);}
     if(r.id!==me){
-      if(r.status!=="approved")btn("Approve","a",()=>updateDoc(doc(db,"users",r.id),{status:"approved"}));
+      if(r.status!=="approved")btn("Approve","a",async()=>{await updateDoc(doc(db,"users",r.id),{status:"approved"});mail("approved",{uid:r.id});});
       if(r.status==="approved"&&r.role!=="admin")btn("Make admin","a",()=>{if(confirm("Make "+r.name+" an admin? They will get full control."))updateDoc(doc(db,"users",r.id),{role:"admin"});});
       if(r.status!=="rejected")btn("Reject","r",()=>updateDoc(doc(db,"users",r.id),{status:"rejected"}));
-      btn("Delete","d",()=>{if(confirm("Delete "+r.name+"?"))deleteDoc(doc(db,"users",r.id));});
+      btn("Delete","d",()=>{if(confirm("Delete "+r.name+"? (To let this College ID register again, also delete it in Firebase > Authentication > Users.)"))deleteDoc(doc(db,"users",r.id));});
     }else c.textContent="You";
     tb.appendChild(tr);
   });
@@ -69,11 +70,11 @@ function drawR(){
   tb.innerHTML=list.length?"":"<tr><td colspan='4'>No resources yet. Add the first one above.</td></tr>";
   list.forEach(r=>{
     const tr=document.createElement("tr");
-    tr.innerHTML="<td><b>"+esc(r.title)+"</b><br><a href='"+esc(r.link)+"' target='_blank' rel='noopener' style='color:#167d78;font-size:12px'>Open link</a></td><td>"+esc(r.category)+"</td><td>"+esc(r.dept)+"<br>"+esc(r.cls)+"</td><td></td>";
+    tr.innerHTML="<td><b>"+esc(r.title)+"</b><br><a href='"+esc(links[r.id]||'')+"' target='_blank' rel='noopener' style='color:#167d78;font-size:12px'>Open link</a></td><td>"+esc(r.category)+"</td><td>"+esc(r.dept)+"<br>"+esc(r.cls)+"</td><td></td>";
     const c=tr.lastChild;
     function btn(txt,cls,fn){const b=document.createElement("button");b.textContent=txt;b.className=cls;b.onclick=fn;c.appendChild(b);}
-    btn("Edit","a",()=>{editId=r.id;$("t").value=r.title;$("c").value=r.category;$("d").value=r.dept;$("k").value=r.cls;$("l").value=r.link;$("n").value=r.desc||"";$("fh").textContent="Edit resource";$("cx").hidden=false;scrollTo({top:0,behavior:"smooth"});});
-    btn("Delete","d",()=>{if(confirm("Delete \""+r.title+"\"?"))deleteDoc(doc(db,"resources",r.id));});
+    btn("Edit","a",()=>{editId=r.id;$("t").value=r.title;$("c").value=r.category;$("d").value=r.dept;$("k").value=r.cls;$("l").value=links[r.id]||"";$("n").value=r.desc||"";$("fh").textContent="Edit resource";$("cx").hidden=false;scrollTo({top:0,behavior:"smooth"});});
+    btn("Delete","d",()=>{if(confirm("Delete \""+r.title+"\"?"))(deleteDoc(doc(db,"resources",r.id)),deleteDoc(doc(db,"resourceLinks",r.id)));});
     tb.appendChild(tr);
   });
 }
@@ -83,9 +84,9 @@ $("rf").onsubmit=async e=>{
   e.preventDefault();const m=$("rm");m.className="msg";m.textContent="";
   const link=$("l").value.trim();
   if(!/^https:\/\/(drive|docs)\.google\.com\//.test(link)){m.className="msg err";m.textContent="Please paste a Google Drive link (https://drive.google.com/...).";return;}
-  const d={title:$("t").value.trim(),category:$("c").value,dept:$("d").value,cls:$("k").value,link,desc:$("n").value.trim(),updatedAt:serverTimestamp()};
+  const d={title:$("t").value.trim(),category:$("c").value,dept:$("d").value,cls:$("k").value,desc:$("n").value.trim(),updatedAt:serverTimestamp()};
   try{
-    if(editId)await updateDoc(doc(db,"resources",editId),d);else await addDoc(collection(db,"resources"),{...d,createdAt:serverTimestamp()});
+    let rid=editId;if(rid)await updateDoc(doc(db,"resources",rid),d);else rid=(await addDoc(collection(db,"resources"),{...d,createdAt:serverTimestamp()})).id;await setDoc(doc(db,"resourceLinks",rid),{link});
     m.className="msg ok";m.textContent="Saved.";reset();
   }catch(err){m.className="msg err";m.textContent="Could not save: "+(err.code||err.message)+". Check the Firestore rules.";}
 };
@@ -169,6 +170,7 @@ function initContent(){
   ],[["name","Name"],["dept","Department"],["cls","Details"]]);
   aboutForm($("p-ab"));
   attendance($("p-at"));
+  addUsers($("p-nu"));
 }
 
 /* ---------- attendance ---------- */
@@ -216,6 +218,67 @@ async function attendance(root){
     const rows=[["No","Name","ID","Department","Class","Role","Time"]].concat(list.map((r,i)=>[i+1,r.name,r.idNo,r.dept,r.cls,r.role,r.ts?r.ts.toDate().toLocaleTimeString("en-IN"):""]));
     const b=new Blob([rows.map(r=>r.map(q).join(",")).join("\n")],{type:"text/csv"});
     const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="attendance-"+$("ad").value+".csv";a.click();
+  };
+}
+
+/* ---------- admin registers users: single or bulk ---------- */
+function parseCSV(t){
+  return t.split(/\r?\n/).map(l=>l.trim()).filter(Boolean).map(l=>{
+    const o=[];let c="",q=false;
+    for(const ch of l){if(ch==='"')q=!q;else if(ch===","&&!q){o.push(c.trim());c="";}else c+=ch;}
+    o.push(c.trim());return o;
+  });
+}
+function addUsers(root){
+  root.innerHTML="<div class='panel'><h2>Register one user</h2><p style='margin:0;color:#5b6b75'>Accounts made here are approved at once. Leave password blank to create one automatically.</p><form id='su'><div class='fg'></div><p style='margin-top:18px'><button class='btn'>Register user</button></p></form></div><div class='panel' style='margin-top:18px'><h2>Register many users (CSV)</h2><p style='margin:0 0 12px;color:#5b6b75'>Columns in this order: name, id, dept, class, role, email, password. Role is student, staff or admin. Password is optional.</p><p><button class='btn' type='button' id='sm' style='background:#eef2f5;color:#062847'>Download sample CSV</button></p><input type='file' id='cf' accept='.csv,text/csv'><p style='margin-top:14px'><button class='btn' type='button' id='bu2'>Register all from CSV</button></p></div><div class='panel' style='margin-top:18px' id='rp' hidden><h2>Result</h2><p class='msg err' style='margin:0 0 10px'>Passwords are shown only now. Download them before leaving this page.</p><p><button class='btn' type='button' id='dc'>Download credentials CSV</button></p><div class='tw'><table><thead><tr><th>ID</th><th>Name</th><th>Password</th><th>Result</th></tr></thead><tbody id='rt'></tbody></table></div></div>";
+  const inp=build([
+    {k:"name",l:"Full name",req:1},{k:"id",l:"College ID (user id)",req:1},
+    {k:"dept",l:"Department",t:"select",o:["BPT (Physiotherapy)","BMLT (Medical Laboratory)","BMIT (Medical Imaging)","MHA (Hospital Administration)","Library / Office","Other"]},
+    {k:"cls",l:"Class",t:"select",o:["1st Year","2nd Year","3rd Year","4th Year","Internship","PG 1st Year","PG 2nd Year","Not applicable"]},
+    {k:"role",l:"Role",t:"select",o:["student","staff","admin"]},{k:"email",l:"Email (for confirmation)"},{k:"password",l:"Password (optional)"}
+  ],root.querySelector(".fg"));
+  let done=[];
+  async function createOne(r){
+    const id=(r.id||"").trim(),name=(r.name||"").trim();
+    if(!id||!name)throw new Error("name and id are required");
+    const role=["student","staff","admin"].includes((r.role||"").toLowerCase())?r.role.toLowerCase():"student";
+    const pw=(r.password||"").length>=6?r.password:genPass();
+    let uid;
+    try{uid=await createAccount(id,pw);}catch(e){throw new Error(e.code==="auth/email-already-in-use"?"ID already exists":(e.code||e.message));}
+    const email=(r.email||"").trim();
+    await setDoc(doc(db,"users",uid),{name,dept:r.dept||"",cls:r.cls||"",idNo:id,authEmail:idEmail(id),email,role,status:"approved",createdBy:me,createdAt:serverTimestamp()});
+    if(email)mail("created",{uid,password:pw});
+    return pw;
+  }
+  function show(){
+    $("rp").hidden=false;const tb=$("rt");tb.innerHTML="";
+    done.forEach(x=>{const tr=document.createElement("tr");[x.id,x.name,x.pw||"",x.msg].forEach(v=>{const td=document.createElement("td");td.textContent=v;tr.appendChild(td);});tb.appendChild(tr);});
+  }
+  function csvDown(name,rows){
+    const q=v=>'"'+String(v==null?"":v).replace(/"/g,'""')+'"';
+    const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([rows.map(r=>r.map(q).join(",")).join("\n")],{type:"text/csv"}));a.download=name;a.click();
+  }
+  root.querySelector("#su").onsubmit=async e=>{
+    e.preventDefault();const r={};Object.keys(inp).forEach(k=>{r[k]=inp[k].value.trim();});
+    try{const pw=await createOne(r);done=[{id:r.id,name:r.name,pw,msg:"Registered"}];root.querySelector("#su").reset();}
+    catch(err){done=[{id:r.id,name:r.name,pw:"",msg:"Failed: "+err.message}];}
+    show();
+  };
+  $("sm").onclick=()=>csvDown("sample-users.csv",[["name","id","dept","class","role","email","password"],["Ravi Kumar","21BPT001","BPT (Physiotherapy)","3rd Year","student","ravi@example.com",""],["Meena S","STAFF014","Library / Office","Not applicable","staff","meena@example.com",""]]);
+  $("dc").onclick=()=>csvDown("credentials.csv",[["id","name","password","result"]].concat(done.map(x=>[x.id,x.name,x.pw,x.msg])));
+  $("bu2").onclick=async()=>{
+    const f=$("cf").files[0];if(!f){alert("Choose a CSV file first.");return;}
+    let rows=parseCSV(await f.text());if(rows.length&&/^name$/i.test(rows[0][0]))rows=rows.slice(1);
+    if(!rows.length){alert("No rows found.");return;}
+    if(!confirm("Register "+rows.length+" users?"))return;
+    done=[];$("bu2").disabled=true;
+    for(const c of rows){
+      const r={name:c[0],id:c[1],dept:c[2],cls:c[3],role:c[4],email:c[5],password:c[6]};
+      try{const pw=await createOne(r);done.push({id:r.id,name:r.name,pw,msg:"Registered"});}
+      catch(err){done.push({id:r.id,name:r.name,pw:"",msg:"Failed: "+err.message});}
+      show();
+    }
+    $("bu2").disabled=false;
   };
 }
 </script></body></html>
