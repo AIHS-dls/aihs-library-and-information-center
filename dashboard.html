@@ -2,16 +2,33 @@
 <body><div class="top"><img src="logo.jpg" alt=""><div><b>AIHS Library</b><small id="who"></small></div><span class="sp"></span><a href="index.html" class="btn">Home</a> <button class="out" id="out">Sign out</button></div>
 <div class="wrap"><div class="panel" id="box">Loading...</div></div>
 <script type="module">
-import {auth,profile,go,signOut,onAuthStateChanged,esc} from "./fb.js";
-document.getElementById("out").onclick=async()=>{await signOut(auth);location.href="index.html";};
+import {auth,db,profile,go,signOut,onAuthStateChanged,collection,onSnapshot,esc} from "./fb.js";
+const $=id=>document.getElementById(id);
+$("out").onclick=async()=>{await signOut(auth);location.href="index.html";};
 onAuthStateChanged(auth,async u=>{
   if(!u){location.href="index.html";return;}
   const p=await profile(u);if(!p){location.href="register.html";return;}
   if(go(p)==="admin.html"){location.href="admin.html";return;}
-  document.getElementById("who").textContent=p.name+" - "+p.role;
-  const b=document.getElementById("box");
-  if(p.status==="pending")b.innerHTML="<h2>Waiting for approval</h2><p>Your registration is with the library admin. You can open resources once it is approved. Please check again later.</p><span class='badge pending'>Pending</span>";
-  else if(p.status==="rejected")b.innerHTML="<h2>Registration not approved</h2><p>Please contact the librarian: librarian@aihs.ac.in</p><span class='badge rejected'>Rejected</span>";
-  else b.innerHTML="<h2>Welcome, "+esc(p.name)+"</h2><p>"+esc(p.dept)+" &middot; "+esc(p.cls)+" &middot; ID "+esc(p.idNo)+"</p><span class='badge approved'>Approved "+esc(p.role)+"</span><p style='margin-top:18px;color:#5b6b75'>E-Books, Study Notes, Question Papers and eJournals will appear here in the next step.</p>";
+  $("who").textContent=p.name+" - "+p.role;
+  const b=$("box");
+  if(p.status==="pending"){b.innerHTML="<h2>Waiting for approval</h2><p>Your registration is with the library admin. You can open resources once it is approved. Please check again later.</p><span class='badge pending'>Pending</span>";return;}
+  if(p.status==="rejected"){b.innerHTML="<h2>Registration not approved</h2><p>Please contact the librarian: librarian@aihs.ac.in</p><span class='badge rejected'>Rejected</span>";return;}
+  b.innerHTML="<h2>Welcome, "+esc(p.name)+"</h2><p style='margin:0 0 6px;color:#5b6b75'>"+esc(p.dept)+" &middot; "+esc(p.cls)+" &middot; ID "+esc(p.idNo)+"</p><div class='tabs' id='ct'></div><input id='rq' placeholder='Search e-books, notes, question papers, journals' style='margin-bottom:6px'><div class='grid2' id='gr'></div>";
+  const CATS=["All","E-Books","Study Notes","Question Papers","eJournals"];let cat="All",list=[];
+  function draw(){
+    const ct=$("ct");ct.innerHTML="";
+    CATS.forEach(c=>{const x=document.createElement("button");x.textContent=c;x.className=c===cat?"on":"";x.onclick=()=>{cat=c;draw();};ct.appendChild(x);});
+    const q=$("rq").value.toLowerCase(),g=$("gr");
+    const v=list.filter(r=>(cat==="All"||r.category===cat)&&(r.title+r.desc+r.dept+r.cls).toLowerCase().includes(q)).sort((a,b)=>a.title.localeCompare(b.title));
+    g.innerHTML=v.length?"":"<p style='color:#5b6b75'>No resources found.</p>";
+    v.forEach(r=>{
+      const ok=/^https:\/\/(drive|docs)\.google\.com\//.test(r.link);
+      const d=document.createElement("div");d.className="rc";
+      d.innerHTML="<span class='cat'>"+esc(r.category)+"</span><h3>"+esc(r.title)+"</h3><p>"+esc(r.dept)+" &middot; "+esc(r.cls)+"</p>"+(r.desc?"<p>"+esc(r.desc)+"</p>":"")+"<a target='_blank' rel='noopener' href='"+(ok?esc(r.link):"#")+"'>Open</a>";
+      g.appendChild(d);
+    });
+  }
+  $("rq").oninput=draw;
+  onSnapshot(collection(db,"resources"),s=>{list=s.docs.map(d=>d.data());draw();},()=>{$("gr").innerHTML="<p class='err'>Could not load resources. Please sign in again.</p>";});
 });
 </script></body></html>
