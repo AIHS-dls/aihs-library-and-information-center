@@ -1,7 +1,7 @@
 <!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Login | AIHS Library</title><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700&family=Manrope:wght@500;700;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="app.css"></head>
-<body><div class="center"><main class="panel">
-<div style="text-align:center"><img src="logo.jpg" alt="AIHS" width="90" style="border-radius:50%;background:#fff"><h1>Login</h1><p>Use your registered College ID and password.</p></div>
-<form id="f"><label for="i">College ID Number</label><input id="i" autocomplete="username" required>
+<body><div class="center bg-login"><main class="panel">
+<div style="text-align:center"><img src="logo.jpg" alt="AIHS" width="90" style="border-radius:50%;background:#fff"><h1>Login</h1><p>Use your registered User ID and password.</p></div>
+<form id="f"><label for="i">User ID</label><input id="i" autocomplete="username" required>
 <label for="p">Password</label><input id="p" type="password" autocomplete="current-password" required>
 <p style="margin-top:20px"><button class="btn" style="width:100%;padding:14px">Login</button></p></form>
 <p class="msg" id="m"></p>
@@ -15,6 +15,6 @@ onAuthStateChanged(auth,u=>{if(u)route(u);});
 document.getElementById("f").onsubmit=async e=>{
   e.preventDefault();m.className="msg";m.textContent="Signing in...";
   try{await login(document.getElementById("i").value,document.getElementById("p").value);}
-  catch(err){m.className="msg err";m.textContent=["auth/invalid-credential","auth/wrong-password","auth/user-not-found","auth/invalid-email"].includes(err.code)?"Wrong College ID or password.":err.code==="auth/operation-not-allowed"?"Email/Password sign-in is not enabled in Firebase yet.":err.code==="auth/too-many-requests"?"Too many attempts. Please wait a few minutes and try again.":"Login failed: "+(err.code||err.message);}
+  catch(err){m.className="msg err";m.textContent=["auth/invalid-credential","auth/wrong-password","auth/user-not-found","auth/invalid-email"].includes(err.code)?"Wrong User ID or password.":err.code==="auth/operation-not-allowed"?"Email/Password sign-in is not enabled in Firebase yet.":err.code==="auth/too-many-requests"?"Too many attempts. Please wait a few minutes and try again.":"Login failed: "+(err.code||err.message);}
 };
 </script></body></html>
