@@ -492,7 +492,6 @@ footer .brand-copy{display:block}
 </head>
 
 <body>
-<div class="util"><div class="util-in"><span>Mon - Sat &middot; 9:00 AM - 5:00 PM</span><a href="mailto:librarian@aihs.ac.in">librarian@aihs.ac.in</a></div></div>
 <header class="ph">
   <div class="ph-in">
     <a class="ph-brand" href="#home" aria-label="AIHS Library home">
@@ -576,13 +575,26 @@ footer .brand-copy{display:block}
       <div class="eyebrow">About the Library</div>
       <div class="section-head">
         <h2>Knowledge should be easy to find.</h2>
-        <p>AIHS Library and Information Center supports students, faculty and researchers with a welcoming environment dedicated to learning, discovery and academic excellence.</p>
+        <p id="aboutIntro">AIHS Library and Information Center supports students, faculty and researchers with a welcoming environment dedicated to learning, discovery and academic excellence.</p>
       </div>
 
       <div class="hours">
         <strong>LIBRARY WORKING HOURS</strong>
         <p>Monday – Saturday · 9:00 AM – 5:00 PM</p>
         <p>Sunday and government holidays · Closed</p>
+      </div>
+      <div class="hard" id="hardBox">
+        <h4>Library Resources</h4><p class="sub">HARD COPIES &bull; DEPARTMENT WISE</p>
+        <div class="n"><span>Physiotherapy</span><b data-k="hdPhysio">1,255</b></div>
+        <div class="n"><span>Medical Laboratory Technology</span><b data-k="hdMlt">662</b></div>
+        <div class="n"><span>Medical Imaging Technology</span><b data-k="hdMit">336</b></div>
+        <div class="n"><span>Master of Hospital Administration</span><b data-k="hdMha">1,139</b></div>
+        <div class="n tot"><span>&#128213; Total Books</span><b id="hdTotal">3,392</b></div>
+      </div>
+      <div class="hard" id="attBox">
+        <h4>Student Entry Attendance</h4><p class="sub">SCAN &bull; SIGN IN &bull; DONE</p>
+        <ol class="steps"><li>Scan the QR code at the library entrance with your phone camera.</li><li>Sign in with your approved library account.</li><li>Your entry is recorded with the date and time.</li></ol>
+        <a class="att-btn" href="login.html">Sign in / Register</a>
       </div>
     </div>
 
@@ -643,7 +655,7 @@ footer .brand-copy{display:block}
     <h2>Library Best Users</h2>
     <p>Recognising students for their excellent library engagement.</p>
   </div>
-  <div class="grid">
+  <div class="grid" id="bestGrid">
     <div class="user-card">
       <div class="rank">BPT · PHYSIOTHERAPY</div>
       <h3>Harikrishna</h3>
@@ -1031,10 +1043,22 @@ if (headerSearchBtn) {
 .lm-x{position:absolute;top:10px;right:14px;border:0;background:none;font-size:26px;cursor:pointer;color:#5b6b75}
 #lmMsg{margin:14px 0 0;color:#b3261e}
 .lm-box a{display:inline-block;margin-top:14px;font-size:14px;font-weight:800;color:#167d78}
+
+.hard{margin-top:22px;background:#fff;color:#102b4c;border-radius:14px;padding:20px;border-top:3px solid #e6ad42;box-shadow:0 10px 26px rgba(6,40,71,.1)}
+.hard h4{margin:0;font:700 20px "Fraunces",Georgia,serif;color:#062847}
+.hard .sub{margin:4px 0 12px;font-size:11px;font-weight:800;letter-spacing:1.2px;color:#167d78}
+.hard .n{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:9px 0;border-bottom:1px solid #e9eef1;font-size:14px;color:#33485a}
+.hard .n b{font:700 20px "Fraunces",Georgia,serif;color:#062847}
+.hard .tot{border-bottom:0;border-top:2px solid #e6ad42;margin-top:4px;font-weight:800;color:#062847}
+.hard .tot b{font-size:26px}
+.hard .steps{margin:0 0 14px;padding-left:20px;font-size:14px;line-height:1.7;color:#33485a}
+.hard .att-btn{display:inline-block;padding:11px 20px;border-radius:30px;background:linear-gradient(135deg,#ffcc69,#e6ad42);color:#062847;font-weight:800;font-size:14px}
+.lm-box a.lm-g{display:block;margin-top:10px;padding:13px;border-radius:10px;text-align:center;font:800 15px "Manrope",Arial,sans-serif;color:#062847;border:1px solid #cbd8d7;background:#fff}
+.lm-box a.lm-p{background:linear-gradient(135deg,#ffcc69,#e6ad42);border-color:#e6ad42}
 </style>
 <div class="lm" id="lm" role="dialog" aria-modal="true" aria-label="Sign in"><div class="lm-box"><button class="lm-x" id="lmX" type="button" aria-label="Close">&times;</button>
-<img src="logo.jpg" alt="AIHS"><h3>Sign in to open resources</h3><p>One login for students, staff and admin.</p>
-<button class="lm-g" id="lmG" type="button">Continue with Google</button><p id="lmMsg"></p><a href="register.html">New here? Self registration</a></div></div>
+<img src="logo.jpg" alt="AIHS"><h3>Sign in to open resources</h3><p>Please login or register to open the library resources.</p>
+<a class="lm-g lm-p" href="login.html">Login</a><a class="lm-g" href="register.html">New here? Register</a></div></div>
 <script type="module">
 import {auth,google,profile,go,onAuthStateChanged} from "./fb.js";
 const lm=document.getElementById("lm"),msg=document.getElementById("lmMsg");let route=null;
@@ -1046,18 +1070,89 @@ onAuthStateChanged(auth,async u=>{
   const l=document.querySelector(".ph-link");if(l){l.textContent=route==="register.html"?"Finish registration":route==="admin.html"?"Admin panel":"My library";l.href=route;}
 });
 document.addEventListener("click",e=>{
-  const a=e.target.closest('#resources .card, a[href="login.html"]');
+  const a=e.target.closest('#resources .card');
   if(!a)return;e.preventDefault();
   if(route)location.href=route;else openLogin();
 },true);
 document.getElementById("lmX").onclick=closeLogin;
 lm.addEventListener("mousedown",e=>{if(e.target===lm)closeLogin();});
 addEventListener("keydown",e=>{if(e.key==="Escape")closeLogin();});
-document.getElementById("lmG").onclick=async()=>{
-  msg.textContent="";
-  try{const u=await google();location.href=go(await profile(u));}
-  catch(e){if(e.code!=="auth/popup-closed-by-user")msg.textContent=e.code==="auth/unauthorized-domain"?"Add this domain in Firebase > Authentication > Authorized domains.":"Sign in failed: "+(e.code||e.message);}
-};
+</script>
+<style>
+.coll{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:22px}
+.coll>div{background:#fff;color:#102b4c;border-radius:14px;padding:18px;border-top:3px solid #e6ad42;box-shadow:0 10px 26px rgba(6,40,71,.1)}
+.coll h4{margin:0 0 12px;font-size:12px;letter-spacing:1.2px;text-transform:uppercase;color:#167d78}
+.coll .n{display:flex;justify-content:space-between;align-items:flex-end;gap:10px;font-size:13px;color:#5b6b75;padding:4px 0}
+.coll b{font:700 28px "Fraunces",Georgia,serif;color:#062847}
+.ev-nav{display:flex;gap:10px;justify-content:center;margin-top:10px}
+.ev-nav button{width:38px;height:38px;border-radius:50%;border:1px solid #cbd8d7;background:#fff;font-size:20px;cursor:pointer}
+@media(max-width:600px){.coll{grid-template-columns:1fr}}
+</style>
+<script type="module">
+import {db,collection,getDocs,doc,getDoc,esc} from "./fb.js";
+const DR=/^https:\/\/(drive|docs)\.google\.com\//;
+function thumb(u){const m=u.match(/\/d\/([\w-]+)/)||u.match(/[?&]id=([\w-]+)/);return m?"https://drive.google.com/thumbnail?id="+m[1]+"&sz=w1400":null;}
+function el(t,c,x){const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e;}
+function count(node,n){const t0=performance.now();(function f(t){const k=Math.min(1,(t-t0)/900);node.textContent=Math.round(n*(1-Math.pow(1-k,3))).toLocaleString("en-IN");if(k<1)requestAnimationFrame(f);})(t0);}
+const byNew=(a,b)=>((b.createdAt&&b.createdAt.seconds)||0)-((a.createdAt&&a.createdAt.seconds)||0);
+
+(async()=>{
+  /* About: collection counts */
+  try{
+    const s=await getDoc(doc(db,"site","about"));
+    if(s.exists()){
+      const d=s.data();
+      if(d.intro)document.getElementById("aboutIntro").textContent=d.intro;
+      const hk=["hdPhysio","hdMlt","hdMit","hdMha"];
+      if(hk.some(k=>d[k]!=null)){hk.forEach(k=>{const n=document.querySelector('#hardBox [data-k="'+k+'"]');if(n&&d[k]!=null)n.textContent=Number(d[k]).toLocaleString("en-IN");});document.getElementById("hdTotal").textContent=hk.reduce((t,k)=>t+(Number(d[k])||0),0).toLocaleString("en-IN");}
+      const groups=[["E-Resources",[["E-Books",d.eBooks],["E-Journals",d.eJournals]]]];
+      if(groups.some(g=>g[1].some(x=>x[1]!=null))){
+        const box=el("div","coll");
+        groups.forEach(g=>{const c=el("div");c.appendChild(el("h4",null,g[0]));g[1].forEach(x=>{if(x[1]==null)return;const r=el("div","n");r.appendChild(el("span",null,x[0]));const b=el("b",null,"0");r.appendChild(b);c.appendChild(r);count(b,x[1]);});box.appendChild(c);});
+        document.getElementById("hardBox").after(box);
+      }
+    }
+  }catch(e){}
+  /* Best users */
+  try{
+    const s=await getDocs(collection(db,"bestUsers")),us=s.docs.map(d=>d.data());
+    if(us.length){
+      const order=["BPT · PHYSIOTHERAPY","BMLT","BMIT","MHA","Other"],g=document.getElementById("bestGrid");g.innerHTML="";
+      order.forEach(dp=>{
+        const l=us.filter(u=>u.dept===dp).sort((a,b)=>a.name.localeCompare(b.name));if(!l.length)return;
+        const c=el("div","user-card");c.appendChild(el("div","rank",dp));
+        l.forEach((u,i)=>{if(i)c.appendChild(document.createElement("hr"));c.appendChild(el("h3",null,u.name));if(u.cls)c.appendChild(el("p",null,u.cls));});
+        g.appendChild(c);
+      });
+    }
+  }catch(e){}
+  /* Events */
+  try{
+    const s=await getDocs(collection(db,"events")),ev=s.docs.map(d=>d.data()).sort(byNew).slice(0,6);
+    if(ev.length){
+      const sec=document.getElementById("events");sec.querySelectorAll(".event,.notice").forEach(x=>x.remove());
+      ev.forEach(e=>{
+        const w=el("div","event"),left=el("div"),fr=el("div","event-photo-frame");
+        const imgs=(e.photos||"").split("\n").map(x=>x.trim()).filter(u=>DR.test(u)).map(thumb).filter(Boolean).slice(0,6);
+        imgs.forEach((u,i)=>{const im=el("img","event-photo"+(i?"":" active"));im.src=u;im.alt=e.title;im.loading="lazy";fr.appendChild(im);});
+        if(!imgs.length){fr.style.cssText="display:grid;place-items:center;background:linear-gradient(135deg,#062847,#167d78);color:#fff;text-align:center;padding:20px";fr.appendChild(el("strong",null,e.title));}
+        left.appendChild(fr);
+        if(imgs.length>1){
+          let i=0;const nav=el("div","ev-nav"),pr=el("button",null,"‹"),nx=el("button",null,"›");
+          pr.type=nx.type="button";pr.setAttribute("aria-label","Previous photo");nx.setAttribute("aria-label","Next photo");
+          const show=n=>{const p=fr.querySelectorAll(".event-photo");p[i].classList.remove("active");i=(n+p.length)%p.length;p[i].classList.add("active");};
+          pr.onclick=()=>show(i-1);nx.onclick=()=>show(i+1);nav.appendChild(pr);nav.appendChild(nx);left.appendChild(nav);
+        }
+        const r=el("div","event-details");
+        r.appendChild(el("div","eyebrow","Library Event"));r.appendChild(el("h2",null,e.title));
+        if(e.date)r.appendChild(el("p","event-date",e.date));
+        if(e.desc)r.appendChild(el("p",null,e.desc));
+        if(e.status){const p=el("p");p.appendChild(el("strong",null,"Status: "));p.appendChild(document.createTextNode(e.status));r.appendChild(p);}
+        w.appendChild(left);w.appendChild(r);sec.appendChild(w);
+      });
+    }
+  }catch(e){}
+})();
 </script>
 </body>
 </html>
