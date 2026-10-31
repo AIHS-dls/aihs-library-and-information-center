@@ -1,24 +1,46 @@
 <!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Admin | AIHS Library</title><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700&family=Manrope:wght@500;700;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="app.css"></head>
 <body><div class="top"><img src="logo.jpg" alt=""><div><b>AIHS Library Admin</b><small id="who"></small></div><span class="sp"></span><a href="index.html" class="btn">Website</a> <button class="out" id="out">Sign out</button></div>
-<div class="wrap"><div class="panel"><h2>Registrations</h2><p style="margin:0;color:#5b6b75">Approve students, staff and admins. Resources, events, best users, about library and attendance come in the next steps.</p>
+<div class="wrap"><div class="mt" id="mt"><button data-t="users" class="on" id="tu">Registrations</button><button data-t="res" id="tr">Resources</button></div>
+
+<div class="panel" id="p-users"><h2>Registrations</h2><p style="margin:0;color:#5b6b75">Approve students and staff. Use Make admin to add another admin.</p>
 <div class="tabs" id="tabs"></div><input id="q" placeholder="Search name, ID, department or email" style="margin-bottom:12px">
-<div class="tw"><table><thead><tr><th>Name</th><th>Role</th><th>Dept / Class</th><th>ID</th><th>Email</th><th>Status</th><th>Action</th></tr></thead><tbody id="rows"></tbody></table></div></div></div>
+<div class="tw"><table><thead><tr><th>Name</th><th>Role</th><th>Dept / Class</th><th>ID</th><th>Email</th><th>Status</th><th>Action</th></tr></thead><tbody id="rows"></tbody></table></div></div>
+
+<div id="p-res" hidden>
+<div class="panel"><h2 id="fh">Add resource</h2><p style="margin:0;color:#5b6b75">Upload the file to your Google Drive folder first, set sharing to "Anyone with the link: Viewer", then paste the link here.</p>
+<form id="rf"><div class="fg">
+<div class="full"><label for="t">Title</label><input id="t" required maxlength="150"></div>
+<div><label for="c">Category</label><select id="c"><option>E-Books</option><option>Study Notes</option><option>Question Papers</option><option>eJournals</option></select></div>
+<div><label for="d">Department</label><select id="d"><option>All departments</option><option>BPT (Physiotherapy)</option><option>BMLT (Medical Laboratory)</option><option>BMIT (Medical Imaging)</option><option>MHA (Hospital Administration)</option><option>Other</option></select></div>
+<div><label for="k">Class</label><select id="k"><option>All classes</option><option>1st Year</option><option>2nd Year</option><option>3rd Year</option><option>4th Year</option><option>Internship</option><option>PG 1st Year</option><option>PG 2nd Year</option></select></div>
+<div><label for="l">Google Drive link</label><input id="l" type="url" required placeholder="https://drive.google.com/..."></div>
+<div class="full"><label for="n">Short description (optional)</label><input id="n" maxlength="200"></div></div>
+<p style="margin-top:18px"><button class="btn" id="sv">Save resource</button> <button class="btn" type="button" id="cx" hidden style="background:#eef2f5;color:#062847">Cancel edit</button></p><p class="msg" id="rm"></p></form></div>
+<div class="panel" style="margin-top:18px"><h2>All resources <span id="rc" style="font-size:14px;color:#5b6b75"></span></h2>
+<input id="rq" placeholder="Search resources" style="margin:10px 0 12px">
+<div class="tw"><table><thead><tr><th>Title</th><th>Category</th><th>Dept / Class</th><th>Action</th></tr></thead><tbody id="rr"></tbody></table></div></div></div></div>
+
 <script type="module">
-import {auth,db,profile,go,signOut,onAuthStateChanged,collection,onSnapshot,doc,updateDoc,deleteDoc,esc} from "./fb.js";
-let rows=[],tab="pending",me=null;
-document.getElementById("out").onclick=async()=>{await signOut(auth);location.href="index.html";};
+import {auth,db,profile,go,signOut,onAuthStateChanged,collection,onSnapshot,doc,updateDoc,deleteDoc,addDoc,serverTimestamp,esc} from "./fb.js";
+const $=id=>document.getElementById(id);
+let rows=[],res=[],tab="pending",me=null,editId=null;
+$("out").onclick=async()=>{await signOut(auth);location.href="index.html";};
 onAuthStateChanged(auth,async u=>{
   if(!u){location.href="index.html";return;}
   const p=await profile(u);
   if(!p||go(p)!=="admin.html"){location.href=p?"dashboard.html":"register.html";return;}
-  me=u.uid;document.getElementById("who").textContent=p.name;
-  onSnapshot(collection(db,"users"),s=>{rows=s.docs.map(d=>({id:d.id,...d.data()}));draw();});
+  me=u.uid;$("who").textContent=p.name;
+  onSnapshot(collection(db,"users"),s=>{rows=s.docs.map(d=>({id:d.id,...d.data()}));drawU();});
+  onSnapshot(collection(db,"resources"),s=>{res=s.docs.map(d=>({id:d.id,...d.data()}));drawR();});
 });
-document.getElementById("q").oninput=()=>draw();
-function draw(){
-  const t=document.getElementById("tabs");t.innerHTML="";
-  ["pending","approved","rejected"].forEach(k=>{const b=document.createElement("button");b.textContent=k[0].toUpperCase()+k.slice(1)+" ("+rows.filter(r=>r.status===k).length+")";b.className=k===tab?"on":"";b.onclick=()=>{tab=k;draw();};t.appendChild(b);});
-  const q=document.getElementById("q").value.toLowerCase(),tb=document.getElementById("rows");
+$("mt").onclick=e=>{const t=e.target.dataset.t;if(!t)return;$("p-users").hidden=t!=="users";$("p-res").hidden=t!=="res";$("tu").className=t==="users"?"on":"";$("tr").className=t==="res"?"on":"";};
+
+/* ---------- registrations ---------- */
+$("q").oninput=()=>drawU();
+function drawU(){
+  const t=$("tabs");t.innerHTML="";
+  ["pending","approved","rejected"].forEach(k=>{const b=document.createElement("button");b.textContent=k[0].toUpperCase()+k.slice(1)+" ("+rows.filter(r=>r.status===k).length+")";b.className=k===tab?"on":"";b.onclick=()=>{tab=k;drawU();};t.appendChild(b);});
+  const q=$("q").value.toLowerCase(),tb=$("rows");
   const list=rows.filter(r=>r.status===tab&&(r.name+r.idNo+r.dept+r.email).toLowerCase().includes(q));
   tb.innerHTML=list.length?"":"<tr><td colspan='7'>Nobody here yet.</td></tr>";
   list.forEach(r=>{
@@ -35,4 +57,34 @@ function draw(){
     tb.appendChild(tr);
   });
 }
+
+/* ---------- resources ---------- */
+$("rq").oninput=()=>drawR();
+function drawR(){
+  const q=$("rq").value.toLowerCase(),tb=$("rr");
+  const list=res.filter(r=>(r.title+r.category+r.dept+r.cls).toLowerCase().includes(q)).sort((a,b)=>a.title.localeCompare(b.title));
+  $("rc").textContent="("+res.length+")";
+  tb.innerHTML=list.length?"":"<tr><td colspan='4'>No resources yet. Add the first one above.</td></tr>";
+  list.forEach(r=>{
+    const tr=document.createElement("tr");
+    tr.innerHTML="<td><b>"+esc(r.title)+"</b><br><a href='"+esc(r.link)+"' target='_blank' rel='noopener' style='color:#167d78;font-size:12px'>Open link</a></td><td>"+esc(r.category)+"</td><td>"+esc(r.dept)+"<br>"+esc(r.cls)+"</td><td></td>";
+    const c=tr.lastChild;
+    function btn(txt,cls,fn){const b=document.createElement("button");b.textContent=txt;b.className=cls;b.onclick=fn;c.appendChild(b);}
+    btn("Edit","a",()=>{editId=r.id;$("t").value=r.title;$("c").value=r.category;$("d").value=r.dept;$("k").value=r.cls;$("l").value=r.link;$("n").value=r.desc||"";$("fh").textContent="Edit resource";$("cx").hidden=false;scrollTo({top:0,behavior:"smooth"});});
+    btn("Delete","d",()=>{if(confirm("Delete \""+r.title+"\"?"))deleteDoc(doc(db,"resources",r.id));});
+    tb.appendChild(tr);
+  });
+}
+function reset(){editId=null;$("rf").reset();$("fh").textContent="Add resource";$("cx").hidden=true;}
+$("cx").onclick=reset;
+$("rf").onsubmit=async e=>{
+  e.preventDefault();const m=$("rm");m.className="msg";m.textContent="";
+  const link=$("l").value.trim();
+  if(!/^https:\/\/(drive|docs)\.google\.com\//.test(link)){m.className="msg err";m.textContent="Please paste a Google Drive link (https://drive.google.com/...).";return;}
+  const d={title:$("t").value.trim(),category:$("c").value,dept:$("d").value,cls:$("k").value,link,desc:$("n").value.trim(),updatedAt:serverTimestamp()};
+  try{
+    if(editId)await updateDoc(doc(db,"resources",editId),d);else await addDoc(collection(db,"resources"),{...d,createdAt:serverTimestamp()});
+    m.className="msg ok";m.textContent="Saved.";reset();
+  }catch(err){m.className="msg err";m.textContent="Could not save: "+(err.code||err.message)+". Check the Firestore rules.";}
+};
 </script></body></html>
