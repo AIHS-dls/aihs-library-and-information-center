@@ -421,449 +421,70 @@ footer .brand small { color:#e0e8e9; font-size:11px; }
 }
 
 
-/* ===== AIHS PREMIUM NAVY & GOLD HEADER ===== */
 
-:root {
-  --aihs-navy: #062847;
-  --aihs-navy-dark: #031d35;
-  --aihs-gold: #e6ad42;
-  --aihs-gold-light: #ffcc69;
-  --aihs-white: #ffffff;
-  --aihs-text: #102b4c;
+/* ===== PREMIUM HEADER, SEARCH, MOTION ===== */
+html{scroll-padding-top:96px}
+body{font-family:"Manrope",Arial,sans-serif}
+.hero h1,.section-head h2,.event h2,.faculty-panel h3,.plagiarism-panel h3{font-family:"Fraunces",Georgia,serif}
+.util{background:#031d35;color:#b9c7d3;font-size:12px}
+.util-in{max-width:1500px;margin:auto;padding:7px 4%;display:flex;justify-content:space-between;gap:12px}
+.util a:hover{color:#ffcc69}
+.ph{position:sticky;top:0;z-index:1000;background:rgba(6,40,71,.94);backdrop-filter:blur(14px) saturate(140%);border-bottom:1px solid rgba(230,173,66,.55);box-shadow:0 10px 30px rgba(3,29,53,.25)}
+.ph-in{max-width:1500px;margin:auto;padding:10px 4%;display:flex;align-items:center;gap:24px}
+.ph-brand{display:flex;align-items:center;gap:13px;color:#fff;flex-shrink:0}
+.ph-brand img{width:52px;height:52px;border-radius:50%;background:#fff;object-fit:contain;padding:3px;border:2px solid #e6ad42}
+.ph-brand b{display:block;font-family:"Fraunces",Georgia,serif;font-size:16px;line-height:1.2}
+.ph-brand small{color:#ffcc69;font-size:11px;letter-spacing:1.6px;text-transform:uppercase;font-weight:700}
+.ph-nav{display:flex;gap:2px;margin:0 auto}
+.ph-nav a{position:relative;padding:10px 12px;color:#dbe6ee;font-size:13.5px;font-weight:700;white-space:nowrap;transition:color .2s}
+.ph-nav a::after{content:"";position:absolute;left:12px;right:100%;bottom:3px;height:2px;background:#e6ad42;transition:right .25s}
+.ph-nav a:hover,.ph-nav a.on{color:#ffcc69}
+.ph-nav a:hover::after,.ph-nav a.on::after{right:12px}
+.ph-actions{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.ph-search{display:flex;align-items:center;gap:8px;padding:9px 14px;border:1px solid rgba(255,255,255,.25);border-radius:30px;background:rgba(255,255,255,.08);color:#fff;font:700 13px "Manrope",Arial,sans-serif;cursor:pointer;transition:background .2s}
+.ph-search:hover{background:rgba(255,255,255,.18)}
+.ph-search kbd{font:700 11px "Manrope",Arial,sans-serif;padding:1px 6px;border-radius:5px;background:rgba(255,255,255,.15);color:#ffcc69}
+.ph-link{color:#fff;font-size:13.5px;font-weight:700;padding:9px 6px}
+.ph-link:hover{color:#ffcc69}
+.ph-cta{padding:10px 18px;border-radius:30px;background:linear-gradient(135deg,#ffcc69,#e6ad42);color:#062847;font-size:13.5px;font-weight:800;box-shadow:0 6px 18px rgba(230,173,66,.35);transition:transform .2s}
+.ph-cta:hover{transform:translateY(-2px)}
+.mobile-menu-btn,.mobile-nav{display:none}
+footer .brand{display:flex;align-items:center;gap:12px}
+footer .brand-logo{width:56px;height:56px;border-radius:50%;background:#fff;object-fit:contain;padding:3px}
+footer .brand-copy{display:block}
+@media(max-width:1180px){
+ .ph-nav,.ph-link,.ph-cta{display:none}
+ .ph-actions{margin-left:auto}
+ .mobile-menu-btn{display:inline-flex;width:42px;height:42px;align-items:center;justify-content:center;border:1px solid rgba(230,173,66,.6);border-radius:10px;background:transparent;color:#ffcc69;font-size:22px;cursor:pointer}
+ .mobile-nav.open{display:flex;flex-direction:column;padding:6px 5% 16px;border-top:1px solid rgba(255,255,255,.1)}
+ .mobile-nav a{padding:13px 6px;color:#fff;font-weight:700;border-bottom:1px solid rgba(255,255,255,.08)}
 }
-
-.premium-header {
-  width: 100%;
-  position: relative;
-  z-index: 1000;
-  background: var(--aihs-white);
-  font-family: "Segoe UI", Arial, sans-serif;
-}
-
-/* Top branding area */
-
-.header-top {
-  min-height: 155px;
-  padding: 22px 5%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 28px;
-  color: var(--aihs-white);
-  background:
-    radial-gradient(
-      ellipse at 50% 0%,
-      rgba(25, 76, 112, 0.55),
-      transparent 70%
-    ),
-    linear-gradient(
-      120deg,
-      var(--aihs-navy-dark),
-      var(--aihs-navy),
-      #052441
-    );
-  border-bottom: 3px solid var(--aihs-gold);
-  position: relative;
-  overflow: hidden;
-}
-
-.header-top::before,
-.header-top::after {
-  content: "";
-  position: absolute;
-  width: 110px;
-  height: 230px;
-  top: -100px;
-  border: 8px solid rgba(230, 173, 66, 0.85);
-  transform: rotate(35deg);
-  pointer-events: none;
-}
-
-.header-top::before {
-  left: -100px;
-}
-
-.header-top::after {
-  right: -100px;
-}
-
-.header-brand {
-  display: flex;
-  align-items: center;
-  gap: 26px;
-  min-width: 0;
-  flex: 1;
-  position: relative;
-  z-index: 1;
-}
-
-.brand-logo {
-  width: 120px;
-  height: 120px;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #fff;
-  border: 3px solid var(--aihs-gold);
-  border-radius: 50%;
-  overflow: hidden;
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.25);
-}
-
-.brand-logo img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  padding: 5px;
-}
-
-.brand-text {
-  text-align: center;
-  flex: 1;
-}
-
-.brand-text h1 {
-  margin: 0 0 8px;
-  color: #fff;
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: clamp(20px, 2.25vw, 34px);
-  font-weight: 800;
-  line-height: 1.25;
-  letter-spacing: 0.7px;
-}
-
-.brand-text h2 {
-  margin: 0;
-  color: var(--aihs-gold-light);
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: clamp(18px, 2vw, 30px);
-  font-weight: 800;
-  line-height: 1.3;
-  letter-spacing: 0.6px;
-}
-
-.brand-tagline {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 15px;
-  margin-top: 10px;
-}
-
-.brand-tagline span {
-  width: 55px;
-  height: 2px;
-  background: var(--aihs-gold);
-}
-
-.brand-tagline p {
-  margin: 0;
-  color: #f5f5f5;
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 15px;
-  font-style: italic;
-  letter-spacing: 0.7px;
-}
-
-.brand-tagline b {
-  color: var(--aihs-gold);
-  margin: 0 8px;
-}
-
-/* Account links */
-
-.header-account {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 17px;
-  flex-shrink: 0;
-  position: relative;
-  z-index: 1;
-}
-
-.account-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  color: var(--aihs-gold-light);
-  text-decoration: none;
-  font-size: 14px;
-  font-weight: 600;
-  transition: color 0.25s ease;
-}
-
-.account-link:hover {
-  color: #fff;
-}
-
-.account-icon {
-  font-size: 23px;
-}
-
-.account-divider {
-  height: 32px;
-  width: 1px;
-  background: rgba(255, 204, 105, 0.7);
-}
-
-/* Navigation bar */
-
-.premium-nav {
-  min-height: 70px;
-  padding: 10px 5%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: clamp(12px, 2.2vw, 32px);
-  background: #fff;
-  box-shadow: 0 5px 18px rgba(3, 29, 53, 0.09);
-}
-
-.nav-link {
-  position: relative;
-  padding: 13px 0;
-  color: var(--aihs-text);
-  text-decoration: none;
-  white-space: nowrap;
-  font-size: 14px;
-  font-weight: 700;
-  transition: color 0.25s ease;
-}
-
-.nav-link::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 100%;
-  bottom: 3px;
-  height: 3px;
-  background: var(--aihs-gold);
-  transition: right 0.25s ease;
-}
-
-.nav-link:hover,
-.nav-link.active {
-  color: #b47b17;
-}
-
-.nav-link:hover::after,
-.nav-link.active::after {
-  right: 0;
-}
-
-/* Search button */
-
-.nav-search {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 9px;
-  flex-shrink: 0;
-  padding: 12px 22px;
-  border: 0;
-  border-radius: 30px;
-  color: #fff;
-  background: var(--aihs-navy);
-  font-size: 14px;
-  font-weight: 700;
-  cursor: pointer;
-  transition:
-    background 0.25s ease,
-    transform 0.25s ease;
-}
-
-.nav-search span {
-  font-size: 23px;
-  line-height: 1;
-}
-
-.nav-search:hover {
-  background: #174b70;
-  transform: translateY(-2px);
-}
-
-.mobile-menu-btn,
-.mobile-nav {
-  display: none;
-}
-
-/* Tablet */
-
-@media (max-width: 1100px) {
-  .header-top {
-    padding: 20px 3%;
-    gap: 15px;
-  }
-
-  .brand-logo {
-    width: 95px;
-    height: 95px;
-  }
-
-  .header-brand {
-    gap: 16px;
-  }
-
-  .header-account {
-    gap: 10px;
-  }
-
-  .account-link {
-    font-size: 12px;
-  }
-
-  .premium-nav {
-    padding: 10px 3%;
-    gap: 16px;
-  }
-
-  .nav-link {
-    font-size: 12px;
-  }
-
-  .nav-search {
-    padding: 11px 15px;
-  }
-}
-
-/* Mobile */
-
-@media (max-width: 760px) {
-  .header-top {
-    min-height: auto;
-    padding: 20px 14px;
-  }
-
-  .header-brand {
-    width: 100%;
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  .brand-logo {
-    width: 82px;
-    height: 82px;
-  }
-
-  .brand-text {
-    width: 100%;
-  }
-
-  .brand-text h1 {
-    font-size: 20px;
-    line-height: 1.35;
-  }
-
-  .brand-text h2 {
-    font-size: 18px;
-    line-height: 1.4;
-  }
-
-  .brand-tagline {
-    gap: 8px;
-    margin-top: 8px;
-  }
-
-  .brand-tagline span {
-    width: 24px;
-  }
-
-  .brand-tagline p {
-    font-size: 12px;
-  }
-
-  .brand-tagline b {
-    margin: 0 3px;
-  }
-
-  .header-account {
-    display: none;
-  }
-
-  .premium-nav {
-    min-height: 62px;
-    justify-content: space-between;
-    padding: 10px 16px;
-    gap: 12px;
-  }
-
-  .premium-nav > .nav-link {
-    display: none;
-  }
-
-  .nav-search {
-    margin-left: auto;
-    padding: 10px 18px;
-  }
-
-  .mobile-menu-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 43px;
-    height: 43px;
-    border: 1px solid #d7b66c;
-    border-radius: 10px;
-    color: var(--aihs-navy);
-    background: #fff;
-    font-size: 24px;
-    cursor: pointer;
-  }
-
-  .mobile-nav {
-    display: none;
-    flex-direction: column;
-    padding: 8px 18px 16px;
-    background: #fff;
-    border-top: 1px solid #eee;
-    box-shadow: 0 8px 16px rgba(3, 29, 53, 0.1);
-  }
-
-  .mobile-nav.open {
-    display: flex;
-  }
-
-  .mobile-nav a {
-    padding: 13px 8px;
-    border-bottom: 1px solid #edf0f3;
-    color: var(--aihs-navy);
-    text-decoration: none;
-    font-size: 15px;
-    font-weight: 650;
-  }
-
-  .mobile-nav a:hover {
-    color: #b47b17;
-    background: #faf7ef;
-  }
-}
-
-/* ===== 3D MOTION LAYER ===== */
-body { font-family:"Manrope",Arial,sans-serif; }
-.hero h1,.section-head h2,.event h2,.faculty-panel h3,.plagiarism-panel h3 { font-family:"Fraunces",Georgia,serif; }
-.premium-header { position:sticky; top:0; }
-.premium-nav { backdrop-filter:blur(10px); background:rgba(255,255,255,.94); }
-.hero { position:relative; overflow:hidden; min-height:680px; }
-.hero-content { position:relative; z-index:2; text-shadow:0 2px 24px rgba(3,29,53,.55); }
-.hero .btn { text-shadow:none; }
-#hero3d { position:absolute; inset:0; width:100%; height:100%; z-index:1; pointer-events:none; }
-.btn,.nav-cta { background:linear-gradient(135deg,#e6ad42,#d18f1f); border-color:#e6ad42; color:#062847; box-shadow:0 8px 22px rgba(230,173,66,.35); transition:transform .25s,box-shadow .25s; }
-.btn:hover { transform:translateY(-3px); box-shadow:0 14px 30px rgba(230,173,66,.45); filter:none; }
-.btn.secondary { background:transparent; color:#fff; box-shadow:none; }
-.search-box .btn,.plagiarism-panel .btn { color:#062847; }
-.rv { opacity:0; transform:perspective(1100px) rotateX(22deg) translateY(46px) scale(.97); transform-origin:50% 100%; transition:opacity .8s ease,transform .9s cubic-bezier(.2,.8,.2,1); }
-.rv.in { opacity:1; transform:none; }
-.tilt { position:relative; transform-style:preserve-3d; transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)); transition:transform .25s ease,box-shadow .25s; will-change:transform; }
-.tilt:hover { transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) translateZ(14px); box-shadow:0 26px 50px rgba(6,40,71,.18); }
-.tilt::before { content:""; position:absolute; inset:0; border-radius:inherit; pointer-events:none; opacity:0; transition:opacity .25s; background:radial-gradient(circle at var(--gx,50%) var(--gy,50%),rgba(230,173,66,.22),transparent 55%); }
-.tilt:hover::before { opacity:1; }
-.tilt .card-icon { transform:translateZ(34px); }
-.tilt h3,.tilt .rank { transform:translateZ(20px); }
-@media(max-width:760px){ .hero { min-height:560px; } }
-@media(prefers-reduced-motion:reduce){ .rv { opacity:1; transform:none; transition:none; } .tilt,.tilt:hover { transform:none; } }
+@media(max-width:700px){.util{display:none}.ph-brand b{font-size:13px}.ph-brand small{font-size:9.5px;letter-spacing:1px}.ph-brand img{width:44px;height:44px}.ph-search .lbl,.ph-search kbd{display:none}.ph-search{padding:10px}.ph-in{gap:10px}}
+.hero{min-height:600px}
+.hero h1{text-shadow:0 2px 24px rgba(3,29,53,.5)}
+.btn,.nav-cta{background:linear-gradient(135deg,#ffcc69,#e6ad42);border-color:#e6ad42;color:#062847;box-shadow:0 8px 22px rgba(230,173,66,.3);transition:transform .25s,box-shadow .25s}
+.btn:hover{transform:translateY(-3px);filter:none}
+.btn.secondary{background:transparent;color:#fff;box-shadow:none}
+.sx{position:fixed;inset:0;z-index:2000;display:none;align-items:flex-start;justify-content:center;padding:11vh 16px 0;background:rgba(3,29,53,.6);backdrop-filter:blur(6px)}
+.sx.open{display:flex}
+.sx-box{width:100%;max-width:640px;background:#fff;border-radius:16px;box-shadow:0 30px 80px rgba(0,0,0,.4);overflow:hidden;border-top:4px solid #e6ad42}
+.sx-box input{width:100%;border:0;outline:0;padding:20px 22px;font:600 17px "Manrope",Arial,sans-serif;color:#102b4c;border-bottom:1px solid #e6ebee}
+.sx-list{max-height:52vh;overflow:auto;margin:0;padding:6px;list-style:none}
+.sx-list li{display:flex;gap:12px;padding:11px 14px;border-radius:10px;cursor:pointer}
+.sx-list li.on,.sx-list li:hover{background:#f7f1e3}
+.sx-k{flex-shrink:0;min-width:78px;font-size:11px;font-weight:800;color:#167d78;padding-top:3px}
+.sx-t{font-weight:800;color:#062847;font-size:15px;line-height:1.4}
+.sx-d{font-size:13px;color:#5b6b75;line-height:1.5}
+.sx-empty{padding:22px;color:#5b6b75;font-size:14px;cursor:default}
+.rv{opacity:0;transform:perspective(1100px) rotateX(22deg) translateY(46px) scale(.97);transform-origin:50% 100%;transition:opacity .8s ease,transform .9s cubic-bezier(.2,.8,.2,1)}
+.rv.in{opacity:1;transform:none}
+.tilt{position:relative;transform-style:preserve-3d;transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));transition:transform .25s ease,box-shadow .25s;will-change:transform}
+.tilt:hover{transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) translateZ(14px);box-shadow:0 26px 50px rgba(6,40,71,.18)}
+.tilt::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;transition:opacity .25s;background:radial-gradient(circle at var(--gx,50%) var(--gy,50%),rgba(230,173,66,.22),transparent 55%)}
+.tilt:hover::before{opacity:1}
+.tilt .card-icon{transform:translateZ(34px)}
+.tilt h3,.tilt .rank{transform:translateZ(20px)}
+@media(prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}.tilt,.tilt:hover{transform:none}}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -871,78 +492,34 @@ body { font-family:"Manrope",Arial,sans-serif; }
 </head>
 
 <body>
-<!-- PREMIUM AIHS HEADER -->
-<header class="premium-header">
-  <div class="header-top">
-    <div class="header-brand">
-      <a href="index.html" class="brand-logo" aria-label="AIHS Home">
-        <img src="logo.jpg" alt="AIHS Logo">
-      </a>
-
-      <div class="brand-text">
-        <h1>ACHARYA INSTITUTE OF HEALTH SCIENCES</h1>
-        <h2>LIBRARY &amp; INFORMATION CENTER</h2>
-        <div class="brand-tagline">
-          <span></span>
-          <p>Knowledge <b>•</b> Learning <b>•</b> Excellence</p>
-          <span></span>
-        </div>
-      </div>
+<div class="util"><div class="util-in"><span>Mon - Sat &middot; 9:00 AM - 5:00 PM</span><a href="mailto:librarian@aihs.ac.in">librarian@aihs.ac.in</a></div></div>
+<header class="ph">
+  <div class="ph-in">
+    <a class="ph-brand" href="#home" aria-label="AIHS Library home">
+      <img src="logo.jpg" alt="AIHS logo">
+      <span><b>Acharya Institute of Health Sciences</b><small>Library &amp; Information Center</small></span>
+    </a>
+    <nav class="ph-nav" aria-label="Main navigation">
+      <a href="#home">Home</a><a href="#resources">Resources</a><a href="#about">About</a><a href="#services">Services</a><a href="#recognition">Recognition</a><a href="#faculty">Faculty</a><a href="#events">Events</a><a href="#contact">Contact</a>
+    </nav>
+    <div class="ph-actions">
+      <button class="ph-search" id="openSearch" type="button" aria-label="Search the library">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+        <span class="lbl">Search</span><kbd>/</kbd>
+      </button>
+      <a class="ph-link" href="login.html">Sign in</a>
+      <a class="ph-cta" href="register.html">Register</a>
     </div>
-
-    <div class="header-account">
-      <a href="register.html" class="account-link">
-        <span class="account-icon">♙</span>
-        <span>Self Registration</span>
-      </a>
-      <span class="account-divider"></span>
-      <a href="login.html" class="account-link">
-        <span class="account-icon">⇥</span>
-        <span>Sign in →</span>
-      </a>
-    </div>
+    <button class="mobile-menu-btn" id="mobileMenuBtn" type="button" aria-label="Open navigation menu" aria-expanded="false" aria-controls="mobileNav">&#9776;</button>
   </div>
-
-  <nav class="premium-nav" aria-label="Main navigation">
-    <a class="nav-link active" href="index.html">Home</a>
-
-    <a class="nav-link" href="#resources">Resources</a>
-    <a class="nav-link" href="#about">About</a>
-    <a class="nav-link" href="#recognition">Recognition</a>
-    <a class="nav-link" href="#faculty">Faculty Excellence</a>
-    <a class="nav-link" href="#events">Events</a>
-    <a class="nav-link" href="#services">Services</a>
-    <a class="nav-link" href="#contact">Contact</a>
-
-    <button class="nav-search" id="headerSearchBtn" type="button">
-      <span aria-hidden="true">⌕</span> Search
-    </button>
-
-    <button class="mobile-menu-btn" id="mobileMenuBtn"
-      type="button" aria-label="Open navigation menu"
-      aria-expanded="false" aria-controls="mobileNav">
-      ☰
-    </button>
-  </nav>
-
   <div class="mobile-nav" id="mobileNav">
-    <a href="index.html">Home</a>
-    <a href="#resources">Resources</a>
-    <a href="#about">About Library</a>
-    <a href="#recognition">Recognition</a>
-    <a href="#faculty">Faculty Excellence</a>
-    <a href="#events">Library Events</a>
-    <a href="#services">Services</a>
-    <a href="#contact">Contact</a>
-    <a href="register.html">Self Registration</a>
-    <a href="login.html">Sign in</a>
+    <a href="#home">Home</a><a href="#resources">Resources</a><a href="#about">About Library</a><a href="#services">Services</a><a href="#recognition">Recognition</a><a href="#faculty">Faculty Excellence</a><a href="#events">Library Events</a><a href="#contact">Contact</a><a href="register.html">Self Registration</a><a href="login.html">Sign in</a>
   </div>
 </header>
 
 <main>
 
 <section class="hero" id="home">
-  <canvas id="hero3d" aria-hidden="true"></canvas>
   <div class="hero-content">
     <div class="eyebrow">Learn · Discover · Grow</div>
     <h1>Your gateway to knowledge and discovery.</h1>
@@ -955,7 +532,7 @@ body { font-family:"Manrope",Arial,sans-serif; }
 <div class="search-band">
   <form class="search-box" id="searchForm">
     <input id="resourceSearch" type="search"
-           placeholder="What are you looking for?"
+           placeholder="Search e-books, notes, question papers, rules, events..."
            aria-label="Search library resources">
     <button class="btn" type="submit">Search resources</button>
   </form>
@@ -1217,25 +794,6 @@ function changeHeroBackground() {
 }
 setInterval(changeHeroBackground, 5000);
 
-/* RESOURCE SEARCH */
-document.getElementById("searchForm").addEventListener("submit", function(e) {
-  e.preventDefault();
-  const query = document.getElementById("resourceSearch").value.trim().toLowerCase();
-  const cards = [...document.querySelectorAll(".searchable")];
-  let found = 0;
-
-  cards.forEach(card => {
-    const match = !query || card.innerText.toLowerCase().includes(query);
-    card.style.display = match ? "" : "none";
-    if (match) found++;
-  });
-
-  document.getElementById("searchMessage").style.display =
-    query && !found ? "block" : "none";
-
-  document.getElementById("resources").scrollIntoView({behavior:"smooth"});
-});
-
 /* EVENT PHOTO SLIDER */
 const eventPhotos = [...document.querySelectorAll(".event-photo")];
 const eventDots = [...document.querySelectorAll(".event-dot")];
@@ -1370,136 +928,136 @@ if (headerSearchBtn) {
 
 </script>
 
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
-  import {
-    getAuth,
-    GoogleAuthProvider,
-    signInWithPopup
-  } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyBjRud7T49JmDfhkwUrNLeY1IcvXqW_W1Y",
-    authDomain: "aihs-digital-library.firebaseapp.com",
-    projectId: "aihs-digital-library",
-    storageBucket: "aihs-digital-library.firebasestorage.app",
-    messagingSenderId: "1032446713158",
-    appId: "1:1032446713158:web:4f679abd8787cc759e9947"
-  };
+<div class="sx" id="sx" role="dialog" aria-modal="true" aria-label="Search the library"><div class="sx-box"><input id="sxIn" type="search" placeholder="Search e-books, notes, question papers, rules, events..." autocomplete="off" aria-label="Search"><ul class="sx-list" id="sxList"></ul></div></div>
 
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const googleProvider = new GoogleAuthProvider();
-
-  window.libraryAuth = auth;
-  window.libraryGoogleProvider = googleProvider;
-  window.librarySignInWithPopup = signInWithPopup;
-</script>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
 (function(){
-  var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  /* sticky nav: brand block scrolls away, menu bar stays */
-  var hdr = document.querySelector(".premium-header"), ht = document.querySelector(".header-top");
-  function stick(){ hdr.style.top = -ht.offsetHeight + "px"; }
-  stick(); addEventListener("resize", stick); addEventListener("load", stick);
+  /* ---- search index (built from the page itself) ---- */
+  var idx=[];
+  function add(t,d,k,go,kw){idx.push({t:t,d:d,k:k,go:go,s:(t+" "+d+" "+k+" "+(kw||"")).toLowerCase()});}
+  var KW={"E-Books":"book books textbook ebook reference pdf","Study Notes":"note notes material study","Question Papers":"exam paper papers previous question qp","eJournals / Databases":"journal journals database research article"};
+  document.querySelectorAll("#resources .card").forEach(function(c){var t=c.querySelector("h3").textContent;add(t,c.querySelector("p").textContent,"Resource","#resources",KW[t]);});
+  document.querySelectorAll("#services .card").forEach(function(c){add(c.querySelector("h3").textContent,c.querySelector("p").textContent,"Service","#services");});
+  document.querySelectorAll(".user-card").forEach(function(c){var r=c.querySelector(".rank").textContent;c.querySelectorAll("h3").forEach(function(h){add(h.textContent,r,"Best user","#recognition","best student award");});});
+  document.querySelectorAll(".rules-board li").forEach(function(li){add(li.textContent,"Library rules","Rule","#about","rules regulations silence mobile bag food");});
+  add("Library working hours","Monday - Saturday, 9:00 AM - 5:00 PM. Closed on Sundays and holidays.","Info","#about","timing time open close hours");
+  add("Plagiarism check (DrillBit)","Open the DrillBit login portal","Service","#plagiarism","plagiarism similarity drillbit");
+  add("Quiz Competition","12 August 2026, 9:30 AM","Event","#events","event quiz winners");
+  add("Faculty Excellence","Articles, books, research and conference contributions","Faculty","#faculty","faculty publications research");
+  add("Contact the librarian","librarian@aihs.ac.in","Contact","#contact","email mail address");
+  add("Sign in","Access your library account","Account","login.html","login signin account");
+  add("Self registration","Create your library account","Account","register.html","register signup join");
 
-  /* 3D flip-up reveal */
-  if (!reduce && "IntersectionObserver" in window) {
-    var io = new IntersectionObserver(function(es){
-      es.forEach(function(e){
-        if (!e.isIntersecting) return;
-        var el = e.target, idx = Array.prototype.indexOf.call(el.parentElement.children, el), d = Math.min(idx,6)*90;
-        el.style.transitionDelay = d + "ms"; el.classList.add("in"); io.unobserve(el);
-        setTimeout(function(){ el.classList.remove("rv","in"); el.style.transitionDelay = ""; }, 1400 + d);
-      });
-    }, { threshold:.15 });
-    document.querySelectorAll(".section-head,.grid>*,.faculty-panel,.plagiarism-panel,.hours,.rules-board,.event>*").forEach(function(el){
-      el.classList.add("rv"); io.observe(el);
-    });
+  function find(q){
+    var tk=q.toLowerCase().split(/\s+/).filter(Boolean);
+    if(!tk.length) return idx.filter(function(e){return e.k==="Resource"||e.k==="Account";});
+    var hits=idx.filter(function(e){return tk.every(function(w){return e.s.indexOf(w)>-1;});});
+    hits.sort(function(a,b){var x=a.t.toLowerCase().indexOf(tk[0]),y=b.t.toLowerCase().indexOf(tk[0]);return (x<0?99:x)-(y<0?99:y);});
+    return hits.slice(0,8);
   }
 
-  /* card tilt */
-  if (!reduce && matchMedia("(hover:hover)").matches) {
+  var box=document.getElementById("sx"),inp=document.getElementById("sxIn"),list=document.getElementById("sxList"),res=[],pos=0;
+  function render(){
+    list.innerHTML="";
+    if(!res.length){var n=document.createElement("li");n.className="sx-empty";n.textContent="No match found. Try e-books, notes, question papers, rules or events.";list.appendChild(n);return;}
+    res.forEach(function(e,i){
+      var li=document.createElement("li"),k=document.createElement("span"),w=document.createElement("span"),t=document.createElement("div"),d=document.createElement("div");
+      if(i===pos)li.className="on";
+      k.className="sx-k";k.textContent=e.k;t.className="sx-t";t.textContent=e.t;d.className="sx-d";d.textContent=e.d;
+      w.appendChild(t);w.appendChild(d);li.appendChild(k);li.appendChild(w);
+      li.addEventListener("click",function(){go(e);});
+      list.appendChild(li);
+    });
+  }
+  function openS(q){box.classList.add("open");document.body.style.overflow="hidden";inp.value=q||"";res=find(inp.value);pos=0;render();setTimeout(function(){inp.focus();},30);}
+  function closeS(){box.classList.remove("open");document.body.style.overflow="";}
+  function go(e){closeS();if(e.go.charAt(0)==="#"){var el=document.querySelector(e.go);if(el)el.scrollIntoView({behavior:"smooth"});}else{location.href=e.go;}}
+  inp.addEventListener("input",function(){res=find(inp.value);pos=0;render();});
+  inp.addEventListener("keydown",function(ev){
+    if(ev.key==="ArrowDown"){ev.preventDefault();pos=Math.min(pos+1,res.length-1);render();}
+    else if(ev.key==="ArrowUp"){ev.preventDefault();pos=Math.max(pos-1,0);render();}
+    else if(ev.key==="Enter"&&res[pos]){ev.preventDefault();go(res[pos]);}
+  });
+  box.addEventListener("mousedown",function(ev){if(ev.target===box)closeS();});
+  addEventListener("keydown",function(ev){
+    var typing=/INPUT|TEXTAREA/.test(document.activeElement.tagName);
+    if(ev.key==="Escape")closeS();
+    else if((ev.key==="/"&&!typing)||((ev.ctrlKey||ev.metaKey)&&ev.key.toLowerCase()==="k")){ev.preventDefault();openS("");}
+  });
+  document.getElementById("openSearch").addEventListener("click",function(){openS("");});
+  document.getElementById("searchForm").addEventListener("submit",function(ev){ev.preventDefault();openS(document.getElementById("resourceSearch").value.trim());});
+
+  /* ---- active menu link ---- */
+  var links=[].slice.call(document.querySelectorAll(".ph-nav a")),ids=["resources","about","services","recognition","faculty","events","contact"],tick=false;
+  function spy(){
+    tick=false;var cur="home";
+    ids.forEach(function(id){var el=document.getElementById(id);if(el&&el.getBoundingClientRect().top<=140)cur=id;});
+    links.forEach(function(a){a.classList.toggle("on",a.getAttribute("href")==="#"+cur);});
+  }
+  addEventListener("scroll",function(){if(!tick){tick=true;requestAnimationFrame(spy);}},{passive:true});spy();
+
+  /* ---- 3D flip-up reveal + card tilt ---- */
+  if(!reduce&&"IntersectionObserver" in window){
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){
+      if(!e.isIntersecting)return;
+      var el=e.target,i=Array.prototype.indexOf.call(el.parentElement.children,el),d=Math.min(i,6)*90;
+      el.style.transitionDelay=d+"ms";el.classList.add("in");io.unobserve(el);
+      setTimeout(function(){el.classList.remove("rv","in");el.style.transitionDelay="";},1400+d);
+    });},{threshold:.15});
+    document.querySelectorAll(".section-head,.grid>*,.faculty-panel,.plagiarism-panel,.hours,.rules-board,.event>*").forEach(function(el){el.classList.add("rv");io.observe(el);});
+  }
+  if(!reduce&&matchMedia("(hover:hover)").matches){
     document.querySelectorAll(".card,.user-card,.faculty-panel,.plagiarism-panel").forEach(function(el){
       el.classList.add("tilt");
-      el.addEventListener("mousemove", function(e){
-        var r = el.getBoundingClientRect(), x = (e.clientX-r.left)/r.width-.5, y = (e.clientY-r.top)/r.height-.5;
-        el.style.setProperty("--ry", (x*12)+"deg"); el.style.setProperty("--rx", (-y*12)+"deg");
-        el.style.setProperty("--gx", ((x+.5)*100)+"%"); el.style.setProperty("--gy", ((y+.5)*100)+"%");
-      });
-      el.addEventListener("mouseleave", function(){ el.style.setProperty("--rx","0deg"); el.style.setProperty("--ry","0deg"); });
+      el.addEventListener("mousemove",function(e){var r=el.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;
+        el.style.setProperty("--ry",(x*12)+"deg");el.style.setProperty("--rx",(-y*12)+"deg");el.style.setProperty("--gx",((x+.5)*100)+"%");el.style.setProperty("--gy",((y+.5)*100)+"%");});
+      el.addEventListener("mouseleave",function(){el.style.setProperty("--rx","0deg");el.style.setProperty("--ry","0deg");});
     });
   }
-
-  /* hero: ring of 3D books */
-  var cv = document.getElementById("hero3d"), hero = document.querySelector(".hero");
-  if (!cv || !window.THREE) return;
-  var renderer;
-  try { renderer = new THREE.WebGLRenderer({ canvas:cv, alpha:true, antialias:true }); } catch(err){ return; }
-  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
-
-  var scene = new THREE.Scene();
-  var cam = new THREE.PerspectiveCamera(40, 1, .1, 100); cam.position.set(0,0,13);
-  scene.add(new THREE.AmbientLight(0xffffff, .7));
-  var key = new THREE.DirectionalLight(0xfff1d6, 1.1); key.position.set(5,6,8); scene.add(key);
-  var rim = new THREE.PointLight(0xe6ad42, 1.7, 40); rim.position.set(-6,-2,5); scene.add(rim);
-
-  var covers = [0x0b3a63,0x167d78,0xe6ad42,0xf15a29,0x174b70,0x8a1f3d,0x2b5d4a];
-  var paper = new THREE.MeshStandardMaterial({ color:0xf3ead6, roughness:.9 });
-  var goldMat = new THREE.MeshStandardMaterial({ color:0xffd27a, roughness:.3, metalness:.6 });
-  var group = new THREE.Group(); scene.add(group);
-  var books = [], N = 26;
-
-  for (var i=0;i<N;i++){
-    var cm = new THREE.MeshStandardMaterial({ color:covers[i%covers.length], roughness:.45, metalness:.1 });
-    var w = 1.1+Math.random()*.4, h = 1.5+Math.random()*.5, dp = .22+Math.random()*.18;
-    var m = new THREE.Mesh(new THREE.BoxGeometry(w,h,dp), [paper,cm,paper,paper,cm,cm]);
-    var band = new THREE.Mesh(new THREE.BoxGeometry(w*.7,.05,dp+.012), goldMat);
-    band.position.y = h*.22; m.add(band);
-    var band2 = band.clone(); band2.position.y = h*.22-.14; m.add(band2);
-    group.add(m);
-    books.push({ m:m, a:i/N*Math.PI*4.4, y:(i/N-.5)*7.6, r:2.9+(i%4)*.28, ph:Math.random()*6.28, tl:(Math.random()-.5)*.3, d:i*45 });
-  }
-
-  var off = 3.4, base = 1, W = 0, H = 0;
-  function size(){
-    W = hero.clientWidth; H = hero.clientHeight;
-    renderer.setSize(W, H, false); cam.aspect = W/H; cam.updateProjectionMatrix();
-    off = W > 900 ? 3.4 : 0; base = W > 900 ? 1 : .5;
-    group.scale.setScalar(W > 900 ? 1 : .8);
-  }
-  size(); addEventListener("resize", size);
-
-  var tx=0, ty=0, mx=0, my=0, t0 = performance.now(), raf = 0, visible = true;
-  addEventListener("mousemove", function(e){ tx = e.clientX/innerWidth-.5; ty = e.clientY/innerHeight-.5; });
-
-  function frame(now){
-    var t = reduce ? 4 : (now-t0)/1000, ms = reduce ? 9999 : now-t0;
-    var p = Math.min(1, Math.max(0, scrollY/(hero.offsetHeight*.9)));
-    mx += (tx-mx)*.05; my += (ty-my)*.05;
-    group.position.set(off, p*3.5, -p*4);
-    group.rotation.y = t*.12 + mx*.6 + p*1.4;
-    group.rotation.x = my*.25;
-    for (var i=0;i<books.length;i++){
-      var b = books[i], k = Math.min(1, Math.max(0, (ms-b.d)/1400)), e = 1-Math.pow(1-k,3);
-      var r = b.r*(1+(1-e)*2.5);
-      b.m.scale.setScalar(Math.max(e,.001));
-      b.m.position.set(Math.cos(b.a)*r, b.y+Math.sin(t*.8+b.ph)*.25, Math.sin(b.a)*r);
-      b.m.rotation.set(Math.cos(t*.5+b.ph)*.15, Math.PI/2-b.a + (1-e)*3, Math.sin(t*.6+b.ph)*.22+b.tl);
-    }
-    cv.style.opacity = base*(1-p*.85);
-    renderer.render(scene, cam);
-    if (!reduce && visible) raf = requestAnimationFrame(frame);
-  }
-  new IntersectionObserver(function(es){
-    visible = es[0].isIntersecting;
-    if (visible && !reduce) { cancelAnimationFrame(raf); raf = requestAnimationFrame(frame); }
-  }).observe(hero);
-  raf = requestAnimationFrame(frame);
 })();
+</script>
+<style>
+.lm{position:fixed;inset:0;z-index:2100;display:none;align-items:center;justify-content:center;padding:16px;background:rgba(3,29,53,.65);backdrop-filter:blur(6px)}
+.lm.open{display:flex}
+.lm-box{position:relative;width:100%;max-width:400px;padding:32px 28px;background:#fff;border-radius:18px;border-top:4px solid #e6ad42;text-align:center;box-shadow:0 30px 80px rgba(0,0,0,.4)}
+.lm-box img{width:84px;height:84px;border-radius:50%;object-fit:contain;border:2px solid #e6ad42;padding:3px}
+.lm-box h3{font-family:"Fraunces",Georgia,serif;font-size:24px;margin:10px 0 6px;color:#062847}
+.lm-box p{font-size:14px;color:#5b6b75;margin:0 0 18px}
+.lm-g{width:100%;padding:13px;border:1px solid #cbd8d7;border-radius:10px;background:#fff;font:800 15px "Manrope",Arial,sans-serif;cursor:pointer}
+.lm-g:hover{background:#f5f7fa}
+.lm-x{position:absolute;top:10px;right:14px;border:0;background:none;font-size:26px;cursor:pointer;color:#5b6b75}
+#lmMsg{margin:14px 0 0;color:#b3261e}
+.lm-box a{display:inline-block;margin-top:14px;font-size:14px;font-weight:800;color:#167d78}
+</style>
+<div class="lm" id="lm" role="dialog" aria-modal="true" aria-label="Sign in"><div class="lm-box"><button class="lm-x" id="lmX" type="button" aria-label="Close">&times;</button>
+<img src="logo.jpg" alt="AIHS"><h3>Sign in to open resources</h3><p>One login for students, staff and admin.</p>
+<button class="lm-g" id="lmG" type="button">Continue with Google</button><p id="lmMsg"></p><a href="register.html">New here? Self registration</a></div></div>
+<script type="module">
+import {auth,google,profile,go,onAuthStateChanged} from "./fb.js";
+const lm=document.getElementById("lm"),msg=document.getElementById("lmMsg");let route=null;
+function openLogin(){lm.classList.add("open");}
+function closeLogin(){lm.classList.remove("open");}
+onAuthStateChanged(auth,async u=>{
+  if(!u){route=null;return;}
+  try{route=go(await profile(u));}catch(e){route="dashboard.html";}
+  const l=document.querySelector(".ph-link");if(l){l.textContent=route==="register.html"?"Finish registration":route==="admin.html"?"Admin panel":"My library";l.href=route;}
+});
+document.addEventListener("click",e=>{
+  const a=e.target.closest('#resources .card, a[href="login.html"]');
+  if(!a)return;e.preventDefault();
+  if(route)location.href=route;else openLogin();
+},true);
+document.getElementById("lmX").onclick=closeLogin;
+lm.addEventListener("mousedown",e=>{if(e.target===lm)closeLogin();});
+addEventListener("keydown",e=>{if(e.key==="Escape")closeLogin();});
+document.getElementById("lmG").onclick=async()=>{
+  msg.textContent="";
+  try{const u=await google();location.href=go(await profile(u));}
+  catch(e){if(e.code!=="auth/popup-closed-by-user")msg.textContent=e.code==="auth/unauthorized-domain"?"Add this domain in Firebase > Authentication > Authorized domains.":"Sign in failed: "+(e.code||e.message);}
+};
 </script>
 </body>
 </html>
