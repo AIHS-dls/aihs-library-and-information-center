@@ -1,0 +1,23 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Library Entry | AIHS</title><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700&family=Manrope:wght@500;700;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="app.css"></head>
+<body><div class="center"><main class="panel" style="text-align:center">
+<img src="logo.jpg" alt="AIHS" width="84" style="border-radius:50%;background:#fff">
+<h1>Library entry</h1><div id="r"><p>Checking your account...</p></div>
+<p style="margin-top:18px"><a href="index.html"><b>Home</b></a></p></main></div>
+<script type="module">
+import {auth,db,profile,doc,getDoc,setDoc,serverTimestamp,onAuthStateChanged,esc} from "./fb.js";
+const r=document.getElementById("r"),k=new URLSearchParams(location.search).get("k")||"";
+const show=(h,c)=>{r.className=c||"";r.innerHTML=h;};
+onAuthStateChanged(auth,async u=>{
+  if(!u){sessionStorage.setItem("next",location.href);location.href="login.html";return;}
+  const p=await profile(u);
+  if(!p){location.href="register.html";return;}
+  if(p.status!=="approved"){show("<p class='err'>Your registration is not approved yet, so entry cannot be recorded.</p>");return;}
+  const date=new Date(Date.now()+19800000).toISOString().slice(0,10),ref=doc(db,"attendance",u.uid+"_"+date);
+  try{
+    const s=await getDoc(ref);
+    if(s.exists()){const t=s.data().ts;show("<h2>Already marked</h2><p>"+esc(p.name)+", your entry for today was recorded"+(t?" at "+esc(t.toDate().toLocaleTimeString("en-IN",{hour:"2-digit",minute:"2-digit"})):"")+".</p>","ok");return;}
+    await setDoc(ref,{uid:u.uid,date,name:p.name,idNo:p.idNo,dept:p.dept,cls:p.cls,role:p.role,key:k,ts:serverTimestamp()});
+    show("<h2>Entry recorded</h2><p>Welcome, "+esc(p.name)+". Your library entry is saved for "+date+".</p>","ok");
+  }catch(e){show("<p class='err'>Could not record entry. Please scan the QR code at the library entrance again.</p>");}
+});
+</script></body></html>
