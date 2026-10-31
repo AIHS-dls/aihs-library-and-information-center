@@ -1,27 +1,34 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Self Registration | AIHS Library</title><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700&family=Manrope:wght@500;700;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="app.css"></head>
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Registration | AIHS Library</title><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700&family=Manrope:wght@500;700;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="app.css"></head>
 <body><div class="center"><main class="panel">
-<h1>Self registration</h1>
-<div id="s1"><p>First verify your Google account, then fill your details. The admin approves your account before you can open resources.</p>
-<button class="g" id="g" type="button">Continue with Google</button></div>
-<form id="f" hidden>
-<div id="roleBox"><label>Register as</label>
-<div class="roles"><label><input type="radio" name="role" value="student" checked> Student</label><label><input type="radio" name="role" value="staff"> Staff</label></div></div>
+<h1>Registration</h1><p style="margin-top:0">Your College ID will be your User ID. The librarian approves your account before you can open resources.</p>
+<form id="f">
+<label>Register as</label><div class="roles"><label><input type="radio" name="role" value="student" checked> Student</label><label><input type="radio" name="role" value="staff"> Staff</label></div>
 <label for="name">Full name</label><input id="name" required>
 <div class="row"><div><label for="dept">Department</label><select id="dept" required><option value="">Select</option><option>BPT (Physiotherapy)</option><option>BMLT (Medical Laboratory)</option><option>BMIT (Medical Imaging)</option><option>MHA (Hospital Administration)</option><option>Library / Office</option><option>Other</option></select></div>
 <div><label for="cls">Class</label><select id="cls" required><option value="">Select</option><option>1st Year</option><option>2nd Year</option><option>3rd Year</option><option>4th Year</option><option>Internship</option><option>PG 1st Year</option><option>PG 2nd Year</option><option>Not applicable</option></select></div></div>
-<label for="idNo">Student / Staff ID number</label><input id="idNo" required>
-<label for="email">Email ID</label><input id="email" readonly>
-<p style="margin-top:20px"><button class="btn" style="width:100%;padding:14px">Submit registration</button></p></form>
-<p class="msg" id="m"></p><p><a href="login.html">Already registered? Sign in</a> &middot; <a href="index.html">Home</a></p>
+<label for="idNo">College ID Number (your User ID)</label><input id="idNo" autocomplete="username" required>
+<label for="email">Email ID (for confirmation message)</label><input id="email" type="email" required>
+<div class="row"><div><label for="pw">Password (min 6)</label><input id="pw" type="password" minlength="6" autocomplete="new-password" required></div>
+<div><label for="pw2">Confirm password</label><input id="pw2" type="password" minlength="6" autocomplete="new-password" required></div></div>
+<p style="margin-top:20px"><button class="btn" style="width:100%;padding:14px">Register</button></p></form>
+<p class="msg" id="m"></p><p style="text-align:center"><a href="login.html">Already registered? Login</a> &middot; <a href="index.html">Home</a></p>
 </main></div>
 <script type="module">
-import {auth,google,profile,go,db,doc,setDoc,serverTimestamp,onAuthStateChanged,BOOT} from "./fb.js";
-const $=id=>document.getElementById(id);let user=null;
-async function after(){const p=await profile(user);if(p){location.href=go(p);return;}$("s1").hidden=true;$("f").hidden=false;$("email").value=user.email;if(BOOT.includes(user.email.toLowerCase()))$("roleBox").hidden=true;$("name").value=user.displayName||"";}
-onAuthStateChanged(auth,u=>{if(u){user=u;after();}});
-$("g").onclick=async()=>{try{user=await google();await after();}catch(e){if(e.code!=="auth/popup-closed-by-user"){$("m").className="msg err";$("m").textContent="Sign in failed: "+(e.code||e.message);}}};
-$("f").onsubmit=async e=>{e.preventDefault();
-  const boot=BOOT.includes(user.email.toLowerCase()),role=boot?"admin":document.querySelector("input[name=role]:checked").value;
-  const d={name:$("name").value.trim(),dept:$("dept").value,cls:$("cls").value,idNo:$("idNo").value.trim(),email:user.email,role,status:boot?"approved":"pending",createdAt:serverTimestamp()};
-  try{await setDoc(doc(db,"users",user.uid),d);location.href=go(d);}catch(err){$("m").className="msg err";$("m").textContent="Could not save: "+(err.code||err.message)+". Check the Firestore rules.";}};
+import {auth,db,signup,idEmail,go,doc,setDoc,serverTimestamp,mail} from "./fb.js";
+const $=id=>document.getElementById(id);
+$("f").onsubmit=async e=>{
+  e.preventDefault();const m=$("m");m.className="msg";m.textContent="";
+  if($("pw").value!==$("pw2").value){m.className="msg err";m.textContent="Passwords do not match.";return;}
+  const idNo=$("idNo").value.trim();
+  try{
+    const c=await signup(idNo,$("pw").value);
+    const d={name:$("name").value.trim(),dept:$("dept").value,cls:$("cls").value,idNo,authEmail:idEmail(idNo),email:$("email").value.trim(),role:document.querySelector("input[name=role]:checked").value,status:"pending",createdAt:serverTimestamp()};
+    await setDoc(doc(db,"users",c.user.uid),d);
+    mail("registered");
+    location.href=go(d);
+  }catch(err){
+    m.className="msg err";
+    m.textContent=err.code==="auth/email-already-in-use"?"This College ID is already registered. Please login.":err.code==="auth/weak-password"?"Password must be at least 6 characters.":err.code==="auth/operation-not-allowed"?"Email/Password sign-in is not enabled in Firebase yet.":"Registration failed: "+(err.code||err.message);
+  }
+};
 </script></body></html>
