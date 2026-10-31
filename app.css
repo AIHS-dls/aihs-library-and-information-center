@@ -36,3 +36,17 @@ th{font-size:12px;color:#5b6b75}
 td button{border:0;border-radius:7px;padding:7px 11px;font:800 12px "Manrope",Arial,sans-serif;cursor:pointer;margin:0 4px 4px 0}
 .a{background:#167d78;color:#fff}.r{background:#fde0de;color:#a3241b}.d{background:#eef2f5;color:#5b6b75}
 @media(max-width:600px){.row{grid-template-columns:1fr}}
+
+.mt{display:flex;gap:8px;margin:0 0 18px;border-bottom:2px solid #e3e9ec}
+.mt button{border:0;background:none;padding:12px 18px;font:800 14px "Manrope",Arial,sans-serif;color:#5b6b75;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px}
+.mt button.on{color:#062847;border-color:#e6ad42}
+.grid2{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px;margin-top:6px}
+.rc{background:#fff;border:1px solid #e3e9ec;border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:8px;border-top:3px solid #167d78}
+.rc h3{margin:0;font-size:16px;line-height:1.35}
+.rc p{margin:0;font-size:13px;color:#5b6b75;line-height:1.5}
+.rc .cat{font-size:11px;font-weight:800;color:#167d78}
+.rc a{margin-top:auto;align-self:flex-start;padding:9px 16px;border-radius:9px;background:#062847;color:#fff;font-size:13px;font-weight:800}
+.rc a:hover{background:#0b3a63}
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}
+.fg .full{grid-column:1/-1}
+@media(max-width:600px){.fg{grid-template-columns:1fr}}
