@@ -1,0 +1,38 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Admin | AIHS Library</title><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700&family=Manrope:wght@500;700;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="app.css"></head>
+<body><div class="top"><img src="logo.jpg" alt=""><div><b>AIHS Library Admin</b><small id="who"></small></div><span class="sp"></span><a href="index.html" class="btn">Website</a> <button class="out" id="out">Sign out</button></div>
+<div class="wrap"><div class="panel"><h2>Registrations</h2><p style="margin:0;color:#5b6b75">Approve students, staff and admins. Resources, events, best users, about library and attendance come in the next steps.</p>
+<div class="tabs" id="tabs"></div><input id="q" placeholder="Search name, ID, department or email" style="margin-bottom:12px">
+<div class="tw"><table><thead><tr><th>Name</th><th>Role</th><th>Dept / Class</th><th>ID</th><th>Email</th><th>Status</th><th>Action</th></tr></thead><tbody id="rows"></tbody></table></div></div></div>
+<script type="module">
+import {auth,db,profile,go,signOut,onAuthStateChanged,collection,onSnapshot,doc,updateDoc,deleteDoc,esc} from "./fb.js";
+let rows=[],tab="pending",me=null;
+document.getElementById("out").onclick=async()=>{await signOut(auth);location.href="index.html";};
+onAuthStateChanged(auth,async u=>{
+  if(!u){location.href="index.html";return;}
+  const p=await profile(u);
+  if(!p||go(p)!=="admin.html"){location.href=p?"dashboard.html":"register.html";return;}
+  me=u.uid;document.getElementById("who").textContent=p.name;
+  onSnapshot(collection(db,"users"),s=>{rows=s.docs.map(d=>({id:d.id,...d.data()}));draw();});
+});
+document.getElementById("q").oninput=()=>draw();
+function draw(){
+  const t=document.getElementById("tabs");t.innerHTML="";
+  ["pending","approved","rejected"].forEach(k=>{const b=document.createElement("button");b.textContent=k[0].toUpperCase()+k.slice(1)+" ("+rows.filter(r=>r.status===k).length+")";b.className=k===tab?"on":"";b.onclick=()=>{tab=k;draw();};t.appendChild(b);});
+  const q=document.getElementById("q").value.toLowerCase(),tb=document.getElementById("rows");
+  const list=rows.filter(r=>r.status===tab&&(r.name+r.idNo+r.dept+r.email).toLowerCase().includes(q));
+  tb.innerHTML=list.length?"":"<tr><td colspan='7'>Nobody here yet.</td></tr>";
+  list.forEach(r=>{
+    const tr=document.createElement("tr");
+    tr.innerHTML="<td>"+esc(r.name)+"</td><td>"+esc(r.role)+"</td><td>"+esc(r.dept)+"<br>"+esc(r.cls)+"</td><td>"+esc(r.idNo)+"</td><td>"+esc(r.email)+"</td><td><span class='badge "+esc(r.status)+"'>"+esc(r.status)+"</span></td><td></td>";
+    const c=tr.lastChild;
+    function btn(txt,cls,fn){const b=document.createElement("button");b.textContent=txt;b.className=cls;b.onclick=fn;c.appendChild(b);}
+    if(r.id!==me){
+      if(r.status!=="approved")btn("Approve","a",()=>updateDoc(doc(db,"users",r.id),{status:"approved"}));
+      if(r.status==="approved"&&r.role!=="admin")btn("Make admin","a",()=>{if(confirm("Make "+r.name+" an admin? They will get full control."))updateDoc(doc(db,"users",r.id),{role:"admin"});});
+      if(r.status!=="rejected")btn("Reject","r",()=>updateDoc(doc(db,"users",r.id),{status:"rejected"}));
+      btn("Delete","d",()=>{if(confirm("Delete "+r.name+"?"))deleteDoc(doc(db,"users",r.id));});
+    }else c.textContent="You";
+    tb.appendChild(tr);
+  });
+}
+</script></body></html>
