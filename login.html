@@ -7,7 +7,7 @@
 <script type="module">
 import {auth,google,profile,go,onAuthStateChanged} from "./fb.js";
 const m=document.getElementById("m");
-async function route(u){location.href=go(await profile(u));}
+async function route(u){const p=await profile(u),n=sessionStorage.getItem("next");if(n&&p&&p.status==="approved"){sessionStorage.removeItem("next");location.href=n;return;}location.href=go(p);}
 onAuthStateChanged(auth,u=>{if(u)route(u);});
 document.getElementById("g").onclick=async()=>{try{await route(await google());}catch(e){if(e.code!=="auth/popup-closed-by-user"){m.className="msg err";m.textContent=e.code==="auth/unauthorized-domain"?"Add this website's domain in Firebase > Authentication > Settings > Authorized domains.":"Sign in failed: "+(e.code||e.message);}}};
 </script></body></html>
