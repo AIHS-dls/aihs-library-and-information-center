@@ -1,0 +1,17 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>My Library | AIHS</title><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700&family=Manrope:wght@500;700;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="app.css"></head>
+<body><div class="top"><img src="logo.jpg" alt=""><div><b>AIHS Library</b><small id="who"></small></div><span class="sp"></span><a href="index.html" class="btn">Home</a> <button class="out" id="out">Sign out</button></div>
+<div class="wrap"><div class="panel" id="box">Loading...</div></div>
+<script type="module">
+import {auth,profile,go,signOut,onAuthStateChanged,esc} from "./fb.js";
+document.getElementById("out").onclick=async()=>{await signOut(auth);location.href="index.html";};
+onAuthStateChanged(auth,async u=>{
+  if(!u){location.href="index.html";return;}
+  const p=await profile(u);if(!p){location.href="register.html";return;}
+  if(go(p)==="admin.html"){location.href="admin.html";return;}
+  document.getElementById("who").textContent=p.name+" - "+p.role;
+  const b=document.getElementById("box");
+  if(p.status==="pending")b.innerHTML="<h2>Waiting for approval</h2><p>Your registration is with the library admin. You can open resources once it is approved. Please check again later.</p><span class='badge pending'>Pending</span>";
+  else if(p.status==="rejected")b.innerHTML="<h2>Registration not approved</h2><p>Please contact the librarian: librarian@aihs.ac.in</p><span class='badge rejected'>Rejected</span>";
+  else b.innerHTML="<h2>Welcome, "+esc(p.name)+"</h2><p>"+esc(p.dept)+" &middot; "+esc(p.cls)+" &middot; ID "+esc(p.idNo)+"</p><span class='badge approved'>Approved "+esc(p.role)+"</span><p style='margin-top:18px;color:#5b6b75'>E-Books, Study Notes, Question Papers and eJournals will appear here in the next step.</p>";
+});
+</script></body></html>
