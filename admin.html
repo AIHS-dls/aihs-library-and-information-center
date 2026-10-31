@@ -1,6 +1,7 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Admin | AIHS Library</title><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700&family=Manrope:wght@500;700;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="app.css"></head>
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Admin | AIHS Library</title><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700&family=Manrope:wght@500;700;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="app.css"><script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
 <body><div class="top"><img src="logo.jpg" alt=""><div><b>AIHS Library Admin</b><small id="who"></small></div><span class="sp"></span><a href="index.html" class="btn">Website</a> <button class="out" id="out">Sign out</button></div>
-<div class="wrap"><div class="mt" id="mt"><button data-t="users" class="on" id="tu">Registrations</button><button data-t="res" id="tr">Resources</button></div>
+<div class="wrap"><div class="mt" id="mt"><button data-t="users" class="on" id="tu">Registrations</button><button data-t="res" id="tr">Resources</button><button data-t="ev">Events</button><button data-t="bu">Best Users</button><button data-t="ab">About Library</button><button data-t="at">Attendance</button></div>
 
 <div class="panel" id="p-users"><h2>Registrations</h2><p style="margin:0;color:#5b6b75">Approve students and staff. Use Make admin to add another admin.</p>
 <div class="tabs" id="tabs"></div><input id="q" placeholder="Search name, ID, department or email" style="margin-bottom:12px">
@@ -18,10 +19,11 @@
 <p style="margin-top:18px"><button class="btn" id="sv">Save resource</button> <button class="btn" type="button" id="cx" hidden style="background:#eef2f5;color:#062847">Cancel edit</button></p><p class="msg" id="rm"></p></form></div>
 <div class="panel" style="margin-top:18px"><h2>All resources <span id="rc" style="font-size:14px;color:#5b6b75"></span></h2>
 <input id="rq" placeholder="Search resources" style="margin:10px 0 12px">
-<div class="tw"><table><thead><tr><th>Title</th><th>Category</th><th>Dept / Class</th><th>Action</th></tr></thead><tbody id="rr"></tbody></table></div></div></div></div>
+<div class="tw"><table><thead><tr><th>Title</th><th>Category</th><th>Dept / Class</th><th>Action</th></tr></thead><tbody id="rr"></tbody></table></div></div></div>
+<div id="p-ev" hidden></div><div id="p-bu" hidden></div><div id="p-ab" hidden></div><div id="p-at" hidden></div></div>
 
 <script type="module">
-import {auth,db,profile,go,signOut,onAuthStateChanged,collection,onSnapshot,doc,updateDoc,deleteDoc,addDoc,serverTimestamp,esc} from "./fb.js";
+import {auth,db,profile,go,signOut,onAuthStateChanged,collection,onSnapshot,doc,updateDoc,deleteDoc,addDoc,getDoc,setDoc,query,where,serverTimestamp,esc} from "./fb.js";
 const $=id=>document.getElementById(id);
 let rows=[],res=[],tab="pending",me=null,editId=null;
 $("out").onclick=async()=>{await signOut(auth);location.href="index.html";};
@@ -29,11 +31,11 @@ onAuthStateChanged(auth,async u=>{
   if(!u){location.href="index.html";return;}
   const p=await profile(u);
   if(!p||go(p)!=="admin.html"){location.href=p?"dashboard.html":"register.html";return;}
-  me=u.uid;$("who").textContent=p.name;
+  me=u.uid;$("who").textContent=p.name;initContent();
   onSnapshot(collection(db,"users"),s=>{rows=s.docs.map(d=>({id:d.id,...d.data()}));drawU();});
   onSnapshot(collection(db,"resources"),s=>{res=s.docs.map(d=>({id:d.id,...d.data()}));drawR();});
 });
-$("mt").onclick=e=>{const t=e.target.dataset.t;if(!t)return;$("p-users").hidden=t!=="users";$("p-res").hidden=t!=="res";$("tu").className=t==="users"?"on":"";$("tr").className=t==="res"?"on":"";};
+$("mt").onclick=e=>{const t=e.target.dataset.t;if(!t)return;["users","res","ev","bu","ab","at"].forEach(k=>{$("p-"+k).hidden=k!==t;});[].forEach.call($("mt").children,b=>{b.className=b.dataset.t===t?"on":"";});};
 
 /* ---------- registrations ---------- */
 $("q").oninput=()=>drawU();
@@ -87,4 +89,133 @@ $("rf").onsubmit=async e=>{
     m.className="msg ok";m.textContent="Saved.";reset();
   }catch(err){m.className="msg err";m.textContent="Could not save: "+(err.code||err.message)+". Check the Firestore rules.";}
 };
+
+/* ---------- events, best users, about ---------- */
+const DR=/^https:\/\/(drive|docs)\.google\.com\//;
+function build(fields,fg){
+  const inp={};
+  fields.forEach(f=>{
+    const w=document.createElement("div");if(f.t==="area")w.className="full";
+    const lb=document.createElement("label");lb.textContent=f.l;let el;
+    if(f.t==="select"){el=document.createElement("select");f.o.forEach(o=>{const op=document.createElement("option");op.textContent=o;el.appendChild(op);});}
+    else if(f.t==="area"){el=document.createElement("textarea");el.rows=3;}
+    else{el=document.createElement("input");if(f.t==="number"){el.type="number";el.min=0;}}
+    if(f.req)el.required=true;if(f.ph)el.placeholder=f.ph;
+    inp[f.k]=el;w.appendChild(lb);w.appendChild(el);fg.appendChild(w);
+  });
+  return inp;
+}
+function crud(root,coll,title,fields,cols){
+  root.innerHTML="<div class='panel'><h2></h2><form><div class='fg'></div><p style='margin-top:18px'><button class='btn'>Save</button> <button class='btn cx' type='button' hidden style='background:#eef2f5;color:#062847'>Cancel edit</button></p><p class='msg'></p></form></div><div class='panel' style='margin-top:18px'><h2>All</h2><div class='tw'><table><thead><tr></tr></thead><tbody></tbody></table></div></div>";
+  const q=s=>root.querySelector(s),h=q("h2"),form=q("form"),msg=q(".msg"),cx=q(".cx");
+  let list=[],eid=null;
+  h.textContent="Add "+title;
+  const inp=build(fields,q(".fg"));
+  cols.concat(["Action"]).forEach(c=>{const th=document.createElement("th");th.textContent=c[1]||c;q("thead tr").appendChild(th);});
+  function reset(){eid=null;form.reset();h.textContent="Add "+title;cx.hidden=true;}
+  cx.onclick=reset;
+  form.onsubmit=async e=>{
+    e.preventDefault();msg.className="msg";msg.textContent="";
+    const d={updatedAt:serverTimestamp()};
+    for(const f of fields){
+      d[f.k]=inp[f.k].value.trim();
+      if(f.drive&&d[f.k]&&d[f.k].split("\n").some(l=>l.trim()&&!DR.test(l.trim()))){msg.className="msg err";msg.textContent="Photo links must be Google Drive links (https://drive.google.com/...).";return;}
+    }
+    try{
+      if(eid)await updateDoc(doc(db,coll,eid),d);else await addDoc(collection(db,coll),{...d,createdAt:serverTimestamp()});
+      msg.className="msg ok";msg.textContent="Saved.";reset();
+    }catch(err){msg.className="msg err";msg.textContent="Could not save: "+(err.code||err.message)+". Check the Firestore rules.";}
+  };
+  onSnapshot(collection(db,coll),s=>{
+    list=s.docs.map(d=>({id:d.id,...d.data()})).sort((x,y)=>((y.createdAt&&y.createdAt.seconds)||0)-((x.createdAt&&x.createdAt.seconds)||0));
+    const tb=q("tbody");tb.innerHTML=list.length?"":"<tr><td colspan='9'>Nothing added yet.</td></tr>";
+    list.forEach(r=>{
+      const tr=document.createElement("tr");
+      cols.forEach(c=>{const td=document.createElement("td");td.textContent=r[c[0]]||"";tr.appendChild(td);});
+      const td=document.createElement("td");
+      const b1=document.createElement("button");b1.className="a";b1.textContent="Edit";
+      b1.onclick=()=>{eid=r.id;fields.forEach(f=>{inp[f.k].value=r[f.k]||"";});h.textContent="Edit "+title;cx.hidden=false;h.scrollIntoView({behavior:"smooth"});};
+      const b2=document.createElement("button");b2.className="d";b2.textContent="Delete";
+      b2.onclick=()=>{if(confirm("Delete this "+title.toLowerCase()+"?"))deleteDoc(doc(db,coll,r.id));};
+      td.appendChild(b1);td.appendChild(b2);tr.appendChild(td);tb.appendChild(tr);
+    });
+  });
+}
+async function aboutForm(root){
+  root.innerHTML="<div class='panel'><h2>About Library</h2><p style='margin:0;color:#5b6b75'>These numbers appear in the About the Library section of the website.</p><form><div class='fg'></div><p style='margin-top:18px'><button class='btn'>Save</button></p><p class='msg'></p></form></div>";
+  const fields=[{k:"intro",l:"Intro text (optional, replaces the paragraph)",t:"area"},{k:"hdPhysio",l:"Hard copies: Physiotherapy",t:"number"},{k:"hdMlt",l:"Hard copies: Medical Laboratory Technology",t:"number"},{k:"hdMit",l:"Hard copies: Medical Imaging Technology",t:"number"},{k:"hdMha",l:"Hard copies: Master of Hospital Administration",t:"number"},{k:"eBooks",l:"E-Resources: E-Books",t:"number"},{k:"eJournals",l:"E-Resources: E-Journals / Databases",t:"number"}];
+  const inp=build(fields,root.querySelector(".fg")),msg=root.querySelector(".msg");
+  inp.hdPhysio.value=1255;inp.hdMlt.value=662;inp.hdMit.value=336;inp.hdMha.value=1139;
+  try{const s=await getDoc(doc(db,"site","about"));if(s.exists())fields.forEach(f=>{inp[f.k].value=s.data()[f.k]??"";});}catch(e){}
+  root.querySelector("form").onsubmit=async e=>{
+    e.preventDefault();const d={updatedAt:serverTimestamp()};
+    fields.forEach(f=>{d[f.k]=f.t==="number"?(inp[f.k].value===""?null:Number(inp[f.k].value)):inp[f.k].value.trim();});
+    try{await setDoc(doc(db,"site","about"),d,{merge:true});msg.className="msg ok";msg.textContent="Saved.";}
+    catch(err){msg.className="msg err";msg.textContent="Could not save: "+(err.code||err.message)+". Check the Firestore rules.";}
+  };
+}
+function initContent(){
+  crud($("p-ev"),"events","Event",[
+    {k:"title",l:"Event title",req:1},
+    {k:"date",l:"Date and time (shown as typed)",ph:"12 August 2026 · 9:30 AM"},
+    {k:"status",l:"Status",t:"select",o:["Completed","Upcoming"]},
+    {k:"desc",l:"Description",t:"area"},
+    {k:"photos",l:"Photo links (Google Drive, one per line, up to 6)",t:"area",drive:1}
+  ],[["title","Title"],["date","Date"],["status","Status"]]);
+  crud($("p-bu"),"bestUsers","Best User",[
+    {k:"dept",l:"Department",t:"select",o:["BPT · PHYSIOTHERAPY","BMLT","BMIT","MHA","Other"]},
+    {k:"name",l:"Student name",req:1},
+    {k:"cls",l:"Class / details",ph:"Medical Laboratory Technology · 3rd Year"}
+  ],[["name","Name"],["dept","Department"],["cls","Details"]]);
+  aboutForm($("p-ab"));
+  attendance($("p-at"));
+}
+
+/* ---------- attendance ---------- */
+function istDate(){return new Date(Date.now()+19800000).toISOString().slice(0,10);}
+async function attendance(root){
+  root.innerHTML="<div class='panel'><h2>Entrance QR code</h2><p style='margin:0;color:#5b6b75'>Print this QR and stick it at the library entrance. Students scan it, sign in and their entry is recorded.</p><div id='qr' style='margin:16px 0;display:inline-block;padding:12px;background:#fff;border:1px solid #e3e9ec;border-radius:10px'></div><p><button class='btn' id='qd'>Download QR</button> <button class='btn' id='qn' style='background:#fde0de;color:#a3241b'>New QR (old one stops working)</button></p><p class='msg' id='qm'></p></div><div class='panel' style='margin-top:18px'><h2>Attendance register</h2><div style='display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:10px 0'><input type='date' id='ad' style='width:auto'><b id='ac'></b><button class='btn' id='ax' style='margin-left:auto'>Export CSV</button></div><div class='tw'><table><thead><tr><th>#</th><th>Name</th><th>ID</th><th>Dept / Class</th><th>Role</th><th>Time</th></tr></thead><tbody id='ar'></tbody></table></div></div>";
+  const kref=doc(db,"private","attendanceKey");let key="";
+  function drawQR(){
+    const el=$("qr");el.innerHTML="";
+    new QRCode(el,{text:new URL("attend.html?k="+key,location.href).href,width:220,height:220,correctLevel:QRCode.CorrectLevel.M});
+  }
+  async function loadKey(fresh){
+    try{
+      if(!fresh){const s=await getDoc(kref);if(s.exists())key=s.data().key;}
+      if(!key||fresh){const b=new Uint8Array(12);crypto.getRandomValues(b);key=[].map.call(b,x=>x.toString(16).padStart(2,"0")).join("");await setDoc(kref,{key,updatedAt:serverTimestamp()});}
+      drawQR();
+    }catch(e){$("qm").className="msg err";$("qm").textContent="Could not prepare the QR: "+(e.code||e.message)+". Check the Firestore rules.";}
+  }
+  loadKey(false);
+  $("qn").onclick=()=>{if(confirm("Create a new QR? The printed one will stop working."))loadKey(true);};
+  $("qd").onclick=()=>{
+    const c=$("qr").querySelector("canvas");if(!c)return;
+    const o=document.createElement("canvas");o.width=o.height=270;const x=o.getContext("2d");x.fillStyle="#fff";x.fillRect(0,0,270,270);x.drawImage(c,25,25);
+    const a=document.createElement("a");a.href=o.toDataURL("image/png");a.download="aihs-library-entry-qr.png";a.click();
+  };
+  let unsub=null,list=[];
+  function drawA(){
+    $("ac").textContent=list.length+" entries";
+    const tb=$("ar");tb.innerHTML=list.length?"":"<tr><td colspan='6'>No entries for this date.</td></tr>";
+    list.forEach((r,i)=>{
+      const tr=document.createElement("tr");
+      [i+1,r.name,r.idNo,(r.dept||"")+" / "+(r.cls||""),r.role,r.ts?r.ts.toDate().toLocaleTimeString("en-IN",{hour:"2-digit",minute:"2-digit"}):""].forEach(v=>{const td=document.createElement("td");td.textContent=v;tr.appendChild(td);});
+      tb.appendChild(tr);
+    });
+  }
+  function watch(){
+    if(unsub)unsub();
+    unsub=onSnapshot(query(collection(db,"attendance"),where("date","==",$("ad").value)),s=>{
+      list=s.docs.map(d=>d.data()).sort((a,b)=>((a.ts&&a.ts.seconds)||0)-((b.ts&&b.ts.seconds)||0));drawA();
+    },()=>{});
+  }
+  $("ad").value=istDate();$("ad").onchange=watch;watch();
+  $("ax").onclick=()=>{
+    const q=v=>'"'+String(v==null?"":v).replace(/"/g,'""')+'"';
+    const rows=[["No","Name","ID","Department","Class","Role","Time"]].concat(list.map((r,i)=>[i+1,r.name,r.idNo,r.dept,r.cls,r.role,r.ts?r.ts.toDate().toLocaleTimeString("en-IN"):""]));
+    const b=new Blob([rows.map(r=>r.map(q).join(",")).join("\n")],{type:"text/csv"});
+    const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="attendance-"+$("ad").value+".csv";a.click();
+  };
+}
 </script></body></html>
