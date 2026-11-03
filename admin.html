@@ -1,212 +1,711 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Admin | AIHS Library</title><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700&family=Manrope:wght@500;700;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="app.css"><script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-</head>
-<body><div class="top"><img src="logo.jpg" alt=""><div><b>AIHS Library Admin</b><small id="who"></small></div><span class="sp"></span><a href="index.html" class="btn">Website</a> <button class="out" id="out">Sign out</button></div>
-<div class="wrap"><div class="mt" id="mt"><button data-t="users" class="on" id="tu">Registrations</button><button data-t="res" id="tr">Resources</button><button data-t="ev">Events</button><button data-t="bu">Best Users</button><button data-t="ab">About Library</button><button data-t="at">Attendance</button><button data-t="nu">Add Users</button></div>
 
-<div class="panel" id="p-users"><h2>Registrations</h2><p style="margin:0;color:#5b6b75">Approve students and staff. Use Make admin to add another admin.</p>
-<div class="tabs" id="tabs"></div><input id="q" placeholder="Search name, ID, department or email" style="margin-bottom:12px">
-<div class="tw"><table><thead><tr><th>Name</th><th>Role</th><th>Dept / Class</th><th>ID</th><th>Email</th><th>Status</th><th>Action</th></tr></thead><tbody id="rows"></tbody></table></div></div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Admin | AIHS Library</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700&family=Manrope:wght@500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="app.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+
+<body>
+<div class="top">
+  <img src="logo.jpg" alt="">
+  <div><b>AIHS Library Admin</b><small id="who"></small></div>
+  <span class="sp"></span>
+  <a href="index.html" class="btn">Website</a>
+  <button class="out" id="out">Sign out</button>
+</div>
+
+<div class="wrap">
+<div class="mt" id="mt">
+  <button data-t="users" class="on">Registrations</button>
+  <button data-t="res">Resources</button>
+  <button data-t="ev">Events</button>
+  <button data-t="bu">Best Users</button>
+  <button data-t="ab">About Library</button>
+  <button data-t="at">Attendance</button>
+  <button data-t="nu">Add Users</button>
+</div>
+
+<div class="panel" id="p-users">
+<h2>Registrations</h2>
+<p style="margin:0;color:#5b6b75">Approve students and staff. Use Make admin to add another admin.</p>
+<div class="tabs" id="tabs"></div>
+<input id="q" placeholder="Search name, ID, department or email" style="margin-bottom:12px">
+<div class="tw">
+<table>
+<thead><tr>
+<th>Name</th><th>Role</th><th>Dept / Class</th><th>ID</th><th>Email</th><th>Status</th><th>Action</th>
+</tr></thead>
+<tbody id="rows"></tbody>
+</table>
+</div>
+</div>
 
 <div id="p-res" hidden>
-<div class="panel"><h2 id="fh">Add resource</h2><p style="margin:0;color:#5b6b75">Upload the file to your Google Drive folder first, set sharing to "Anyone with the link: Viewer", then paste the link here.</p>
-<form id="rf"><div class="fg">
+<div class="panel">
+<h2 id="fh">Add resource</h2>
+<p style="margin:0;color:#5b6b75">Upload the file to your Google Drive folder first, set sharing to "Anyone with the link: Viewer", then paste the link here.</p>
+<form id="rf">
+<div class="fg">
 <div class="full"><label for="t">Title</label><input id="t" required maxlength="150"></div>
-<div><label for="c">Category</label><select id="c"><option>E-Books</option><option>Study Notes</option><option>Question Papers</option><option>eJournals</option></select></div>
-<div><label for="d">Department</label><select id="d"><option>All departments</option><option>BPT (Physiotherapy)</option><option>BMLT (Medical Laboratory)</option><option>BMIT (Medical Imaging)</option><option>MHA (Hospital Administration)</option><option>Other</option></select></div>
-<div><label for="k">Class</label><select id="k"><option>All classes</option><option>1st Year</option><option>2nd Year</option><option>3rd Year</option><option>4th Year</option><option>Internship</option><option>PG 1st Year</option><option>PG 2nd Year</option></select></div>
+<div><label for="c">Category</label>
+<select id="c">
+<option>E-Books</option><option>Study Notes</option><option>Question Papers</option><option>eJournals</option>
+</select></div>
+<div><label for="d">Department</label>
+<select id="d">
+<option>All departments</option><option>BPT (Physiotherapy)</option><option>BMLT (Medical Laboratory)</option><option>BMIT (Medical Imaging)</option><option>MHA (Hospital Administration)</option><option>Other</option>
+</select></div>
+<div><label for="k">Class</label>
+<select id="k">
+<option>All classes</option><option>1st Year</option><option>2nd Year</option><option>3rd Year</option><option>4th Year</option><option>Internship</option><option>PG 1st Year</option><option>PG 2nd Year</option>
+</select></div>
 <div><label for="l">Google Drive link</label><input id="l" type="url" required placeholder="https://drive.google.com/..."></div>
-<div class="full"><label for="n">Short description (optional)</label><input id="n" maxlength="200"></div></div>
-<p style="margin-top:18px"><button class="btn" id="sv">Save resource</button> <button class="btn" type="button" id="cx" hidden style="background:#eef2f5;color:#062847">Cancel edit</button></p><p class="msg" id="rm"></p></form></div>
-<div class="panel" style="margin-top:18px"><h2>All resources <span id="rc" style="font-size:14px;color:#5b6b75"></span></h2>
+<div class="full"><label for="n">Short description (optional)</label><input id="n" maxlength="200"></div>
+</div>
+<p style="margin-top:18px">
+<button class="btn" id="sv">Save resource</button>
+<button class="btn" type="button" id="cx" hidden style="background:#eef2f5;color:#062847">Cancel edit</button>
+</p>
+<p class="msg" id="rm"></p>
+</form>
+</div>
+
+<div class="panel" style="margin-top:18px">
+<h2>All resources <span id="rc" style="font-size:14px;color:#5b6b75"></span></h2>
 <input id="rq" placeholder="Search resources" style="margin:10px 0 12px">
-<div class="tw"><table><thead><tr><th>Title</th><th>Category</th><th>Dept / Class</th><th>Action</th></tr></thead><tbody id="rr"></tbody></table></div></div></div>
-<div id="p-ev" hidden></div><div id="p-bu" hidden></div><div id="p-ab" hidden></div><div id="p-at" hidden></div><div id="p-nu" hidden></div></div>
+<div class="tw"><table>
+<thead><tr><th>Title</th><th>Category</th><th>Dept / Class</th><th>Action</th></tr></thead>
+<tbody id="rr"></tbody>
+</table></div>
+</div>
+</div>
+
+<div id="p-ev" hidden></div>
+<div id="p-bu" hidden></div>
+<div id="p-ab" hidden></div>
+<div id="p-at" hidden></div>
+<div id="p-nu" hidden></div>
+</div>
 
 <script type="module">
-import {auth,db,profile,go,signOut,onAuthStateChanged,collection,onSnapshot,doc,updateDoc,deleteDoc,addDoc,getDoc,setDoc,query,where,serverTimestamp,esc,mail,createAccount,idEmail,genPass} from "./fb.js";
+import {
+ auth,db,profile,go,signOut,onAuthStateChanged,
+ collection,onSnapshot,doc,updateDoc,deleteDoc,addDoc,
+ getDoc,setDoc,query,where,serverTimestamp,esc,mail,
+ createAccount,idEmail,genPass
+} from "./fb.js";
+
 const $=id=>document.getElementById(id);
-let rows=[],res=[],tab="pending",me=null,editId=null,links={};
-$("out").onclick=async()=>{await signOut(auth);location.href="index.html";};
+
+let rows=[];
+let res=[];
+let tab="pending";
+let me=null;
+let editId=null;
+let links={};
+
+$("out").onclick=async()=>{
+  await signOut(auth);
+  location.href="index.html";
+};
+
 onAuthStateChanged(auth,async u=>{
-  if(!u){location.href="index.html";return;}
-  const p=await profile(u);
-  if(!p||go(p)!=="admin.html"){location.href=p?"dashboard.html":"register.html";return;}
-  me=u.uid;$("who").textContent=p.name;initContent();
-  onSnapshot(collection(db,"registrations"),s=>{
-  rows=s.docs.map(d=>{
-    const x=d.data();
-    return {
-      id:d.id,
-      name:x.fullName || "",
-      role:x.requestedRole || "",
-      dept:x.department || "",
-      cls:x.class || "",
-      idNo:x.rollNumber || "",
-      email:x.email || "",
-      status:x.status || "pending"
-    };
+  if(!u){
+    location.href="index.html";
+    return;
+  }
+
+  try{
+    const p=await profile(u);
+
+    if(!p || go(p)!=="admin.html"){
+      location.href=p?"dashboard.html":"register.html";
+      return;
+    }
+
+    me=u.uid;
+    $("who").textContent=p.name || p.email || "";
+
+    initContent();
+
+    onSnapshot(collection(db,"registrations"),s=>{
+      rows=s.docs.map(d=>{
+        const x=d.data();
+        return {
+          id:d.id,
+          name:x.fullName || "",
+          role:x.requestedRole || "",
+          dept:x.department || "",
+          cls:x.class || "",
+          idNo:x.rollNumber || "",
+          email:x.email || "",
+          status:x.status || "pending"
+        };
+      });
+      drawU();
+    },err=>{
+      console.error("Registration loading error:",err);
+      $("rows").innerHTML="<tr><td colspan='7'>Error loading registrations: "+esc(err.message)+"</td></tr>";
+    });
+
+    onSnapshot(collection(db,"resources"),s=>{
+      res=s.docs.map(d=>({id:d.id,...d.data()}));
+      drawR();
+    },err=>console.error("Resources error:",err));
+
+    onSnapshot(collection(db,"resourceLinks"),s=>{
+      links={};
+      s.docs.forEach(d=>{links[d.id]=d.data().link;});
+      drawR();
+    },err=>console.error("Resource links error:",err));
+
+  }catch(err){
+    console.error("Admin initialization error:",err);
+    alert("Admin loading failed: "+err.message);
+  }
+});
+
+/* ---------- navigation ---------- */
+$("mt").onclick=e=>{
+  const t=e.target.dataset.t;
+  if(!t)return;
+
+  ["users","res","ev","bu","ab","at","nu"].forEach(k=>{
+    $("p-"+k).hidden=k!==t;
   });
-  drawU();
-},err=>{
-  console.error("Registration loading error:",err);
-  $("rows").innerHTML =
-    "<tr><td colspan='7'>Error loading registrations: "+
-    esc(err.message)+"</td></tr>";
-});
-  onSnapshot(collection(db,"resources"),s=>{res=s.docs.map(d=>({id:d.id,...d.data()}));drawR();});
-  onSnapshot(collection(db,"resourceLinks"),s=>{links={};s.docs.forEach(d=>{links[d.id]=d.data().link;});drawR();});
-});
-$("mt").onclick=e=>{const t=e.target.dataset.t;if(!t)return;["users","res","ev","bu","ab","at","nu"].forEach(k=>{$("p-"+k).hidden=k!==t;});[].forEach.call($("mt").children,b=>{b.className=b.dataset.t===t?"on":"";});};
+
+  Array.from($("mt").children).forEach(b=>{
+    b.className=b.dataset.t===t?"on":"";
+  });
+};
 
 /* ---------- registrations ---------- */
 $("q").oninput=()=>drawU();
+
 function drawU(){
-  const t=$("tabs");t.innerHTML="";
-  ["pending","approved","rejected"].forEach(k=>{const b=document.createElement("button");b.textContent=k[0].toUpperCase()+k.slice(1)+" ("+rows.filter(r=>r.status===k).length+")";b.className=k===tab?"on":"";b.onclick=()=>{tab=k;drawU();};t.appendChild(b);});
-  const q=$("q").value.toLowerCase(),tb=$("rows");
-  const list=rows.filter(r=>r.status===tab&&(r.name+r.idNo+r.dept+r.email).toLowerCase().includes(q));
-  tb.innerHTML=list.length?"":"<tr><td colspan='7'>Nobody here yet.</td></tr>";
+  const t=$("tabs");
+  t.innerHTML="";
+
+  ["pending","approved","rejected"].forEach(k=>{
+    const b=document.createElement("button");
+    b.textContent=k[0].toUpperCase()+k.slice(1)+" ("+rows.filter(r=>r.status===k).length+")";
+    b.className=k===tab?"on":"";
+    b.onclick=()=>{
+      tab=k;
+      drawU();
+    };
+    t.appendChild(b);
+  });
+
+  const q=$("q").value.toLowerCase();
+  const tb=$("rows");
+
+  const list=rows.filter(r=>
+    r.status===tab &&
+    (r.name+" "+r.idNo+" "+r.dept+" "+r.email+" "+r.role).toLowerCase().includes(q)
+  );
+
+  tb.innerHTML="";
+
+  if(!list.length){
+    tb.innerHTML="<tr><td colspan='7'>Nobody here yet.</td></tr>";
+    return;
+  }
+
   list.forEach(r=>{
     const tr=document.createElement("tr");
-    tr.innerHTML="<td>"+esc(r.name)+"</td><td>"+esc(r.role)+"</td><td>"+esc(r.dept)+"<br>"+esc(r.cls)+"</td><td>"+esc(r.idNo)+"</td><td>"+esc(r.email)+"</td><td><span class='badge "+esc(r.status)+"'>"+esc(r.status)+"</span></td><td></td>";
+
+    tr.innerHTML=
+      "<td>"+esc(r.name)+"</td>"+
+      "<td>"+esc(r.role)+"</td>"+
+      "<td>"+esc(r.dept)+"<br>"+esc(r.cls)+"</td>"+
+      "<td>"+esc(r.idNo)+"</td>"+
+      "<td>"+esc(r.email)+"</td>"+
+      "<td><span class='badge "+esc(r.status)+"'>"+esc(r.status)+"</span></td>"+
+      "<td></td>";
+
     const c=tr.lastChild;
-    function btn(txt,cls,fn){const b=document.createElement("button");b.textContent=txt;b.className=cls;b.onclick=fn;c.appendChild(b);}
-    if(r.id!==me){
-    if(r.status==="pending")btn("Approve","a",async()=>{
-  try{
-    await setDoc(doc(db,"users",r.id),{
-      name:r.name,
-      role:r.role,
-      dept:r.dept,
-      cls:r.cls,
-      idNo:r.idNo,
-      email:r.email,
-      authEmail:r.email,
-      status:"approved",
-      createdAt:serverTimestamp()
-    });
 
-    await updateDoc(doc(db,"registrations",r.id),{
-      status:"approved",
-      approvedAt:serverTimestamp()
-    });
-
-    mail("approved",{uid:r.id});
-  }catch(err){
-    alert("Approve failed: "+err.message);
-  }
-});
-      
-      if(r.status==="approved"&&r.role!=="admin")btn("Make admin","a",()=>{if(confirm("Make "+r.name+" an admin? They will get full control."))updateDoc(doc(db,"users",r.id),{role:"admin"});});
-      if(r.status!=="rejected")btn("Reject","r",()=>updateDoc(doc(db,"users",r.id),{status:"rejected"}));
-      btn("Delete","d",async()=>{
-  if(confirm("Delete "+r.name+" registration?")){
-    try{
-      await deleteDoc(doc(db,"registrations",r.id));
-    }catch(err){
-      alert("Delete failed: "+err.message);
+    function btn(txt,cls,fn){
+      const b=document.createElement("button");
+      b.textContent=txt;
+      b.className=cls;
+      b.onclick=fn;
+      c.appendChild(b);
     }
-  }
-});
-      btn("Delete","d",()=>{if(confirm("Delete "+r.name+"? (To 
+
+    if(r.id!==me){
+
+      if(r.status==="pending"){
+        btn("Approve","a",async()=>{
+          if(!confirm("Approve "+r.name+"?"))return;
+
+          try{
+            await setDoc(doc(db,"users",r.id),{
+              name:r.name,
+              role:r.role,
+              dept:r.dept,
+              cls:r.cls,
+              idNo:r.idNo,
+              email:r.email,
+              authEmail:r.email,
+              status:"approved",
+              createdAt:serverTimestamp()
+            },{merge:true});
+
+            await updateDoc(doc(db,"registrations",r.id),{
+              status:"approved",
+              approvedAt:serverTimestamp()
+            });
+
+            try{
+              mail("approved",{uid:r.id});
+            }catch(mailError){
+              console.warn("Approval email could not be sent:",mailError);
+            }
+
+            alert("Registration approved.");
+          }catch(err){
+            alert("Approve failed: "+err.message);
+          }
+        });
+      }
+
+      if(r.status==="approved" && r.role!=="admin"){
+        btn("Make admin","a",async()=>{
+          if(!confirm("Make "+r.name+" an admin? They will get full control."))return;
+
+          try{
+            await updateDoc(doc(db,"users",r.id),{
+              role:"admin",
+              status:"approved"
+            });
+
+            alert("Admin role updated.");
+          }catch(err){
+            alert("Could not make admin: "+err.message);
+          }
+        });
+      }
+
+      if(r.status!=="rejected"){
+        btn("Reject","r",async()=>{
+          if(!confirm("Reject "+r.name+"?"))return;
+
+          try{
+            await updateDoc(doc(db,"registrations",r.id),{
+              status:"rejected",
+              rejectedAt:serverTimestamp()
+            });
+
+            const userRef=doc(db,"users",r.id);
+            const userSnap=await getDoc(userRef);
+
+            if(userSnap.exists()){
+              await updateDoc(userRef,{status:"rejected"});
+            }
+
+          }catch(err){
+            alert("Reject failed: "+err.message);
+          }
+        });
+      }
+
+      btn("Delete","d",async()=>{
+        if(!confirm("Delete "+r.name+" registration?"))return;
+
+        try{
+          await deleteDoc(doc(db,"registrations",r.id));
+          alert("Registration deleted.");
+        }catch(err){
+          alert("Delete failed: "+err.message);
+        }
+      });
+    }
+
     tb.appendChild(tr);
   });
 }
 
 /* ---------- resources ---------- */
 $("rq").oninput=()=>drawR();
+
 function drawR(){
-  const q=$("rq").value.toLowerCase(),tb=$("rr");
-  const list=res.filter(r=>(r.title+r.category+r.dept+r.cls).toLowerCase().includes(q)).sort((a,b)=>a.title.localeCompare(b.title));
+  const q=$("rq").value.toLowerCase();
+  const tb=$("rr");
+
+  const list=res.filter(r=>
+    ((r.title||"")+" "+(r.category||"")+" "+(r.dept||"")+" "+(r.cls||"")).toLowerCase().includes(q)
+  ).sort((a,b)=>(a.title||"").localeCompare(b.title||""));
+
   $("rc").textContent="("+res.length+")";
-  tb.innerHTML=list.length?"":"<tr><td colspan='4'>No resources yet. Add the first one above.</td></tr>";
+  tb.innerHTML="";
+
+  if(!list.length){
+    tb.innerHTML="<tr><td colspan='4'>No resources yet. Add the first one above.</td></tr>";
+    return;
+  }
+
   list.forEach(r=>{
     const tr=document.createElement("tr");
-    tr.innerHTML="<td><b>"+esc(r.title)+"</b><br><a href='"+esc(links[r.id]||'')+"' target='_blank' rel='noopener' style='color:#167d78;font-size:12px'>Open link</a></td><td>"+esc(r.category)+"</td><td>"+esc(r.dept)+"<br>"+esc(r.cls)+"</td><td></td>";
+
+    const safeLink=links[r.id]||"";
+    const linkHtml=safeLink
+      ? "<br><a href='"+esc(safeLink)+"' target='_blank' rel='noopener' style='color:#167d78;font-size:12px'>Open link</a>"
+      : "";
+
+    tr.innerHTML=
+      "<td><b>"+esc(r.title)+"</b>"+linkHtml+"</td>"+
+      "<td>"+esc(r.category)+"</td>"+
+      "<td>"+esc(r.dept)+"<br>"+esc(r.cls)+"</td>"+
+      "<td></td>";
+
     const c=tr.lastChild;
-    function btn(txt,cls,fn){const b=document.createElement("button");b.textContent=txt;b.className=cls;b.onclick=fn;c.appendChild(b);}
-    btn("Edit","a",()=>{editId=r.id;$("t").value=r.title;$("c").value=r.category;$("d").value=r.dept;$("k").value=r.cls;$("l").value=links[r.id]||"";$("n").value=r.desc||"";$("fh").textContent="Edit resource";$("cx").hidden=false;scrollTo({top:0,behavior:"smooth"});});
-    btn("Delete","d",()=>{if(confirm("Delete \""+r.title+"\"?"))(deleteDoc(doc(db,"resources",r.id)),deleteDoc(doc(db,"resourceLinks",r.id)));});
+
+    function btn(txt,cls,fn){
+      const b=document.createElement("button");
+      b.textContent=txt;
+      b.className=cls;
+      b.onclick=fn;
+      c.appendChild(b);
+    }
+
+    btn("Edit","a",()=>{
+      editId=r.id;
+      $("t").value=r.title||"";
+      $("c").value=r.category||"E-Books";
+      $("d").value=r.dept||"All departments";
+      $("k").value=r.cls||"All classes";
+      $("l").value=links[r.id]||"";
+      $("n").value=r.desc||"";
+      $("fh").textContent="Edit resource";
+      $("cx").hidden=false;
+      scrollTo({top:0,behavior:"smooth"});
+    });
+
+    btn("Delete","d",async()=>{
+      if(!confirm("Delete \""+r.title+"\"?"))return;
+
+      try{
+        await deleteDoc(doc(db,"resources",r.id));
+        await deleteDoc(doc(db,"resourceLinks",r.id));
+      }catch(err){
+        alert("Delete failed: "+err.message);
+      }
+    });
+
     tb.appendChild(tr);
   });
 }
-function reset(){editId=null;$("rf").reset();$("fh").textContent="Add resource";$("cx").hidden=true;}
+
+function reset(){
+  editId=null;
+  $("rf").reset();
+  $("fh").textContent="Add resource";
+  $("cx").hidden=true;
+}
+
 $("cx").onclick=reset;
+
 $("rf").onsubmit=async e=>{
-  e.preventDefault();const m=$("rm");m.className="msg";m.textContent="";
+  e.preventDefault();
+
+  const m=$("rm");
+  m.className="msg";
+  m.textContent="";
+
   const link=$("l").value.trim();
-  if(!/^https:\/\/(drive|docs)\.google\.com\//.test(link)){m.className="msg err";m.textContent="Please paste a Google Drive link (https://drive.google.com/...).";return;}
-  const d={title:$("t").value.trim(),category:$("c").value,dept:$("d").value,cls:$("k").value,desc:$("n").value.trim(),updatedAt:serverTimestamp()};
+
+  if(!/^https:\/\/(drive|docs)\.google\.com\//.test(link)){
+    m.className="msg err";
+    m.textContent="Please paste a Google Drive link.";
+    return;
+  }
+
+  const d={
+    title:$("t").value.trim(),
+    category:$("c").value,
+    dept:$("d").value,
+    cls:$("k").value,
+    desc:$("n").value.trim(),
+    published:true,
+    updatedAt:serverTimestamp()
+  };
+
   try{
-    let rid=editId;if(rid)await updateDoc(doc(db,"resources",rid),d);else rid=(await addDoc(collection(db,"resources"),{...d,createdAt:serverTimestamp()})).id;await setDoc(doc(db,"resourceLinks",rid),{link});
-    m.className="msg ok";m.textContent="Saved.";reset();
-  }catch(err){m.className="msg err";m.textContent="Could not save: "+(err.code||err.message)+". Check the Firestore rules.";}
+    let rid=editId;
+
+    if(rid){
+      await updateDoc(doc(db,"resources",rid),d);
+    }else{
+      rid=(await addDoc(collection(db,"resources"),{
+        ...d,
+        createdAt:serverTimestamp()
+      })).id;
+    }
+
+    await setDoc(doc(db,"resourceLinks",rid),{link});
+
+    m.className="msg ok";
+    m.textContent="Saved.";
+    reset();
+
+  }catch(err){
+    m.className="msg err";
+    m.textContent="Could not save: "+(err.code||err.message)+". Check the Firestore rules.";
+  }
 };
 
-/* ---------- events, best users, about ---------- */
+/* ---------- shared form builder ---------- */
 const DR=/^https:\/\/(drive|docs)\.google\.com\//;
+
 function build(fields,fg){
   const inp={};
+
   fields.forEach(f=>{
-    const w=document.createElement("div");if(f.t==="area")w.className="full";
-    const lb=document.createElement("label");lb.textContent=f.l;let el;
-    if(f.t==="select"){el=document.createElement("select");f.o.forEach(o=>{const op=document.createElement("option");op.textContent=o;el.appendChild(op);});}
-    else if(f.t==="area"){el=document.createElement("textarea");el.rows=3;}
-    else{el=document.createElement("input");if(f.t==="number"){el.type="number";el.min=0;}}
-    if(f.req)el.required=true;if(f.ph)el.placeholder=f.ph;
-    inp[f.k]=el;w.appendChild(lb);w.appendChild(el);fg.appendChild(w);
+    const w=document.createElement("div");
+    if(f.t==="area")w.className="full";
+
+    const lb=document.createElement("label");
+    lb.textContent=f.l;
+
+    let el;
+
+    if(f.t==="select"){
+      el=document.createElement("select");
+      f.o.forEach(o=>{
+        const op=document.createElement("option");
+        op.textContent=o;
+        el.appendChild(op);
+      });
+    }else if(f.t==="area"){
+      el=document.createElement("textarea");
+      el.rows=3;
+    }else{
+      el=document.createElement("input");
+      if(f.t==="number"){
+        el.type="number";
+        el.min=0;
+      }
+    }
+
+    if(f.req)el.required=true;
+    if(f.ph)el.placeholder=f.ph;
+
+    inp[f.k]=el;
+    w.appendChild(lb);
+    w.appendChild(el);
+    fg.appendChild(w);
   });
+
   return inp;
 }
+
+/* ---------- generic collection manager ---------- */
 function crud(root,coll,title,fields,cols){
-  root.innerHTML="<div class='panel'><h2></h2><form><div class='fg'></div><p style='margin-top:18px'><button class='btn'>Save</button> <button class='btn cx' type='button' hidden style='background:#eef2f5;color:#062847'>Cancel edit</button></p><p class='msg'></p></form></div><div class='panel' style='margin-top:18px'><h2>All</h2><div class='tw'><table><thead><tr></tr></thead><tbody></tbody></table></div></div>";
-  const q=s=>root.querySelector(s),h=q("h2"),form=q("form"),msg=q(".msg"),cx=q(".cx");
-  let list=[],eid=null;
+  root.innerHTML=
+  "<div class='panel'><h2></h2><form><div class='fg'></div>"+
+  "<p style='margin-top:18px'><button class='btn'>Save</button> "+
+  "<button class='btn cx' type='button' hidden style='background:#eef2f5;color:#062847'>Cancel edit</button></p>"+
+  "<p class='msg'></p></form></div>"+
+  "<div class='panel' style='margin-top:18px'><h2>All</h2>"+
+  "<div class='tw'><table><thead><tr></tr></thead><tbody></tbody></table></div></div>";
+
+  const q=s=>root.querySelector(s);
+  const h=q("h2");
+  const form=q("form");
+  const msg=q(".msg");
+  const cx=q(".cx");
+
+  let list=[];
+  let eid=null;
+
   h.textContent="Add "+title;
+
   const inp=build(fields,q(".fg"));
-  cols.concat(["Action"]).forEach(c=>{const th=document.createElement("th");th.textContent=c[1]||c;q("thead tr").appendChild(th);});
-  function reset(){eid=null;form.reset();h.textContent="Add "+title;cx.hidden=true;}
+
+  cols.concat(["Action"]).forEach(c=>{
+    const th=document.createElement("th");
+    th.textContent=c[1]||c;
+    q("thead tr").appendChild(th);
+  });
+
+  function reset(){
+    eid=null;
+    form.reset();
+    h.textContent="Add "+title;
+    cx.hidden=true;
+  }
+
   cx.onclick=reset;
+
   form.onsubmit=async e=>{
-    e.preventDefault();msg.className="msg";msg.textContent="";
+    e.preventDefault();
+
+    msg.className="msg";
+    msg.textContent="";
+
     const d={updatedAt:serverTimestamp()};
+
     for(const f of fields){
       d[f.k]=inp[f.k].value.trim();
-      if(f.drive&&d[f.k]&&d[f.k].split("\n").some(l=>l.trim()&&!DR.test(l.trim()))){msg.className="msg err";msg.textContent="Photo links must be Google Drive links (https://drive.google.com/...).";return;}
+
+      if(f.drive && d[f.k] &&
+        d[f.k].split("\n").some(l=>l.trim()&&!DR.test(l.trim()))
+      ){
+        msg.className="msg err";
+        msg.textContent="Photo links must be Google Drive links.";
+        return;
+      }
     }
+
     try{
-      if(eid)await updateDoc(doc(db,coll,eid),d);else await addDoc(collection(db,coll),{...d,createdAt:serverTimestamp()});
-      msg.className="msg ok";msg.textContent="Saved.";reset();
-    }catch(err){msg.className="msg err";msg.textContent="Could not save: "+(err.code||err.message)+". Check the Firestore rules.";}
+      if(eid){
+        await updateDoc(doc(db,coll,eid),d);
+      }else{
+        await addDoc(collection(db,coll),{
+          ...d,
+          published:true,
+          createdAt:serverTimestamp()
+        });
+      }
+
+      msg.className="msg ok";
+      msg.textContent="Saved.";
+      reset();
+
+    }catch(err){
+      msg.className="msg err";
+      msg.textContent="Could not save: "+(err.code||err.message)+". Check the Firestore rules.";
+    }
   };
+
   onSnapshot(collection(db,coll),s=>{
-    list=s.docs.map(d=>({id:d.id,...d.data()})).sort((x,y)=>((y.createdAt&&y.createdAt.seconds)||0)-((x.createdAt&&x.createdAt.seconds)||0));
-    const tb=q("tbody");tb.innerHTML=list.length?"":"<tr><td colspan='9'>Nothing added yet.</td></tr>";
+    list=s.docs.map(d=>({id:d.id,...d.data()})).sort((x,y)=>
+      ((y.createdAt&&y.createdAt.seconds)||0)-((x.createdAt&&x.createdAt.seconds)||0)
+    );
+
+    const tb=q("tbody");
+    tb.innerHTML="";
+
+    if(!list.length){
+      tb.innerHTML="<tr><td colspan='9'>Nothing added yet.</td></tr>";
+      return;
+    }
+
     list.forEach(r=>{
       const tr=document.createElement("tr");
-      cols.forEach(c=>{const td=document.createElement("td");td.textContent=r[c[0]]||"";tr.appendChild(td);});
+
+      cols.forEach(c=>{
+        const td=document.createElement("td");
+        td.textContent=r[c[0]]||"";
+        tr.appendChild(td);
+      });
+
       const td=document.createElement("td");
-      const b1=document.createElement("button");b1.className="a";b1.textContent="Edit";
-      b1.onclick=()=>{eid=r.id;fields.forEach(f=>{inp[f.k].value=r[f.k]||"";});h.textContent="Edit "+title;cx.hidden=false;h.scrollIntoView({behavior:"smooth"});};
-      const b2=document.createElement("button");b2.className="d";b2.textContent="Delete";
-      b2.onclick=()=>{if(confirm("Delete this "+title.toLowerCase()+"?"))deleteDoc(doc(db,coll,r.id));};
-      td.appendChild(b1);td.appendChild(b2);tr.appendChild(td);tb.appendChild(tr);
+
+      const b1=document.createElement("button");
+      b1.className="a";
+      b1.textContent="Edit";
+
+      b1.onclick=()=>{
+        eid=r.id;
+        fields.forEach(f=>{
+          inp[f.k].value=r[f.k]||"";
+        });
+        h.textContent="Edit "+title;
+        cx.hidden=false;
+        h.scrollIntoView({behavior:"smooth"});
+      };
+
+      const b2=document.createElement("button");
+      b2.className="d";
+      b2.textContent="Delete";
+
+      b2.onclick=async()=>{
+        if(!confirm("Delete this "+title.toLowerCase()+"?"))return;
+        try{
+          await deleteDoc(doc(db,coll,r.id));
+        }catch(err){
+          alert("Delete failed: "+err.message);
+        }
+      };
+
+      td.appendChild(b1);
+      td.appendChild(b2);
+      tr.appendChild(td);
+      tb.appendChild(tr);
     });
-  });
+
+  },err=>console.error(coll+" loading error:",err));
 }
+
+/* ---------- about library ---------- */
 async function aboutForm(root){
-  root.innerHTML="<div class='panel'><h2>About Library</h2><p style='margin:0;color:#5b6b75'>These numbers appear in the About the Library section of the website.</p><form><div class='fg'></div><p style='margin-top:18px'><button class='btn'>Save</button></p><p class='msg'></p></form></div>";
-  const fields=[{k:"intro",l:"Intro text (optional, replaces the paragraph)",t:"area"},{k:"hdPhysio",l:"Hard copies: Physiotherapy",t:"number"},{k:"hdMlt",l:"Hard copies: Medical Laboratory Technology",t:"number"},{k:"hdMit",l:"Hard copies: Medical Imaging Technology",t:"number"},{k:"hdMha",l:"Hard copies: Master of Hospital Administration",t:"number"},{k:"eBooks",l:"E-Resources: E-Books",t:"number"},{k:"eJournals",l:"E-Resources: E-Journals / Databases",t:"number"}];
-  const inp=build(fields,root.querySelector(".fg")),msg=root.querySelector(".msg");
-  inp.hdPhysio.value=1255;inp.hdMlt.value=662;inp.hdMit.value=336;inp.hdMha.value=1139;
-  try{const s=await getDoc(doc(db,"site","about"));if(s.exists())fields.forEach(f=>{inp[f.k].value=s.data()[f.k]??"";});}catch(e){}
+  root.innerHTML=
+  "<div class='panel'><h2>About Library</h2>"+
+  "<p style='margin:0;color:#5b6b75'>These numbers appear in the About the Library section of the website.</p>"+
+  "<form><div class='fg'></div><p style='margin-top:18px'><button class='btn'>Save</button></p>"+
+  "<p class='msg'></p></form></div>";
+
+  const fields=[
+    {k:"intro",l:"Intro text (optional, replaces the paragraph)",t:"area"},
+    {k:"hdPhysio",l:"Hard copies: Physiotherapy",t:"number"},
+    {k:"hdMlt",l:"Hard copies: Medical Laboratory Technology",t:"number"},
+    {k:"hdMit",l:"Hard copies: Medical Imaging Technology",t:"number"},
+    {k:"hdMha",l:"Hard copies: Master of Hospital Administration",t:"number"},
+    {k:"eBooks",l:"E-Resources: E-Books",t:"number"},
+    {k:"eJournals",l:"E-Resources: E-Journals / Databases",t:"number"}
+  ];
+
+  const inp=build(fields,root.querySelector(".fg"));
+  const msg=root.querySelector(".msg");
+
+  inp.hdPhysio.value=1255;
+  inp.hdMlt.value=662;
+  inp.hdMit.value=336;
+  inp.hdMha.value=1139;
+
+  try{
+    const s=await getDoc(doc(db,"site","about"));
+    if(s.exists()){
+      fields.forEach(f=>{
+        inp[f.k].value=s.data()[f.k]??"";
+      });
+    }
+  }catch(e){
+    console.error("About loading error:",e);
+  }
+
   root.querySelector("form").onsubmit=async e=>{
-    e.preventDefault();const d={updatedAt:serverTimestamp()};
-    fields.forEach(f=>{d[f.k]=f.t==="number"?(inp[f.k].value===""?null:Number(inp[f.k].value)):inp[f.k].value.trim();});
-    try{await setDoc(doc(db,"site","about"),d,{merge:true});msg.className="msg ok";msg.textContent="Saved.";}
-    catch(err){msg.className="msg err";msg.textContent="Could not save: "+(err.code||err.message)+". Check the Firestore rules.";}
+    e.preventDefault();
+
+    const d={updatedAt:serverTimestamp()};
+
+    fields.forEach(f=>{
+      d[f.k]=f.t==="number"
+        ?(inp[f.k].value===""?null:Number(inp[f.k].value))
+        :inp[f.k].value.trim();
+    });
+
+    try{
+      await setDoc(doc(db,"site","about"),d,{merge:true});
+      msg.className="msg ok";
+      msg.textContent="Saved.";
+    }catch(err){
+      msg.className="msg err";
+      msg.textContent="Could not save: "+(err.code||err.message)+". Check the Firestore rules.";
+    }
   };
 }
+
+/* ---------- initialize sections ---------- */
 function initContent(){
   crud($("p-ev"),"events","Event",[
     {k:"title",l:"Event title",req:1},
@@ -215,122 +714,397 @@ function initContent(){
     {k:"desc",l:"Description",t:"area"},
     {k:"photos",l:"Photo links (Google Drive, one per line, up to 6)",t:"area",drive:1}
   ],[["title","Title"],["date","Date"],["status","Status"]]);
+
   crud($("p-bu"),"bestUsers","Best User",[
     {k:"dept",l:"Department",t:"select",o:["BPT · PHYSIOTHERAPY","BMLT","BMIT","MHA","Other"]},
     {k:"name",l:"Student name",req:1},
     {k:"cls",l:"Class / details",ph:"Medical Laboratory Technology · 3rd Year"}
   ],[["name","Name"],["dept","Department"],["cls","Details"]]);
+
   aboutForm($("p-ab"));
   attendance($("p-at"));
   addUsers($("p-nu"));
 }
 
 /* ---------- attendance ---------- */
-function istDate(){return new Date(Date.now()+19800000).toISOString().slice(0,10);}
+function istDate(){
+  return new Date(Date.now()+19800000).toISOString().slice(0,10);
+}
+
 async function attendance(root){
-  root.innerHTML="<div class='panel'><h2>Entrance QR code</h2><p style='margin:0;color:#5b6b75'>Print this QR and stick it at the library entrance. Students scan it, sign in and their entry is recorded.</p><div id='qr' style='margin:16px 0;display:inline-block;padding:12px;background:#fff;border:1px solid #e3e9ec;border-radius:10px'></div><p><button class='btn' id='qd'>Download QR</button> <button class='btn' id='qn' style='background:#fde0de;color:#a3241b'>New QR (old one stops working)</button></p><p class='msg' id='qm'></p></div><div class='panel' style='margin-top:18px'><h2>Attendance register</h2><div style='display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:10px 0'><input type='date' id='ad' style='width:auto'><b id='ac'></b><button class='btn' id='ax' style='margin-left:auto'>Export CSV</button></div><div class='tw'><table><thead><tr><th>#</th><th>Name</th><th>ID</th><th>Dept / Class</th><th>Role</th><th>Time</th></tr></thead><tbody id='ar'></tbody></table></div></div>";
-  const kref=doc(db,"private","attendanceKey");let key="";
+  root.innerHTML=
+  "<div class='panel'><h2>Entrance QR code</h2>"+
+  "<p style='margin:0;color:#5b6b75'>Print this QR and stick it at the library entrance. Students scan it, sign in and their entry is recorded.</p>"+
+  "<div id='qr' style='margin:16px 0;display:inline-block;padding:12px;background:#fff;border:1px solid #e3e9ec;border-radius:10px'></div>"+
+  "<p><button class='btn' id='qd'>Download QR</button> "+
+  "<button class='btn' id='qn' style='background:#fde0de;color:#a3241b'>New QR (old one stops working)</button></p>"+
+  "<p class='msg' id='qm'></p></div>"+
+  "<div class='panel' style='margin-top:18px'><h2>Attendance register</h2>"+
+  "<div style='display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:10px 0'>"+
+  "<input type='date' id='ad' style='width:auto'><b id='ac'></b>"+
+  "<button class='btn' id='ax' style='margin-left:auto'>Export CSV</button></div>"+
+  "<div class='tw'><table><thead><tr><th>#</th><th>Name</th><th>ID</th><th>Dept / Class</th><th>Role</th><th>Time</th></tr></thead>"+
+  "<tbody id='ar'></tbody></table></div></div>";
+
+  const kref=doc(db,"private","attendanceKey");
+  let key="";
+
   function drawQR(){
-    const el=$("qr");el.innerHTML="";
-    new QRCode(el,{text:new URL("attend.html?k="+key,location.href).href,width:220,height:220,correctLevel:QRCode.CorrectLevel.M});
+    const el=$("qr");
+    el.innerHTML="";
+    new QRCode(el,{
+      text:new URL("attend.html?k="+key,location.href).href,
+      width:220,
+      height:220,
+      correctLevel:QRCode.CorrectLevel.M
+    });
   }
+
   async function loadKey(fresh){
     try{
-      if(!fresh){const s=await getDoc(kref);if(s.exists())key=s.data().key;}
-      if(!key||fresh){const b=new Uint8Array(12);crypto.getRandomValues(b);key=[].map.call(b,x=>x.toString(16).padStart(2,"0")).join("");await setDoc(kref,{key,updatedAt:serverTimestamp()});}
+      if(!fresh){
+        const s=await getDoc(kref);
+        if(s.exists())key=s.data().key;
+      }
+
+      if(!key||fresh){
+        const b=new Uint8Array(12);
+        crypto.getRandomValues(b);
+        key=Array.from(b,x=>x.toString(16).padStart(2,"0")).join("");
+        await setDoc(kref,{key,updatedAt:serverTimestamp()});
+      }
+
       drawQR();
-    }catch(e){$("qm").className="msg err";$("qm").textContent="Could not prepare the QR: "+(e.code||e.message)+". Check the Firestore rules.";}
+
+    }catch(e){
+      $("qm").className="msg err";
+      $("qm").textContent="Could not prepare the QR: "+(e.code||e.message)+". Check the Firestore rules.";
+    }
   }
+
   loadKey(false);
-  $("qn").onclick=()=>{if(confirm("Create a new QR? The printed one will stop working."))loadKey(true);};
-  $("qd").onclick=()=>{
-    const c=$("qr").querySelector("canvas");if(!c)return;
-    const o=document.createElement("canvas");o.width=o.height=270;const x=o.getContext("2d");x.fillStyle="#fff";x.fillRect(0,0,270,270);x.drawImage(c,25,25);
-    const a=document.createElement("a");a.href=o.toDataURL("image/png");a.download="aihs-library-entry-qr.png";a.click();
+
+  $("qn").onclick=()=>{
+    if(confirm("Create a new QR? The printed one will stop working.")){
+      loadKey(true);
+    }
   };
-  let unsub=null,list=[];
+
+  $("qd").onclick=()=>{
+    const c=$("qr").querySelector("canvas");
+    if(!c)return;
+
+    const o=document.createElement("canvas");
+    o.width=o.height=270;
+
+    const x=o.getContext("2d");
+    x.fillStyle="#fff";
+    x.fillRect(0,0,270,270);
+    x.drawImage(c,25,25);
+
+    const a=document.createElement("a");
+    a.href=o.toDataURL("image/png");
+    a.download="aihs-library-entry-qr.png";
+    a.click();
+  };
+
+  let unsub=null;
+  let list=[];
+
   function drawA(){
     $("ac").textContent=list.length+" entries";
-    const tb=$("ar");tb.innerHTML=list.length?"":"<tr><td colspan='6'>No entries for this date.</td></tr>";
+
+    const tb=$("ar");
+    tb.innerHTML="";
+
+    if(!list.length){
+      tb.innerHTML="<tr><td colspan='6'>No entries for this date.</td></tr>";
+      return;
+    }
+
     list.forEach((r,i)=>{
       const tr=document.createElement("tr");
-      [i+1,r.name,r.idNo,(r.dept||"")+" / "+(r.cls||""),r.role,r.ts?r.ts.toDate().toLocaleTimeString("en-IN",{hour:"2-digit",minute:"2-digit"}):""].forEach(v=>{const td=document.createElement("td");td.textContent=v;tr.appendChild(td);});
+
+      [
+        i+1,
+        r.name,
+        r.idNo,
+        (r.dept||"")+" / "+(r.cls||""),
+        r.role,
+        r.ts?r.ts.toDate().toLocaleTimeString("en-IN",{hour:"2-digit",minute:"2-digit"}):""
+      ].forEach(v=>{
+        const td=document.createElement("td");
+        td.textContent=v;
+        tr.appendChild(td);
+      });
+
       tb.appendChild(tr);
     });
   }
+
   function watch(){
     if(unsub)unsub();
-    unsub=onSnapshot(query(collection(db,"attendance"),where("date","==",$("ad").value)),s=>{
-      list=s.docs.map(d=>d.data()).sort((a,b)=>((a.ts&&a.ts.seconds)||0)-((b.ts&&b.ts.seconds)||0));drawA();
-    },()=>{});
+
+    unsub=onSnapshot(
+      query(collection(db,"attendance"),where("date","==",$("ad").value)),
+      s=>{
+        list=s.docs.map(d=>d.data()).sort((a,b)=>
+          ((a.ts&&a.ts.seconds)||0)-((b.ts&&b.ts.seconds)||0)
+        );
+        drawA();
+      },
+      err=>{
+        console.error("Attendance loading error:",err);
+        $("ar").innerHTML="<tr><td colspan='6'>Could not load attendance. Check Firestore rules.</td></tr>";
+      }
+    );
   }
-  $("ad").value=istDate();$("ad").onchange=watch;watch();
+
+  $("ad").value=istDate();
+  $("ad").onchange=watch;
+  watch();
+
   $("ax").onclick=()=>{
     const q=v=>'"'+String(v==null?"":v).replace(/"/g,'""')+'"';
-    const rows=[["No","Name","ID","Department","Class","Role","Time"]].concat(list.map((r,i)=>[i+1,r.name,r.idNo,r.dept,r.cls,r.role,r.ts?r.ts.toDate().toLocaleTimeString("en-IN"):""]));
-    const b=new Blob([rows.map(r=>r.map(q).join(",")).join("\n")],{type:"text/csv"});
-    const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="attendance-"+$("ad").value+".csv";a.click();
+
+    const data=[
+      ["No","Name","ID","Department","Class","Role","Time"]
+    ].concat(list.map((r,i)=>[
+      i+1,r.name,r.idNo,r.dept,r.cls,r.role,
+      r.ts?r.ts.toDate().toLocaleTimeString("en-IN"):""
+    ]));
+
+    const b=new Blob(
+      [data.map(r=>r.map(q).join(",")).join("\n")],
+      {type:"text/csv"}
+    );
+
+    const a=document.createElement("a");
+    a.href=URL.createObjectURL(b);
+    a.download="attendance-"+$("ad").value+".csv";
+    a.click();
   };
 }
 
-/* ---------- admin registers users: single or bulk ---------- */
+/* ---------- CSV parser ---------- */
 function parseCSV(t){
   return t.split(/\r?\n/).map(l=>l.trim()).filter(Boolean).map(l=>{
-    const o=[];let c="",q=false;
-    for(const ch of l){if(ch==='"')q=!q;else if(ch===","&&!q){o.push(c.trim());c="";}else c+=ch;}
-    o.push(c.trim());return o;
+    const o=[];
+    let c="",q=false;
+
+    for(const ch of l){
+      if(ch==='"')q=!q;
+      else if(ch===","&&!q){
+        o.push(c.trim());
+        c="";
+      }else{
+        c+=ch;
+      }
+    }
+
+    o.push(c.trim());
+    return o;
   });
 }
+
+/* ---------- add users: single or bulk ---------- */
 function addUsers(root){
-  root.innerHTML="<div class='panel'><h2>Register one user</h2><p style='margin:0;color:#5b6b75'>Accounts made here are approved at once. Leave password blank to create one automatically.</p><form id='su'><div class='fg'></div><p style='margin-top:18px'><button class='btn'>Register user</button></p></form></div><div class='panel' style='margin-top:18px'><h2>Register many users (CSV)</h2><p style='margin:0 0 12px;color:#5b6b75'>Columns in this order: name, id, dept, class, role, email, password. Role is student, staff or admin. Password is optional.</p><p><button class='btn' type='button' id='sm' style='background:#eef2f5;color:#062847'>Download sample CSV</button></p><input type='file' id='cf' accept='.csv,text/csv'><p style='margin-top:14px'><button class='btn' type='button' id='bu2'>Register all from CSV</button></p></div><div class='panel' style='margin-top:18px' id='rp' hidden><h2>Result</h2><p class='msg err' style='margin:0 0 10px'>Passwords are shown only now. Download them before leaving this page.</p><p><button class='btn' type='button' id='dc'>Download credentials CSV</button></p><div class='tw'><table><thead><tr><th>ID</th><th>Name</th><th>Password</th><th>Result</th></tr></thead><tbody id='rt'></tbody></table></div></div>";
+  root.innerHTML=
+  "<div class='panel'><h2>Register one user</h2>"+
+  "<p style='margin:0;color:#5b6b75'>Accounts made here are approved at once. Leave password blank to create one automatically.</p>"+
+  "<form id='su'><div class='fg'></div><p style='margin-top:18px'><button class='btn'>Register user</button></p></form></div>"+
+  "<div class='panel' style='margin-top:18px'><h2>Register many users (CSV)</h2>"+
+  "<p style='margin:0 0 12px;color:#5b6b75'>Columns in this order: name, id, dept, class, role, email, password. Role is student, staff or admin. Password is optional.</p>"+
+  "<p><button class='btn' type='button' id='sm' style='background:#eef2f5;color:#062847'>Download sample CSV</button></p>"+
+  "<input type='file' id='cf' accept='.csv,text/csv'>"+
+  "<p style='margin-top:14px'><button class='btn' type='button' id='bu2'>Register all from CSV</button></p></div>"+
+  "<div class='panel' style='margin-top:18px' id='rp' hidden><h2>Result</h2>"+
+  "<p class='msg err' style='margin:0 0 10px'>Passwords are shown only now. Download them before leaving this page.</p>"+
+  "<p><button class='btn' type='button' id='dc'>Download credentials CSV</button></p>"+
+  "<div class='tw'><table><thead><tr><th>ID</th><th>Name</th><th>Password</th><th>Result</th></tr></thead><tbody id='rt'></tbody></table></div></div>";
+
   const inp=build([
-    {k:"name",l:"Full name",req:1},{k:"id",l:"College ID (user id)",req:1},
+    {k:"name",l:"Full name",req:1},
+    {k:"id",l:"College ID (user id)",req:1},
     {k:"dept",l:"Department",t:"select",o:["BPT (Physiotherapy)","BMLT (Medical Laboratory)","BMIT (Medical Imaging)","MHA (Hospital Administration)","Library / Office","Other"]},
     {k:"cls",l:"Class",t:"select",o:["1st Year","2nd Year","3rd Year","4th Year","Internship","PG 1st Year","PG 2nd Year","Not applicable"]},
-    {k:"role",l:"Role",t:"select",o:["student","staff","admin"]},{k:"email",l:"Email (for confirmation)"},{k:"password",l:"Password (optional)"}
+    {k:"role",l:"Role",t:"select",o:["student","staff","admin"]},
+    {k:"email",l:"Email (for confirmation)"},
+    {k:"password",l:"Password (optional)"}
   ],root.querySelector(".fg"));
+
   let done=[];
+
   async function createOne(r){
-    const id=(r.id||"").trim(),name=(r.name||"").trim();
-    if(!id||!name)throw new Error("name and id are required");
-    const role=["student","staff","admin"].includes((r.role||"").toLowerCase())?r.role.toLowerCase():"student";
+    const id=(r.id||"").trim();
+    const name=(r.name||"").trim();
+
+    if(!id||!name){
+      throw new Error("Name and ID are required.");
+    }
+
+    const role=["student","staff","admin"].includes((r.role||"").toLowerCase())
+      ?r.role.toLowerCase()
+      :"student";
+
     const pw=(r.password||"").length>=6?r.password:genPass();
+
     let uid;
-    try{uid=await createAccount(id,pw);}catch(e){throw new Error(e.code==="auth/email-already-in-use"?"ID already exists":(e.code||e.message));}
+
+    try{
+      uid=await createAccount(id,pw);
+    }catch(e){
+      throw new Error(
+        e.code==="auth/email-already-in-use"
+          ?"ID already exists"
+          :(e.code||e.message)
+      );
+    }
+
     const email=(r.email||"").trim();
-    await setDoc(doc(db,"users",uid),{name,dept:r.dept||"",cls:r.cls||"",idNo:id,authEmail:idEmail(id),email,role,status:"approved",createdBy:me,createdAt:serverTimestamp()});
-    if(email)mail("created",{uid,password:pw});
-    return pw;
+
+    try{
+      await setDoc(doc(db,"users",uid),{
+        name,
+        dept:r.dept||"",
+        cls:r.cls||"",
+        idNo:id,
+        authEmail:idEmail(id),
+        email,
+        role,
+        status:"approved",
+        createdBy:me,
+        createdAt:serverTimestamp()
+      });
+
+      if(email){
+        try{
+          mail("created",{uid,password:pw});
+        }catch(mailError){
+          console.warn("Confirmation email failed:",mailError);
+        }
+      }
+
+      return pw;
+
+    }catch(err){
+      throw new Error("Account created, but profile saving failed: "+err.message);
+    }
   }
+
   function show(){
-    $("rp").hidden=false;const tb=$("rt");tb.innerHTML="";
-    done.forEach(x=>{const tr=document.createElement("tr");[x.id,x.name,x.pw||"",x.msg].forEach(v=>{const td=document.createElement("td");td.textContent=v;tr.appendChild(td);});tb.appendChild(tr);});
+    $("rp").hidden=false;
+
+    const tb=$("rt");
+    tb.innerHTML="";
+
+    done.forEach(x=>{
+      const tr=document.createElement("tr");
+
+      [x.id,x.name,x.pw||"",x.msg].forEach(v=>{
+        const td=document.createElement("td");
+        td.textContent=v;
+        tr.appendChild(td);
+      });
+
+      tb.appendChild(tr);
+    });
   }
-  function csvDown(name,rows){
+
+  function csvDown(name,data){
     const q=v=>'"'+String(v==null?"":v).replace(/"/g,'""')+'"';
-    const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([rows.map(r=>r.map(q).join(",")).join("\n")],{type:"text/csv"}));a.download=name;a.click();
+
+    const a=document.createElement("a");
+    a.href=URL.createObjectURL(new Blob(
+      [data.map(r=>r.map(q).join(",")).join("\n")],
+      {type:"text/csv"}
+    ));
+    a.download=name;
+    a.click();
   }
+
   root.querySelector("#su").onsubmit=async e=>{
-    e.preventDefault();const r={};Object.keys(inp).forEach(k=>{r[k]=inp[k].value.trim();});
-    try{const pw=await createOne(r);done=[{id:r.id,name:r.name,pw,msg:"Registered"}];root.querySelector("#su").reset();}
-    catch(err){done=[{id:r.id,name:r.name,pw:"",msg:"Failed: "+err.message}];}
+    e.preventDefault();
+
+    const r={};
+    Object.keys(inp).forEach(k=>{
+      r[k]=inp[k].value.trim();
+    });
+
+    try{
+      const pw=await createOne(r);
+      done=[{id:r.id,name:r.name,pw,msg:"Registered"}];
+      root.querySelector("#su").reset();
+    }catch(err){
+      done=[{id:r.id,name:r.name,pw:"",msg:"Failed: "+err.message}];
+    }
+
     show();
   };
-  $("sm").onclick=()=>csvDown("sample-users.csv",[["name","id","dept","class","role","email","password"],["Ravi Kumar","21BPT001","BPT (Physiotherapy)","3rd Year","student","ravi@example.com",""],["Meena S","STAFF014","Library / Office","Not applicable","staff","meena@example.com",""]]);
-  $("dc").onclick=()=>csvDown("credentials.csv",[["id","name","password","result"]].concat(done.map(x=>[x.id,x.name,x.pw,x.msg])));
+
+  $("sm").onclick=()=>{
+    csvDown("sample-users.csv",[
+      ["name","id","dept","class","role","email","password"],
+      ["Ravi Kumar","21BPT001","BPT (Physiotherapy)","3rd Year","student","ravi@example.com",""],
+      ["Meena S","STAFF014","Library / Office","Not applicable","staff","meena@example.com",""]
+    ]);
+  };
+
+  $("dc").onclick=()=>{
+    csvDown("credentials.csv",[
+      ["id","name","password","result"],
+      ...done.map(x=>[x.id,x.name,x.pw,x.msg])
+    ]);
+  };
+
   $("bu2").onclick=async()=>{
-    const f=$("cf").files[0];if(!f){alert("Choose a CSV file first.");return;}
-    let rows=parseCSV(await f.text());if(rows.length&&/^name$/i.test(rows[0][0]))rows=rows.slice(1);
-    if(!rows.length){alert("No rows found.");return;}
-    if(!confirm("Register "+rows.length+" users?"))return;
-    done=[];$("bu2").disabled=true;
-    for(const c of rows){
-      const r={name:c[0],id:c[1],dept:c[2],cls:c[3],role:c[4],email:c[5],password:c[6]};
-      try{const pw=await createOne(r);done.push({id:r.id,name:r.name,pw,msg:"Registered"});}
-      catch(err){done.push({id:r.id,name:r.name,pw:"",msg:"Failed: "+err.message});}
+    const f=$("cf").files[0];
+
+    if(!f){
+      alert("Choose a CSV file first.");
+      return;
+    }
+
+    let data=parseCSV(await f.text());
+
+    if(data.length && /^name$/i.test(data[0][0])){
+      data=data.slice(1);
+    }
+
+    if(!data.length){
+      alert("No rows found.");
+      return;
+    }
+
+    if(!confirm("Register "+data.length+" users?"))return;
+
+    done=[];
+    $("bu2").disabled=true;
+
+    for(const c of data){
+      const r={
+        name:c[0],
+        id:c[1],
+        dept:c[2],
+        cls:c[3],
+        role:c[4],
+        email:c[5],
+        password:c[6]
+      };
+
+      try{
+        const pw=await createOne(r);
+        done.push({id:r.id,name:r.name,pw,msg:"Registered"});
+      }catch(err){
+        done.push({id:r.id,name:r.name,pw:"",msg:"Failed: "+err.message});
+      }
+
       show();
     }
+
     $("bu2").disabled=false;
   };
 }
-</script></body></html>
+</script>
+</body>
+</html>
