@@ -1,6 +1,6 @@
 <!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Registration | AIHS Library</title><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700&family=Manrope:wght@500;700;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="app.css"></head>
 <body><div class="center bg-reg"><main class="panel">
-<div style="text-align:center"><img src="logo.jpg" alt="AIHS" width="90" style="border-radius:50%;background:#fff"><h1>Registration</h1></div><p style="margin-top:0">Your College ID will be your User ID. The librarian approves your account before you can open resources.</p>
+<div class="brand"><img src="logo.jpg" alt="AIHS"><span class="eyebrow">AIHS Library &amp; Information Center</span><h1>Create your account</h1><p>Your College ID will be your User ID. The librarian approves your account before you can open resources.</p></div>
 <form id="f">
 <label>Register as</label><div class="roles"><label><input type="radio" name="role" value="student" checked> Student</label><label><input type="radio" name="role" value="staff"> Staff</label></div>
 <label for="name">Full name</label><input id="name" required>
@@ -10,8 +10,8 @@
 <label for="email">Email ID (for confirmation message)</label><input id="email" type="email" required>
 <div class="row"><div><label for="pw">Password (min 6)</label><input id="pw" type="password" minlength="6" autocomplete="new-password" required></div>
 <div><label for="pw2">Confirm password</label><input id="pw2" type="password" minlength="6" autocomplete="new-password" required></div></div>
-<p style="margin-top:20px"><button class="btn" style="width:100%;padding:14px">Register</button></p></form>
-<p class="msg" id="m"></p><p style="text-align:center"><a href="login.html">Already registered? Login</a> &middot; <a href="index.html">Home</a></p>
+<p style="margin-top:20px"><button class="btn" style="width:100%;padding:15px;font-size:14px">Create account</button></p></form>
+<p class="msg" id="m" role="alert"></p><p class="links"><a href="login.html">Already registered? Sign in</a> &middot; <a href="index.html">Home</a></p>
 </main></div>
 <script type="module">
 import {auth,db,signup,idEmail,go,doc,setDoc,serverTimestamp,mail} from "./fb.js";
