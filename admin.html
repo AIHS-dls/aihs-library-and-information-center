@@ -32,7 +32,27 @@ onAuthStateChanged(auth,async u=>{
   const p=await profile(u);
   if(!p||go(p)!=="admin.html"){location.href=p?"dashboard.html":"register.html";return;}
   me=u.uid;$("who").textContent=p.name;initContent();
-  onSnapshot(collection(db,"users"),s=>{rows=s.docs.map(d=>({id:d.id,...d.data()}));drawU();});
+  onSnapshot(collection(db,"registrations"),s=>{
+  rows=s.docs.map(d=>{
+    const x=d.data();
+    return {
+      id:d.id,
+      name:x.fullName || "",
+      role:x.requestedRole || "",
+      dept:x.department || "",
+      cls:x.class || "",
+      idNo:x.rollNumber || "",
+      email:x.email || "",
+      status:x.status || "pending"
+    };
+  });
+  drawU();
+},err=>{
+  console.error("Registration loading error:",err);
+  $("rows").innerHTML =
+    "<tr><td colspan='7'>Error loading registrations: "+
+    esc(err.message)+"</td></tr>";
+});
   onSnapshot(collection(db,"resources"),s=>{res=s.docs.map(d=>({id:d.id,...d.data()}));drawR();});
   onSnapshot(collection(db,"resourceLinks"),s=>{links={};s.docs.forEach(d=>{links[d.id]=d.data().link;});drawR();});
 });
@@ -52,11 +72,43 @@ function drawU(){
     const c=tr.lastChild;
     function btn(txt,cls,fn){const b=document.createElement("button");b.textContent=txt;b.className=cls;b.onclick=fn;c.appendChild(b);}
     if(r.id!==me){
-      if(r.status!=="approved")btn("Approve","a",async()=>{await updateDoc(doc(db,"users",r.id),{status:"approved"});mail("approved",{uid:r.id});});
+    if(r.status==="pending")btn("Approve","a",async()=>{
+  try{
+    await setDoc(doc(db,"users",r.id),{
+      name:r.name,
+      role:r.role,
+      dept:r.dept,
+      cls:r.cls,
+      idNo:r.idNo,
+      email:r.email,
+      authEmail:r.email,
+      status:"approved",
+      createdAt:serverTimestamp()
+    });
+
+    await updateDoc(doc(db,"registrations",r.id),{
+      status:"approved",
+      approvedAt:serverTimestamp()
+    });
+
+    mail("approved",{uid:r.id});
+  }catch(err){
+    alert("Approve failed: "+err.message);
+  }
+});
+      
       if(r.status==="approved"&&r.role!=="admin")btn("Make admin","a",()=>{if(confirm("Make "+r.name+" an admin? They will get full control."))updateDoc(doc(db,"users",r.id),{role:"admin"});});
       if(r.status!=="rejected")btn("Reject","r",()=>updateDoc(doc(db,"users",r.id),{status:"rejected"}));
-      btn("Delete","d",()=>{if(confirm("Delete "+r.name+"? (To let this College ID register again, also delete it in Firebase > Authentication > Users.)"))deleteDoc(doc(db,"users",r.id));});
-    }else c.textContent="You";
+      btn("Delete","d",async()=>{
+  if(confirm("Delete "+r.name+" registration?")){
+    try{
+      await deleteDoc(doc(db,"registrations",r.id));
+    }catch(err){
+      alert("Delete failed: "+err.message);
+    }
+  }
+});
+      btn("Delete","d",()=>{if(confirm("Delete "+r.name+"? (To 
     tb.appendChild(tr);
   });
 }
