@@ -65,7 +65,17 @@
 <select id="k">
 <option>All classes</option><option>1st Year</option><option>2nd Year</option><option>3rd Year</option><option>4th Year</option><option>Internship</option><option>PG 1st Year</option><option>PG 2nd Year</option>
 </select></div>
-<div><label for="l">Google Drive link</label><input id="l" type="url" required placeholder="https://drive.google.com/..."></div>
+<div>
+  <label for="cover">Cover Page Google Drive Link</label>
+  <input id="cover" type="url"
+         placeholder="Paste cover image Drive link">
+</div>
+
+<div>
+  <label for="l">PDF Google Drive Link</label>
+  <input id="l" type="url" required
+         placeholder="Paste PDF Drive link">
+</div>
 <div class="full"><label for="n">Short description (optional)</label><input id="n" maxlength="200"></div>
 </div>
 <p style="margin-top:18px">
@@ -333,6 +343,28 @@ function drawU(){
   });
 }
 
+/* ---------- Google Drive link helpers ---------- */
+function driveFileId(value){
+  const url=String(value||"").trim();
+  const patterns=[
+    /\/file\/d\/([a-zA-Z0-9_-]+)/,
+    /[?&]id=([a-zA-Z0-9_-]+)/,
+    /\/uc\?(?:[^#]*&)?id=([a-zA-Z0-9_-]+)/
+  ];
+  for(const pattern of patterns){
+    const match=url.match(pattern);
+    if(match)return match[1];
+  }
+  return "";
+}
+function driveImageUrl(value){
+  const id=driveFileId(value);
+  return id ? "https://drive.google.com/uc?export=view&id="+encodeURIComponent(id) : "";
+}
+function validDriveLink(value){
+  return /^https:\/\/(drive|docs)\.google\.com\//i.test(String(value||"").trim());
+}
+
 /* ---------- resources ---------- */
 $("rq").oninput=()=>drawR();
 
@@ -356,12 +388,17 @@ function drawR(){
     const tr=document.createElement("tr");
 
     const safeLink=links[r.id]||"";
+    const coverLink=String(r.coverLink||"");
+    const coverSrc=driveImageUrl(coverLink);
+    const coverHtml=coverSrc
+      ? "<br><img src='"+esc(coverSrc)+"' alt='Cover' style='width:54px;height:70px;object-fit:cover;border-radius:5px;margin-top:6px' onerror='this.style.display=\"none\"'>"
+      : "";
     const linkHtml=safeLink
-      ? "<br><a href='"+esc(safeLink)+"' target='_blank' rel='noopener' style='color:#167d78;font-size:12px'>Open link</a>"
+      ? "<br><a href='"+esc(safeLink)+"' target='_blank' rel='noopener' style='color:#167d78;font-size:12px'>Open PDF</a>"
       : "";
 
     tr.innerHTML=
-      "<td><b>"+esc(r.title)+"</b>"+linkHtml+"</td>"+
+      "<td>"+coverHtml+"<br><b>"+esc(r.title)+"</b>"+linkHtml+"</td>"+
       "<td>"+esc(r.category)+"</td>"+
       "<td>"+esc(r.dept)+"<br>"+esc(r.cls)+"</td>"+
       "<td></td>";
@@ -383,6 +420,7 @@ function drawR(){
       $("d").value=r.dept||"All departments";
       $("k").value=r.cls||"All classes";
       $("l").value=links[r.id]||"";
+      $("cover").value=r.coverLink||"";
       $("n").value=r.desc||"";
       $("fh").textContent="Edit resource";
       $("cx").hidden=false;
@@ -428,11 +466,19 @@ $("rf").onsubmit=async e=>{
     return;
   }
 
+  const coverLink=$("cover").value.trim();
+  if(coverLink && !validDriveLink(coverLink)){
+    m.className="msg err";
+    m.textContent="Please paste a valid Google Drive cover image link.";
+    return;
+  }
+
   const d={
     title:$("t").value.trim(),
     category:$("c").value,
     dept:$("d").value,
     cls:$("k").value,
+    coverLink,
     desc:$("n").value.trim(),
     published:true,
     updatedAt:serverTimestamp()
@@ -492,6 +538,8 @@ function build(fields,fg){
       if(f.t==="number"){
         el.type="number";
         el.min=0;
+      }else if(f.t==="url"){
+        el.type="url";
       }
     }
 
@@ -556,13 +604,16 @@ function crud(root,coll,title,fields,cols){
     for(const f of fields){
       d[f.k]=inp[f.k].value.trim();
 
-      if(f.drive && d[f.k] &&
-        d[f.k].split("\n").some(l=>l.trim()&&!DR.test(l.trim()))
-      ){
+      if(f.drive && d[f.k] && !validDriveLink(d[f.k])){
         msg.className="msg err";
-        msg.textContent="Photo links must be Google Drive links.";
+        msg.textContent="Please paste a valid Google Drive link for "+f.l+".";
         return;
       }
+    }
+
+    // Keep the existing website's photos field compatible.
+    if(coll==="events"){
+      d.photos=[d.photo1,d.photo2,d.photo3].filter(Boolean).join("\\n");
     }
 
     try{
@@ -712,7 +763,9 @@ function initContent(){
     {k:"date",l:"Date and time (shown as typed)",ph:"12 August 2026 · 9:30 AM"},
     {k:"status",l:"Status",t:"select",o:["Completed","Upcoming"]},
     {k:"desc",l:"Description",t:"area"},
-    {k:"photos",l:"Photo links (Google Drive, one per line, up to 6)",t:"area",drive:1}
+    {k:"photo1",l:"Event Photo 1 — Google Drive Link",t:"url",drive:1,ph:"Paste first photo Drive link"},
+    {k:"photo2",l:"Event Photo 2 — Google Drive Link",t:"url",drive:1,ph:"Paste second photo Drive link"},
+    {k:"photo3",l:"Event Photo 3 — Google Drive Link",t:"url",drive:1,ph:"Paste third photo Drive link"}
   ],[["title","Title"],["date","Date"],["status","Status"]]);
 
   crud($("p-bu"),"bestUsers","Best User",[
