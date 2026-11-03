@@ -46,8 +46,7 @@ export async function profile(u){
 }
 export function go(p){
   if(!p)return "register.html";
-  if(p.role==="admin")return "admin.html";
-  if(p.status==="approved")return "dashboard.html";
+  if(p.status==="approved"&&p.role==="admin")return "admin.html";
   return "dashboard.html";
 }
 export const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
