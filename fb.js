@@ -10,7 +10,11 @@ export {query,where,signOut,onAuthStateChanged,doc,getDoc,getDocs,setDoc,updateD
 /* College ID is the user id. Firebase needs an email, so the ID is turned into one. */
 export const idKey=id=>String(id).trim().toLowerCase().replace(/[^a-z0-9._-]/g,"-");
 export const idEmail=id=>idKey(id)+"@aihs-library.in";
-export const login=(id,pw)=>signInWithEmailAndPassword(auth,idEmail(id),pw);
+export const login=(id,pw)=>{
+  const value=String(id).trim();
+  const email=value.includes("@") ? value.toLowerCase() : idEmail(value);
+  return signInWithEmailAndPassword(auth,email,pw);
+};
 export const signup=(id,pw)=>createUserWithEmailAndPassword(auth,idEmail(id),pw);
 
 /* admin creates accounts without losing their own session */
@@ -42,7 +46,8 @@ export async function profile(u){
 }
 export function go(p){
   if(!p)return "register.html";
-  if(p.status==="approved"&&p.role==="admin")return "admin.html";
+  if(p.role==="admin")return "admin.html";
+  if(p.status==="approved")return "dashboard.html";
   return "dashboard.html";
 }
 export const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
