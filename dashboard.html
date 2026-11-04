@@ -1,5 +1,5 @@
 <!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>My Library | AIHS</title><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700&family=Manrope:wght@500;700;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="app.css"></head>
-<body><div class="top"><img src="logo.jpg" alt=""><div><b>AIHS Library</b><small id="who"></small></div><span class="sp"></span><a href="index.html" class="btn">Home</a> <button class="out" id="out">Sign out</button></div>
+<body><div class="top"><img src="logo.jpg" alt=""><div><b>AIHS Library</b><small id="who"></small><small id="profileInfo" style="display:block;margin-top:4px"></small></div><span class="sp"></span><a href="index.html" class="btn">Home</a> <button class="out" id="out">Sign out</button></div>
 <div class="wrap"><div class="panel" id="box">Loading...</div>
 <div class="panel" style="margin-top:18px"><h2>Change password</h2><form id="pf"><div class="row"><div><label for="cp">Current password</label><input id="cp" type="password" required></div><div><label for="np">New password (min 6)</label><input id="np" type="password" minlength="6" required></div></div><p style="margin-top:14px"><button class="btn">Change password</button></p><p class="msg" id="pm"></p></form></div></div>
 <script type="module">
@@ -13,11 +13,12 @@ onAuthStateChanged(auth,async u=>{
   if(!u){location.href="index.html";return;}
   const p=await profile(u);if(!p){location.href="register.html";return;}
   if(go(p)==="admin.html"){location.href="admin.html";return;}
-  $("who").textContent=p.name+" - "+p.role;
+  $("who").textContent="Profile";
+  $("profileInfo").textContent="Name: "+(p.name||"—")+"  |  College ID / User ID: "+(p.idNo||"—");
   const b=$("box");
   if(p.status==="pending"){b.innerHTML="<h2>Waiting for approval</h2><p>Your registration is with the library admin. You can open resources once it is approved. Please check again later.</p><span class='badge pending'>Pending</span>";return;}
   if(p.status==="rejected"){b.innerHTML="<h2>Registration not approved</h2><p>Please contact the librarian: librarian@aihs.ac.in</p><span class='badge rejected'>Rejected</span>";return;}
-  b.innerHTML="<h2>Welcome, "+esc(p.name)+"</h2><p style='margin:0 0 6px;color:#5b6b75'>"+esc(p.dept)+" &middot; "+esc(p.cls)+" &middot; ID "+esc(p.idNo)+"</p><div class='tabs' id='ct'></div><input id='rq' placeholder='Search e-books, notes, question papers, journals' style='margin-bottom:6px'><div class='grid2' id='gr'></div>";
+  b.innerHTML="<h2>Welcome, "+esc(p.name)+"</h2><p style='margin:0 0 6px;color:#5b6b75'><strong>Name:</strong> "+esc(p.name)+" &middot; <strong>College ID / User ID:</strong> "+esc(p.idNo)+"</p><p style='margin:0 0 12px;color:#5b6b75'>"+esc(p.dept)+" &middot; "+esc(p.cls)+"</p><div class='tabs' id='ct'></div><input id='rq' placeholder='Search e-books, notes, question papers, journals' style='margin-bottom:6px'><div class='grid2' id='gr'></div>";
   const CATS=["All","E-Books","Study Notes","Question Papers","eJournals"];let cat="All",list=[],links={};
   function draw(){
     const ct=$("ct");ct.innerHTML="";
