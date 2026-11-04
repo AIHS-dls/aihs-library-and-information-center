@@ -1,40 +1,57 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>My Library | AIHS</title><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700&family=Manrope:wght@500;700;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="app.css"></head>
-<body><div class="top"><img src="logo.jpg" alt=""><div><b>AIHS Library</b><small id="who"></small><small id="profileInfo" style="display:block;margin-top:4px"></small></div><span class="sp"></span><a href="index.html" class="btn">Home</a> <button class="out" id="out">Sign out</button></div>
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>My Library | AIHS</title><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700&family=Manrope:wght@500;700;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="app.css">
+<style>
+/* Student / Staff dashboard improvements */
+.top{gap:12px}.top .profile-block{min-width:0}.top .profile-block small{text-transform:none;letter-spacing:0;color:#ffe0a0;font-size:11px;line-height:1.5}.top .top-actions{display:flex;align-items:center;gap:9px;margin-left:auto}.top .pw-toggle{background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.35);box-shadow:none}.top .pw-toggle:hover{background:rgba(255,255,255,.18);box-shadow:none}
+.pw-panel{display:none;margin:18px 0 0}.pw-panel.open{display:block}.pw-panel .panel{padding:22px}.pw-panel h2{margin-bottom:8px}
+.resource-section{margin:24px 0 8px}.resource-section h2{font-size:20px;margin:0 0 12px;padding-bottom:8px;border-bottom:2px solid #e9eef0;color:#062847}.book-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:15px;margin:10px 0 22px}.book-card{min-width:0;background:#fff;border:1px solid #e3e9ec;border-radius:14px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 2px 8px rgba(6,40,71,.05);transition:transform .18s,box-shadow .18s}.book-card:hover{transform:translateY(-3px);box-shadow:0 12px 26px rgba(6,40,71,.12)}.book-cover{width:100%;aspect-ratio:3/4;background:linear-gradient(135deg,#edf2f4,#dfe8eb);display:flex;align-items:center;justify-content:center;overflow:hidden}.book-cover img{width:100%;height:100%;object-fit:cover}.book-cover .no-cover{font-size:13px;color:#667985;padding:15px;text-align:center}.book-info{padding:11px;display:flex;flex-direction:column;gap:7px;flex:1}.book-info h3{font-size:13px;line-height:1.4;margin:0;color:#102b4c;overflow-wrap:anywhere}.book-info p{font-size:11px;color:#687985;line-height:1.4;margin:0}.book-info a{margin-top:auto;display:inline-block;text-align:center;padding:8px 10px;border-radius:8px;background:#062847;color:white;font-size:12px;font-weight:800}.book-info a:hover{background:#167d78}.department-filter{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.department-filter button{border:1px solid #cbd8d7;background:#fff;border-radius:18px;padding:7px 13px;font:800 12px Manrope,Arial,sans-serif;cursor:pointer}.department-filter button.on{background:#167d78;color:#fff;border-color:#167d78}.empty-state{padding:22px;background:#f7f9fa;border:1px dashed #cbd8d7;border-radius:12px;color:#5b6b75}
+@media(max-width:1100px){.book-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:800px){.book-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.top{flex-wrap:wrap}.top .top-actions{gap:6px}}
+@media(max-width:560px){.book-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.top{padding:10px 3%;gap:8px}.top img{width:38px;height:38px}.top .top-actions{width:100%;justify-content:flex-end}.top .top-actions a{margin-right:auto}.panel{padding:18px}}
+</style></head>
+<body>
+<div class="top"><img src="logo.jpg" alt="AIHS Library logo"><div class="profile-block"><b>AIHS Library</b><small id="profileInfo">Loading profile...</small></div><div class="top-actions"><a href="index.html" class="btn">Home</a><button type="button" class="pw-toggle" id="pwToggle">Change password</button><button class="out" id="out">Sign out</button></div></div>
 <div class="wrap"><div class="panel" id="box">Loading...</div>
-<div class="panel" style="margin-top:18px"><h2>Change password</h2><form id="pf"><div class="row"><div><label for="cp">Current password</label><input id="cp" type="password" required></div><div><label for="np">New password (min 6)</label><input id="np" type="password" minlength="6" required></div></div><p style="margin-top:14px"><button class="btn">Change password</button></p><p class="msg" id="pm"></p></form></div></div>
+<div class="pw-panel" id="pwPanel"><div class="panel"><h2>Change password</h2><form id="pf"><div class="row"><div><label for="cp">Current password</label><input id="cp" type="password" required></div><div><label for="np">New password (min 6)</label><input id="np" type="password" minlength="6" required></div></div><p style="margin-top:14px"><button class="btn">Change password</button> <button type="button" class="btn" id="pwClose" style="background:#e9eef0;box-shadow:none">Close</button></p><p class="msg" id="pm"></p></form></div></div>
+</div>
 <script type="module">
 import {auth,db,profile,go,signOut,onAuthStateChanged,collection,onSnapshot,esc,changePassword} from "./fb.js";
 const $=id=>document.getElementById(id);
 $("out").onclick=async()=>{await signOut(auth);location.href="index.html";};
-$("pf").onsubmit=async e=>{e.preventDefault();const m=$("pm");m.className="msg";m.textContent="";
-  try{await changePassword($("cp").value,$("np").value);m.className="msg ok";m.textContent="Password changed.";$("pf").reset();}
-  catch(err){m.className="msg err";m.textContent=err.code==="auth/invalid-credential"||err.code==="auth/wrong-password"?"Current password is wrong.":"Could not change password: "+(err.code||err.message);}};
+$("pwToggle").onclick=()=>{$("pwPanel").classList.toggle("open");if($("pwPanel").classList.contains("open"))$("cp").focus();};
+$("pwClose").onclick=()=>{$("pwPanel").classList.remove("open");};
+$("pf").onsubmit=async e=>{e.preventDefault();const m=$("pm");m.className="msg";m.textContent="";try{await changePassword($("cp").value,$("np").value);m.className="msg ok";m.textContent="Password changed successfully.";$("pf").reset();}catch(err){m.className="msg err";m.textContent=err.code==="auth/invalid-credential"||err.code==="auth/wrong-password"?"Current password is wrong.":"Could not change password: "+(err.code||err.message);}};
+function driveImage(url){if(!url)return "";const s=String(url).trim();if(/^https?:\/\//i.test(s)&&!s.includes("drive.google.com"))return s;const m=s.match(/\/d\/([\w-]+)/)||s.match(/[?&]id=([\w-]+)/);return m?`https://drive.google.com/thumbnail?id=${m[1]}&sz=w600`:s;}
+function driveFile(url){if(!url)return "";const s=String(url).trim();if(/^https:\/\//i.test(s))return s;const m=s.match(/[\w-]{20,}/);return m?`https://drive.google.com/file/d/${m[0]}/view`:"";}
 onAuthStateChanged(auth,async u=>{
-  if(!u){location.href="index.html";return;}
-  const p=await profile(u);if(!p){location.href="register.html";return;}
-  if(go(p)==="admin.html"){location.href="admin.html";return;}
-  $("who").textContent="Profile";
-  $("profileInfo").textContent="Name: "+(p.name||"—")+"  |  College ID / User ID: "+(p.idNo||"—");
-  const b=$("box");
-  if(p.status==="pending"){b.innerHTML="<h2>Waiting for approval</h2><p>Your registration is with the library admin. You can open resources once it is approved. Please check again later.</p><span class='badge pending'>Pending</span>";return;}
-  if(p.status==="rejected"){b.innerHTML="<h2>Registration not approved</h2><p>Please contact the librarian: librarian@aihs.ac.in</p><span class='badge rejected'>Rejected</span>";return;}
-  b.innerHTML="<h2>Welcome, "+esc(p.name)+"</h2><p style='margin:0 0 6px;color:#5b6b75'><strong>Name:</strong> "+esc(p.name)+" &middot; <strong>College ID / User ID:</strong> "+esc(p.idNo)+"</p><p style='margin:0 0 12px;color:#5b6b75'>"+esc(p.dept)+" &middot; "+esc(p.cls)+"</p><div class='tabs' id='ct'></div><input id='rq' placeholder='Search e-books, notes, question papers, journals' style='margin-bottom:6px'><div class='grid2' id='gr'></div>";
-  const CATS=["All","E-Books","Study Notes","Question Papers","eJournals"];let cat="All",list=[],links={};
-  function draw(){
-    const ct=$("ct");ct.innerHTML="";
-    CATS.forEach(c=>{const x=document.createElement("button");x.textContent=c;x.className=c===cat?"on":"";x.onclick=()=>{cat=c;draw();};ct.appendChild(x);});
-    const q=$("rq").value.toLowerCase(),g=$("gr");
-    const v=list.filter(r=>(cat==="All"||r.category===cat)&&(r.title+(r.desc||"")+r.dept+r.cls).toLowerCase().includes(q)).sort((a,b)=>a.title.localeCompare(b.title));
-    g.innerHTML=v.length?"":"<p style='color:#5b6b75'>No resources found.</p>";
-    v.forEach(r=>{
-      const l=links[r.id]||"",ok=/^https:\/\/(drive|docs)\.google\.com\//.test(l);
-      const d=document.createElement("div");d.className="rc";
-      d.innerHTML="<span class='cat'>"+esc(r.category)+"</span><h3>"+esc(r.title)+"</h3><p>"+esc(r.dept)+" &middot; "+esc(r.cls)+"</p>"+(r.desc?"<p>"+esc(r.desc)+"</p>":"")+(ok?"<a target='_blank' rel='noopener' href='"+esc(l)+"'>Open</a>":"");
-      g.appendChild(d);
-    });
+ if(!u){location.href="index.html";return;}
+ const p=await profile(u);if(!p){location.href="register.html";return;}
+ if(go(p)==="admin.html"){location.href="admin.html";return;}
+ $("profileInfo").textContent="Name: "+(p.name||"—")+"  |  College ID / User ID: "+(p.idNo||"—");
+ const b=$("box");
+ if(p.status==="pending"){b.innerHTML="<h2>Waiting for approval</h2><p>Your registration is with the library admin. You can open resources once it is approved. Please check again later.</p><span class='badge pending'>Pending</span>";return;}
+ if(p.status==="rejected"){b.innerHTML="<h2>Registration not approved</h2><p>Please contact the librarian: librarian@aihs.ac.in</p><span class='badge rejected'>Rejected</span>";return;}
+ b.innerHTML="<h2>Welcome, "+esc(p.name||"Library Member")+"</h2><p style='margin:0 0 12px;color:#5b6b75'>"+esc(p.dept||"")+" · "+esc(p.cls||"")+"</p><div class='tabs' id='ct'></div><input id='rq' placeholder='Search e-books, notes, question papers, journals' style='margin-bottom:6px'><div id='deptFilters' class='department-filter' style='display:none'></div><div id='resourceResults'></div>";
+ const CATS=["All","E-Books","Study Notes","Question Papers","eJournals"];let cat="All",list=[],links={},deptChoice="All";
+ function getDept(r){return String(r.dept||"Other departments").trim()||"Other departments";}
+ function resourceLink(r){return driveFile(r.link||r.pdfLink||links[r.id]||"");}
+ function coverLink(r){return driveImage(r.coverLink||r.coverURL||r.cover||"");}
+ function card(r){const l=resourceLink(r),cover=coverLink(r),d=document.createElement("article");d.className="book-card";const visual=document.createElement("div");visual.className="book-cover";if(cover){const im=document.createElement("img");im.src=cover;im.alt=r.title||"Book cover";im.loading="lazy";im.onerror=()=>{visual.innerHTML="<div class='no-cover'>Cover image unavailable</div>";};visual.appendChild(im);}else visual.innerHTML="<div class='no-cover'>Cover page not added</div>";const info=document.createElement("div");info.className="book-info";const h=document.createElement("h3");h.textContent=r.title||"Untitled resource";const meta=document.createElement("p");meta.textContent=getDept(r)+(r.cls?" · "+r.cls:"");info.append(h,meta);if(l){const a=document.createElement("a");a.href=l;a.target="_blank";a.rel="noopener";a.textContent="Open / Read";info.appendChild(a);}d.append(visual,info);return d;}
+ function draw(){
+  const ct=$("ct");ct.innerHTML="";CATS.forEach(c=>{const x=document.createElement("button");x.textContent=c;x.className=c===cat?"on":"";x.onclick=()=>{cat=c;deptChoice="All";draw();};ct.appendChild(x);});
+  const q=$("rq").value.toLowerCase();const v=list.filter(r=>(cat==="All"||r.category===cat)&&((r.title||"")+" "+(r.desc||"")+" "+(r.dept||"")+" "+(r.cls||"")).toLowerCase().includes(q)).sort((a,b)=>(a.title||"").localeCompare(b.title||""));
+  const results=$("resourceResults"),df=$("deptFilters");results.innerHTML="";
+  if(cat==="E-Books"){
+   const depts=[...new Set(v.map(getDept))].sort((a,b)=>a.localeCompare(b));df.style.display=depts.length?"flex":"none";df.innerHTML="";
+   ["All",...depts].forEach(dep=>{const btn=document.createElement("button");btn.textContent=dep;btn.className=deptChoice===dep?"on":"";btn.onclick=()=>{deptChoice=dep;draw();};df.appendChild(btn);});
+   const selected=deptChoice==="All"?v:v.filter(r=>getDept(r)===deptChoice);const groups=deptChoice==="All"?depts:[deptChoice];
+   if(!selected.length){results.innerHTML="<div class='empty-state'>No E-Books found for this department.</div>";return;}
+   groups.forEach(dep=>{const books=selected.filter(r=>getDept(r)===dep);if(!books.length)return;const sec=document.createElement("section");sec.className="resource-section";const title=document.createElement("h2");title.textContent=dep;const grid=document.createElement("div");grid.className="book-grid";books.forEach(r=>grid.appendChild(card(r)));sec.append(title,grid);results.appendChild(sec);});
+  }else{
+   df.style.display="none";if(!v.length){results.innerHTML="<div class='empty-state'>No resources found.</div>";return;}const grid=document.createElement("div");grid.className="book-grid";v.forEach(r=>grid.appendChild(card(r)));results.appendChild(grid);
   }
-  $("rq").oninput=draw;
-  onSnapshot(collection(db,"resources"),s=>{list=s.docs.map(d=>({id:d.id,...d.data()}));draw();});
-  onSnapshot(collection(db,"resourceLinks"),s=>{links={};s.docs.forEach(d=>{links[d.id]=d.data().link;});draw();});
+ }
+ $("rq").oninput=draw;
+ onSnapshot(collection(db,"resources"),s=>{list=s.docs.map(d=>({id:d.id,...d.data()}));draw();},err=>{console.error(err);$("resourceResults").innerHTML="<div class='empty-state'>Resources could not be loaded. Please contact the librarian.</div>";});
+ onSnapshot(collection(db,"resourceLinks"),s=>{links={};s.docs.forEach(d=>{links[d.id]=d.data().link;});draw();},err=>console.warn("Resource links unavailable",err));
 });
 </script></body></html>
