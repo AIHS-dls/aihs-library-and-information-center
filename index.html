@@ -1143,7 +1143,7 @@ addEventListener("keydown",e=>{if(e.key==="Escape")closeLogin();});
 @media(max-width:700px){.res-item{grid-template-columns:1fr;gap:4px}}
 </style>
 <script type="module">
-import {db,collection,getDocs,doc,getDoc,esc} from "./fb.js";
+import {db,collection,getDocs,doc,getDoc,onSnapshot,esc} from "./fb.js";
 const DR=/^https:\/\/(drive|docs)\.google\.com\//;
 function thumb(u){const m=u.match(/\/d\/([\w-]+)/)||u.match(/[?&]id=([\w-]+)/);return m?"https://drive.google.com/thumbnail?id="+m[1]+"&sz=w1400":null;}
 function el(t,c,x){const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e;}
@@ -1181,18 +1181,31 @@ const byNew=(a,b)=>((b.createdAt&&b.createdAt.seconds)||0)-((a.createdAt&&a.crea
     }
   }catch(e){}
   /* Latest resources section removed by request. */
-  /* Events: build the updated cards first, then swap them in only after
-     their lead photos finish loading. This prevents the refresh-time flash. */
-  try{
-    const snap=await getDocs(collection(db,"events")),ev=snap.docs.map(d=>d.data()).sort(byNew).slice(0,6);
-    if(ev.length){
+  /* Events: live Firestore listener. Admin edits appear here without stale static text. */
+  onSnapshot(collection(db,"events"),async snap=>{
+    try{
+      const ev=snap.docs.map(d=>({id:d.id,...d.data()})).filter(e=>e.published!==false).sort(byNew).slice(0,6);
+      if(!ev.length)return;
       const sec=document.getElementById("events"),cards=[],photoReady=[];
       ev.forEach(e=>{
         const w=el("div","event"),left=el("div"),fr=el("div","event-photo-frame");
-        const rawPhotos=e.photos||[e.photo1,e.photo2,e.photo3].filter(Boolean);const photoList=Array.isArray(rawPhotos)?rawPhotos:String(rawPhotos||"").split("\n");const imgs=photoList.map(x=>String(x||"").trim()).filter(Boolean).map(u=>{if(DR.test(u))return thumb(u);if(/^https:\/\//i.test(u))return u;const clean=u.split(/[?#]/)[0],leaf=clean.split("/").pop();if(/^event[123]\.(?:jpg|jpeg|png|webp)$/i.test(leaf))return "https://raw.githubusercontent.com/AIHS-dls/aihs-library-and-information-center/main/"+leaf;return (u.startsWith("/")||u.startsWith("events/")||u.startsWith("images/")||/^[\w./-]+\.(?:jpg|jpeg|png|webp)$/i.test(u))?u:null;}).filter(Boolean).slice(0,6);\n        if(!imgs.length && /quiz competition/i.test(e.title||""))imgs.push("event1.jpg","event2.jpg","event3.jpg");
+        const rawPhotos=e.photos||[e.photo1,e.photo2,e.photo3].filter(Boolean);
+        const photoList=Array.isArray(rawPhotos)?rawPhotos:String(rawPhotos||"").split("\n");
+        const imgs=photoList.map(x=>String(x||"").trim()).filter(Boolean).map(u=>{
+          if(DR.test(u))return thumb(u);
+          if(/^https:\/\//i.test(u))return u;
+          const clean=u.split(/[?#]/)[0],leaf=clean.split("/").pop();
+          if(/^event[123]\.(?:jpg|jpeg|png|webp)$/i.test(leaf))return "https://raw.githubusercontent.com/AIHS-dls/aihs-library-and-information-center/main/"+leaf;
+          return (u.startsWith("/")||u.startsWith("events/")||u.startsWith("images/")||/^[\w./-]+\.(?:jpg|jpeg|png|webp)$/i.test(u))?u:null;
+        }).filter(Boolean).slice(0,6);
+        if(!imgs.length && /quiz competition/i.test(e.title||""))imgs.push(
+          "https://raw.githubusercontent.com/AIHS-dls/aihs-library-and-information-center/main/event1.jpg",
+          "https://raw.githubusercontent.com/AIHS-dls/aihs-library-and-information-center/main/event2.jpg",
+          "https://raw.githubusercontent.com/AIHS-dls/aihs-library-and-information-center/main/event3.jpg"
+        );
         imgs.forEach((u,i)=>{
           const im=el("img","event-photo"+(i?"":" active"));
-          im.alt=e.title;im.loading="eager";im.decoding="async";
+          im.alt=e.title||"Library event photo";im.loading="eager";im.decoding="async";
           if(i===0){
             photoReady.push(new Promise(resolve=>{
               im.addEventListener("load",resolve,{once:true});
@@ -1203,7 +1216,7 @@ const byNew=(a,b)=>((b.createdAt&&b.createdAt.seconds)||0)-((a.createdAt&&a.crea
           }else im.src=u;
           fr.appendChild(im);
         });
-        if(!imgs.length){fr.style.cssText="display:grid;place-items:center;background:linear-gradient(135deg,#062847,#167d78);color:#fff;text-align:center;padding:20px";fr.appendChild(el("strong",null,e.title));}
+        if(!imgs.length){fr.style.cssText="display:grid;place-items:center;background:linear-gradient(135deg,#062847,#167d78);color:#fff;text-align:center;padding:20px";fr.appendChild(el("strong",null,e.title||"Library Event"));}
         left.appendChild(fr);
         if(imgs.length>1){
           let i=0;const nav=el("div","ev-nav"),pr=el("button",null,"‹"),nx=el("button",null,"›");
@@ -1212,7 +1225,8 @@ const byNew=(a,b)=>((b.createdAt&&b.createdAt.seconds)||0)-((a.createdAt&&a.crea
           pr.onclick=()=>show(i-1);nx.onclick=()=>show(i+1);nav.appendChild(pr);nav.appendChild(nx);left.appendChild(nav);
         }
         const details=el("div","event-details");
-        details.appendChild(el("div","eyebrow","Library Event"));details.appendChild(el("h2",null,e.title));
+        details.appendChild(el("div","eyebrow","Library Event"));
+        details.appendChild(el("h2",null,e.title||"Library Event"));
         if(e.date)details.appendChild(el("p","event-date",e.date));
         const eventDescription=e.desc||e.description||e.details||"";
         if(eventDescription)details.appendChild(el("p",null,eventDescription));
@@ -1222,8 +1236,14 @@ const byNew=(a,b)=>((b.createdAt&&b.createdAt.seconds)||0)-((a.createdAt&&a.crea
       await Promise.all(photoReady);
       sec.querySelectorAll(".event,.notice").forEach(x=>x.remove());
       cards.forEach(card=>sec.appendChild(card));
-    }
-  }catch(e){}
+    }catch(renderError){console.error("Event display error:",renderError);}
+  },err=>{
+    console.error("Public events read failed:",err);
+    const sec=document.getElementById("events");
+    let note=sec.querySelector(".event-db-error");
+    if(!note){note=document.createElement("p");note.className="event-db-error notice";sec.appendChild(note);}
+    note.textContent="Event updates are unavailable. Firestore events read permission needs to be enabled.";
+  });
 })();
 </script>
 </body>
