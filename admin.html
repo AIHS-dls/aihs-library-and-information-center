@@ -613,6 +613,8 @@ function crud(root,coll,title,fields,cols){
 
     // Keep the existing website's photos field compatible.
     if(coll==="events"){
+      // Keep both legacy and current description field names in sync.
+      d.description=d.desc;
       d.photos=[d.photo1,d.photo2,d.photo3].filter(Boolean).join("\n");
     }
 
@@ -682,7 +684,7 @@ function crud(root,coll,title,fields,cols){
       b1.onclick=()=>{
         eid=r.id;
         fields.forEach(f=>{
-          inp[f.k].value=r[f.k]||"";
+          inp[f.k].value=(f.k==="desc"?(r.desc||r.description||r.details||""):(r[f.k]||""));
         });
         h.textContent="Edit "+title;
         cx.hidden=false;
