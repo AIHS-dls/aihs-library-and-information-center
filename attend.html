@@ -1,19 +1,19 @@
 <!doctype html>
-<html lang="kn">
+<html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#092d43"><title>AIHS Library Visitor Register</title>
 <style>
 *{box-sizing:border-box}body{margin:0;min-height:100vh;padding:24px 14px;display:grid;place-items:center;background:linear-gradient(135deg,#09283d,#17616a);font-family:Arial,sans-serif;color:#183443}.card{width:min(100%,560px);padding:30px;background:#fff;border-radius:22px;box-shadow:0 22px 65px #001b2b66}.head{text-align:center}.logo{width:76px;height:76px;object-fit:contain}.eyebrow{margin:12px 0 5px;color:#a57a34;font-size:11px;font-weight:bold;letter-spacing:1.8px}h1{margin:0;color:#092d43;font-size:30px}.sub{color:#65777e;font-size:14px;line-height:1.65}.form{display:grid;gap:13px;margin-top:22px}.form label{font-size:12px;font-weight:bold;color:#52666f}.form input,.form select{width:100%;margin-top:6px;padding:13px;border:1px solid #d9e3e5;border-radius:11px;font-size:15px;background:#fff}.btn{width:100%;padding:15px;border:0;border-radius:11px;background:#0b5360;color:#fff;font-size:15px;font-weight:bold;cursor:pointer}.btn:disabled{opacity:.6}.note{font-size:12px;color:#77868b;text-align:center;line-height:1.6}.status{margin-top:18px;padding:16px;border-radius:12px;background:#edf7f2;color:#17634e;line-height:1.7;font-weight:bold}.error{background:#fff0ee;color:#a13a31}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}.cell{padding:12px;border:1px solid #e2e9e9;border-radius:10px;background:#f8faf9}.cell small{display:block;color:#75848a;font-size:10px;font-weight:bold;text-transform:uppercase}.cell b{display:block;margin-top:5px;font-size:14px;overflow-wrap:anywhere}@media(max-width:440px){.card{padding:23px 17px}.grid{gap:7px}.cell{padding:10px}.cell b{font-size:12px}}
 </style></head>
-<body><main class="card"><header class="head"><img class="logo" src="logo.jpg" alt="AIHS Library"><div class="eyebrow">AIHS LIBRARY &amp; INFORMATION CENTER</div><h1>Visitor Entry Register</h1><p class="sub">ಲೈಬ್ರರಿಗೆ ಆಗಮಿಸಿದವರು ತಮ್ಮ ವಿವರಗಳನ್ನು ದಾಖಲಿಸಿ. ಮೊದಲ ಬಾರಿ Submit ಮಾಡಿದಾಗ Entry, ಮತ್ತೆ Submit ಮಾಡಿದಾಗ Out ಸಮಯ ದಾಖಲಾಗುತ್ತದೆ.</p></header>
+<body><main class="card"><header class="head"><img class="logo" src="logo.jpg" alt="AIHS Library"><div class="eyebrow">AIHS LIBRARY &amp; INFORMATION CENTER</div><h1>Visitor Entry Register</h1><p class="sub">Please enter your details below. Your first submission records your Entry. Submit again when leaving to record your Exit.</p></header>
 <div id="app"><form id="visitorForm" class="form">
-<label>ಪೂರ್ಣ ಹೆಸರು *<input id="name" required maxlength="100" placeholder="ನಿಮ್ಮ ಹೆಸರು"></label>
-<label>ನೀವು ಯಾರು? *<select id="visitorType" required><option value="">ಆಯ್ಕೆಮಾಡಿ</option><option value="Student">Student</option><option value="Staff">Staff</option><option value="Visitor">Visitor</option></select></label>
-<label>Department / Class (ಐಚ್ಛಿಕ)<input id="dept" maxlength="100" placeholder="ಉದಾ: BPT / 2nd Year"></label>
-<label>ಭೇಟಿಯ ಉದ್ದೇಶ (ಐಚ್ಛಿಕ)<input id="purpose" maxlength="180" placeholder="ಉದಾ: Library study / Meeting"></label>
-<label>ಮೊಬೈಲ್ ಸಂಖ್ಯೆ (ಐಚ್ಛಿಕ)<input id="phone" inputmode="tel" maxlength="20" placeholder="ಮೊಬೈಲ್ ಸಂಖ್ಯೆ"></label>
-<button class="btn" type="submit">Submit Entry</button><p class="note">Login ಅಥವಾ College ID ಅಗತ್ಯವಿಲ್ಲ. ಇದು ಎಲ್ಲರಿಗೂ ಮುಕ್ತವಾದ Visitor Register.</p>
+<label>Full Name *<input id="name" required maxlength="100" placeholder="Enter your full name"></label>
+<label>Visitor Type *<select id="visitorType" required><option value="">Select visitor type</option><option value="Student">Student</option><option value="Staff">Staff</option><option value="Visitor">Visitor</option></select></label>
+<label>Department / Class (Optional)<input id="dept" maxlength="100" placeholder="e.g. BPT / 2nd Year"></label>
+<label>Purpose of Visit (Optional)<input id="purpose" maxlength="180" placeholder="e.g. Library study / Meeting"></label>
+<label>Mobile Number (Optional)<input id="phone" inputmode="tel" maxlength="20" placeholder="Enter mobile number"></label>
+<button class="btn" type="submit">Submit Entry</button><p class="note">No login or College ID is required. This Visitor Register is open to everyone.</p>
 </form></div><p class="note" style="margin-top:18px"><a href="index.html">Library Website</a></p></main>
 <script type="module">
 import {signInAnonymously} from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
@@ -24,9 +24,9 @@ const safe=s=>String(s||"").trim();
 const show=(message,details="",error=false)=>{app.innerHTML=(details?'<div class="grid">'+details+'</div>':'')+'<div class="status '+(error?'error':'')+'">'+message+'</div><button class="btn" style="margin-top:15px" onclick="location.reload()">Done</button>';};
 const cell=(label,value)=>'<div class="cell"><small>'+label+'</small><b>'+esc(value||"—")+'</b></div>';
 const time=v=>v?.toDate?v.toDate().toLocaleString("en-IN",{timeZone:"Asia/Kolkata"}):"—";
-try{if(!auth.currentUser)await signInAnonymously(auth);}catch(e){show("Attendance service ಆರಂಭಿಸಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ. Admin ಅನ್ನು ಸಂಪರ್ಕಿಸಿ.",esc(e.code||e.message),true);}
+try{if(!auth.currentUser)await signInAnonymously(auth);}catch(e){show("Could not start the attendance service. Please contact the administrator.",esc(e.code||e.message),true);}
 form.addEventListener("submit",async e=>{
- e.preventDefault();const btn=form.querySelector("button");btn.disabled=true;btn.textContent="ದಾಖಲಾಗುತ್ತಿದೆ...";
+ e.preventDefault();const btn=form.querySelector("button");btn.disabled=true;btn.textContent="Submitting...";
  try{
   if(!auth.currentUser)await signInAnonymously(auth);
   const pending=localStorage.getItem(pendingKey);
@@ -37,7 +37,7 @@ form.addEventListener("submit",async e=>{
     if(snap.exists()&&!snap.data().outAt){
      await updateDoc(ref,{outAt:serverTimestamp(),outDate:p.date});
      const d=snap.data();localStorage.removeItem(pendingKey);
-     show("ನಿಮ್ಮ Out ಸಮಯ ಯಶಸ್ವಿಯಾಗಿ ದಾಖಲಾಗಿದೆ. ಧನ್ಯವಾದಗಳು!",cell("Name",d.name)+cell("Type",d.role)+cell("Entry",time(d.entryAt||d.ts))+cell("Out",new Date().toLocaleString("en-IN",{timeZone:"Asia/Kolkata"})));
+     show("Your exit time has been recorded successfully. Thank you!",cell("Name",d.name)+cell("Type",d.role)+cell("Entry",time(d.entryAt||d.ts))+cell("Out",new Date().toLocaleString("en-IN",{timeZone:"Asia/Kolkata"})));
      return;
     }
     localStorage.removeItem(pendingKey);
@@ -50,7 +50,7 @@ form.addEventListener("submit",async e=>{
   const data={name,role,dept:safe(document.getElementById("dept").value),cls:"",purpose:safe(document.getElementById("purpose").value),phone:safe(document.getElementById("phone").value),date,entryDate:date,outDate:"",uid:auth.currentUser.uid,createdBy:auth.currentUser.uid,ts:serverTimestamp(),entryAt:serverTimestamp(),outAt:null,key:new URLSearchParams(location.search).get("k")||""};
   await setDoc(doc(db,"attendance",docId),data);
   localStorage.setItem(pendingKey,JSON.stringify({docId,date}));
-  show("ನಿಮ್ಮ Entry ಯಶಸ್ವಿಯಾಗಿ ದಾಖಲಾಗಿದೆ. ಹೊರಡುವಾಗ ಇದೇ QR ಅನ್ನು ಮತ್ತೆ ಸ್ಕ್ಯಾನ್ ಮಾಡಿ Out ದಾಖಲಿಸಿ.",cell("Name",name)+cell("Type",role)+cell("Department / Class",data.dept)+cell("Entry Date",date)+cell("Entry Time",now.toLocaleTimeString("en-IN")));
- }catch(err){show("ದಾಖಲಿಸಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ. ದಯವಿಟ್ಟು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ. "+esc(err.code||err.message),"",true);btn.disabled=false;btn.textContent="Submit Entry";}
+  show("Your entry has been recorded successfully. Scan this QR code again when leaving to record your exit.",cell("Name",name)+cell("Type",role)+cell("Department / Class",data.dept)+cell("Entry Date",date)+cell("Entry Time",now.toLocaleTimeString("en-IN")));
+ }catch(err){show("Could not save your record. Please try again. "+esc(err.code||err.message),"",true);btn.disabled=false;btn.textContent="Submit Entry";}
 });
 </script></body></html>
