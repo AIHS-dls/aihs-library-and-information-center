@@ -1215,7 +1215,8 @@ const byNew=(a,b)=>((b.createdAt&&b.createdAt.seconds)||0)-((a.createdAt&&a.crea
         const details=el("div","event-details");
         details.appendChild(el("div","eyebrow","Library Event"));details.appendChild(el("h2",null,e.title));
         if(e.date)details.appendChild(el("p","event-date",e.date));
-        if(e.desc)details.appendChild(el("p",null,e.desc));
+        const eventDescription=e.desc||e.description||e.details||"";
+        if(eventDescription)details.appendChild(el("p",null,eventDescription));
         if(e.status){const p=el("p");p.appendChild(el("strong",null,"Status: "));p.appendChild(document.createTextNode(e.status));details.appendChild(p);}
         w.appendChild(left);w.appendChild(details);cards.push(w);
       });
