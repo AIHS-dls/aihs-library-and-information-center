@@ -650,9 +650,9 @@ function crud(root,coll,title,fields,cols){
         date:"12 August 2026 · 9:30 AM",
         status:"Completed",
         desc:"A total of 21 final-year students participated in 7 teams. Winners received medals and certificates.",
-        photo1:"events/quiz-competition-1.jpg",
-        photo2:"events/quiz-competition-2.jpg",
-        photo3:"events/quiz-competition-3.jpg"
+        photo1:"images/event1.jpg",
+        photo2:"images/event2.jpg",
+        photo3:"images/event3.jpg"
       }];
     }
 
@@ -692,6 +692,10 @@ function crud(root,coll,title,fields,cols){
       const b2=document.createElement("button");
       b2.className="d";
       b2.textContent="Delete";
+      if(r.id==="__demo_event__"){
+        b2.disabled=true;
+        b2.title="Save this demo event first before deleting it.";
+      }
 
       b2.onclick=async()=>{
         if(!confirm("Delete this "+title.toLowerCase()+"?"))return;
