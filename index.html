@@ -1184,7 +1184,7 @@ const byNew=(a,b)=>((b.createdAt&&b.createdAt.seconds)||0)-((a.createdAt&&a.crea
   /* Events: live Firestore listener. Admin edits appear here without stale static text. */
   onSnapshot(collection(db,"events"),async snap=>{
     try{
-      const ev=snap.docs.map(d=>({id:d.id,...d.data()})).filter(e=>e.published!==false).sort(byNew).slice(0,6);
+      const ev=snap.docs.map(d=>({id:d.id,...d.data()})).sort(byNew).slice(0,6);
       if(!ev.length)return;
       const sec=document.getElementById("events"),cards=[],photoReady=[];
       ev.forEach(e=>{
