@@ -44,7 +44,7 @@ form.addEventListener("submit",async e=>{
    }
   }
   const name=safe(document.getElementById("name").value),role=safe(document.getElementById("visitorType").value);
-  if(!name||!role)throw new Error("Name ಮತ್ತು visitor type ನಮೂದಿಸಿ.");
+  if(!name||!role)throw new Error("Please enter your name and select a visitor type.");
   const now=new Date(),date=new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Kolkata",year:"numeric",month:"2-digit",day:"2-digit"}).format(now);
   const docId=auth.currentUser.uid+"_"+crypto.randomUUID();
   const data={name,role,dept:safe(document.getElementById("dept").value),cls:"",purpose:safe(document.getElementById("purpose").value),phone:safe(document.getElementById("phone").value),date,entryDate:date,outDate:"",uid:auth.currentUser.uid,createdBy:auth.currentUser.uid,ts:serverTimestamp(),entryAt:serverTimestamp(),outAt:null,key:new URLSearchParams(location.search).get("k")||""};
