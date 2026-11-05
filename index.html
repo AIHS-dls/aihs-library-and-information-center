@@ -776,13 +776,13 @@ footer .brand-copy{display:block}
     <div>
       <div class="event-photo-frame" id="eventPhotoFrame">
         <img class="event-photo active"
-             src="events/quiz-competition-1.jpg"
+             src="event1.jpg"
              alt="Original Quiz Competition photo 1">
         <img class="event-photo"
-             src="events/quiz-competition-2.jpg"
+             src="event2.jpg"
              alt="Original Quiz Competition photo 2">
         <img class="event-photo"
-             src="events/quiz-competition-3.jpg"
+             src="event3.jpg"
              alt="Original Quiz Competition photo 3">
         <div class="event-photo-missing" id="eventPhotoMissing">
           <strong>Library Event Photos</strong>
@@ -1189,7 +1189,7 @@ const byNew=(a,b)=>((b.createdAt&&b.createdAt.seconds)||0)-((a.createdAt&&a.crea
       const sec=document.getElementById("events");sec.querySelectorAll(".event,.notice").forEach(x=>x.remove());
       ev.forEach(e=>{
         const w=el("div","event"),left=el("div"),fr=el("div","event-photo-frame");
-        const imgs=(e.photos||[e.photo1,e.photo2,e.photo3].filter(Boolean).join("\n")).split("\n").map(x=>x.trim()).map(u=>DR.test(u)?thumb(u):(/^https:\/\//i.test(u)||u.startsWith("/")||u.startsWith("events/")||u.startsWith("images/")?u:null)).filter(Boolean).slice(0,6);
+        const imgs=(e.photos||[e.photo1,e.photo2,e.photo3].filter(Boolean).join("\n")).split("\n").map(x=>x.trim()).map(u=>DR.test(u)?thumb(u):(/^https:\/\//i.test(u)||u.startsWith("/")||u.startsWith("events/")||u.startsWith("images/")||/^[\w./-]+\.(?:jpg|jpeg|png|webp)$/i.test(u)?u:null)).filter(Boolean).slice(0,6);
         imgs.forEach((u,i)=>{const im=el("img","event-photo"+(i?"":" active"));im.src=u;im.alt=e.title;im.loading="lazy";fr.appendChild(im);});
         if(!imgs.length){fr.style.cssText="display:grid;place-items:center;background:linear-gradient(135deg,#062847,#167d78);color:#fff;text-align:center;padding:20px";fr.appendChild(el("strong",null,e.title));}
         left.appendChild(fr);
