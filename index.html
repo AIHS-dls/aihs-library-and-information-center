@@ -1189,7 +1189,7 @@ const byNew=(a,b)=>((b.createdAt&&b.createdAt.seconds)||0)-((a.createdAt&&a.crea
       const sec=document.getElementById("events");sec.querySelectorAll(".event,.notice").forEach(x=>x.remove());
       ev.forEach(e=>{
         const w=el("div","event"),left=el("div"),fr=el("div","event-photo-frame");
-        const imgs=(e.photos||"").split("\n").map(x=>x.trim()).filter(u=>DR.test(u)).map(thumb).filter(Boolean).slice(0,6);
+        const imgs=(e.photos||[e.photo1,e.photo2,e.photo3].filter(Boolean).join("\n")).split("\n").map(x=>x.trim()).map(u=>DR.test(u)?thumb(u):(/^https:\/\//i.test(u)||u.startsWith("/")||u.startsWith("events/")||u.startsWith("images/")?u:null)).filter(Boolean).slice(0,6);
         imgs.forEach((u,i)=>{const im=el("img","event-photo"+(i?"":" active"));im.src=u;im.alt=e.title;im.loading="lazy";fr.appendChild(im);});
         if(!imgs.length){fr.style.cssText="display:grid;place-items:center;background:linear-gradient(135deg,#062847,#167d78);color:#fff;text-align:center;padding:20px";fr.appendChild(el("strong",null,e.title));}
         left.appendChild(fr);
