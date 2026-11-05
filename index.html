@@ -776,13 +776,13 @@ footer .brand-copy{display:block}
     <div>
       <div class="event-photo-frame" id="eventPhotoFrame">
         <img class="event-photo active"
-             src="event1.jpg"
+             src="https://raw.githubusercontent.com/AIHS-dls/aihs-library-and-information-center/main/event1.jpg"
              alt="Original Quiz Competition photo 1">
         <img class="event-photo"
-             src="event2.jpg"
+             src="https://raw.githubusercontent.com/AIHS-dls/aihs-library-and-information-center/main/event2.jpg"
              alt="Original Quiz Competition photo 2">
         <img class="event-photo"
-             src="event3.jpg"
+             src="https://raw.githubusercontent.com/AIHS-dls/aihs-library-and-information-center/main/event3.jpg"
              alt="Original Quiz Competition photo 3">
         <div class="event-photo-missing" id="eventPhotoMissing">
           <strong>Library Event Photos</strong>
@@ -808,7 +808,6 @@ footer .brand-copy{display:block}
       <p><strong>Status:</strong> Completed</p>
     </div>
   </div>
-  <p class="notice">Original photographs will appear here after you upload them to GitHub.</p>
 </section>
 
 </main>
@@ -1190,7 +1189,7 @@ const byNew=(a,b)=>((b.createdAt&&b.createdAt.seconds)||0)-((a.createdAt&&a.crea
       const sec=document.getElementById("events"),cards=[],photoReady=[];
       ev.forEach(e=>{
         const w=el("div","event"),left=el("div"),fr=el("div","event-photo-frame");
-        const imgs=(e.photos||[e.photo1,e.photo2,e.photo3].filter(Boolean).join("\n")).split("\n").map(x=>x.trim()).map(u=>{if(DR.test(u))return thumb(u);if(/^https:\/\//i.test(u))return u;const clean=u.split(/[?#]/)[0],leaf=clean.split("/").pop();if(/^event[123]\.(?:jpg|jpeg|png|webp)$/i.test(leaf))return leaf;return (u.startsWith("/")||u.startsWith("events/")||u.startsWith("images/")||/^[\w./-]+\.(?:jpg|jpeg|png|webp)$/i.test(u))?u:null;}).filter(Boolean).slice(0,6);\n        if(!imgs.length && /quiz competition/i.test(e.title||""))imgs.push("event1.jpg","event2.jpg","event3.jpg");
+        const rawPhotos=e.photos||[e.photo1,e.photo2,e.photo3].filter(Boolean);const photoList=Array.isArray(rawPhotos)?rawPhotos:String(rawPhotos||"").split("\n");const imgs=photoList.map(x=>String(x||"").trim()).filter(Boolean).map(u=>{if(DR.test(u))return thumb(u);if(/^https:\/\//i.test(u))return u;const clean=u.split(/[?#]/)[0],leaf=clean.split("/").pop();if(/^event[123]\.(?:jpg|jpeg|png|webp)$/i.test(leaf))return "https://raw.githubusercontent.com/AIHS-dls/aihs-library-and-information-center/main/"+leaf;return (u.startsWith("/")||u.startsWith("events/")||u.startsWith("images/")||/^[\w./-]+\.(?:jpg|jpeg|png|webp)$/i.test(u))?u:null;}).filter(Boolean).slice(0,6);\n        if(!imgs.length && /quiz competition/i.test(e.title||""))imgs.push("event1.jpg","event2.jpg","event3.jpg");
         imgs.forEach((u,i)=>{
           const im=el("img","event-photo"+(i?"":" active"));
           im.alt=e.title;im.loading="eager";im.decoding="async";
