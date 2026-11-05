@@ -615,6 +615,8 @@ function crud(root,coll,title,fields,cols){
     if(coll==="events"){
       // Keep both legacy and current description field names in sync.
       d.description=d.desc;
+      d.details=d.desc;
+      d.published=true;
       d.photos=[d.photo1,d.photo2,d.photo3].filter(Boolean).join("\n");
     }
 
