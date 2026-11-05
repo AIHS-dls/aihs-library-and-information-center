@@ -485,6 +485,27 @@ footer .brand-copy{display:block}
 .tilt .card-icon{transform:translateZ(34px)}
 .tilt h3,.tilt .rank{transform:translateZ(20px)}
 @media(prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}.tilt,.tilt:hover{transform:none}}
+
+/* PREMIUM RESOURCES SECTION */
+#resources{position:relative;isolation:isolate;overflow:hidden;padding:100px 7%;background:radial-gradient(ellipse at 12% 5%,rgba(230,173,66,.18),transparent 36%),linear-gradient(135deg,#f5f3ec,#fff 48%,#eaf3f1)}
+#resources:before{content:"";position:absolute;inset:22px;border:1px solid rgba(22,125,120,.13);border-radius:30px;pointer-events:none}
+#resources .section-head{max-width:850px;margin:0 auto 46px;text-align:center}
+#resources .eyebrow{display:inline-block;padding:9px 16px;border:1px solid #d7ad6380;border-radius:99px;background:#fff;color:#98702e;letter-spacing:2.5px}
+#resources .section-head h2{font-size:clamp(38px,5vw,58px);color:#092d43;letter-spacing:-1.4px}
+#resources .section-head p{font-size:17px;color:#64747a}
+#resources .grid{max-width:1400px;margin:auto;gap:24px;position:relative}
+#resources .card{min-height:245px;padding:30px 27px;border:1px solid #0d424f20;border-radius:22px;background:linear-gradient(150deg,#fff,#f8fbfa);box-shadow:0 15px 38px #06284712;position:relative;overflow:hidden}
+#resources .card:hover{transform:translateY(-8px);border-color:#d7ad63;box-shadow:0 24px 55px #06284724}
+#resources .card-icon{width:60px;height:60px;border-radius:18px;background:linear-gradient(135deg,#0c3b50,#167d78);color:#ffcf75;font-size:27px}
+#resources .card h3{font-family:"Fraunces",Georgia,serif;font-size:23px;margin:22px 0 9px;color:#092d43}
+#resources .card p{font-size:14px;line-height:1.8;color:#65757b}
+.qr-panel{display:grid;grid-template-columns:1fr 130px;align-items:center;gap:14px}
+.qr-panel h4{font-family:"Fraunces",Georgia,serif}
+.qr-kicker{font-size:10px;letter-spacing:1.5px;font-weight:900;color:#b58a42}
+.qr-panel .qr-copy p,.qr-panel p{font-size:13px;line-height:1.7}
+.qr-panel ul{padding-left:18px;font-size:12px;line-height:1.8}
+.qr-image{width:125px;height:125px;object-fit:contain;padding:6px;background:#fff;border-radius:10px}
+@media(max-width:760px){#resources{padding:65px 6%}#resources:before{inset:10px}#resources .grid{grid-template-columns:1fr}#resources .card{min-height:190px}.qr-panel{grid-template-columns:1fr 105px;gap:10px}.qr-image{width:100px;height:100px}}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -591,11 +612,8 @@ footer .brand-copy{display:block}
         <div class="n"><span>Master of Hospital Administration</span><b data-k="hdMha">1,139</b></div>
         <div class="n tot"><span>&#128213; Total Books</span><b id="hdTotal">3,392</b></div>
       </div>
-      <div class="hard" id="attBox">
-        <h4>Student Entry Attendance</h4><p class="sub">SCAN &bull; SIGN IN &bull; DONE</p>
-        <ol class="steps"><li>Scan the QR code at the library entrance with your phone camera.</li><li>Sign in with your approved library account.</li><li>Your entry is recorded with the date and time.</li></ol>
-        <a class="att-btn" href="login.html">Sign in / Register</a>
-      </div>
+      <div class="hard qr-panel" id="attBox"><div><span class="qr-kicker">SMART LIBRARY CHECK-IN</span><h4>Student Entry &amp; Exit</h4><p class="sub">SCAN • RECORD • CONTINUE</p><p>ಪ್ರವೇಶಿಸುವಾಗ QR ಸ್ಕ್ಯಾನ್ ಮಾಡಿ Entry ದಾಖಲಿಸಿ. ಹೊರಡುವಾಗ ಅದೇ QR ಸ್ಕ್ಯಾನ್ ಮಾಡಿ Out ಸಮಯ ದಾಖಲಿಸಿ.</p><ul><li>Name</li><li>Department</li><li>Class</li><li>Entry Date &amp; Time</li><li>Out Date &amp; Time</li></ul><a class="att-btn" href="attend.html">Open Attendance</a></div><img class="qr-image" src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&amp;data=https%3A%2F%2Faihs-dls.github.io%2Faihs-library-and-information-center%2Fattend.html" alt="Attendance QR Code"></div>
+      <div class="hard qr-panel"><div><span class="qr-kicker">VISIT US ONLINE</span><h4>AIHS Digital Library</h4><p>ನಮ್ಮ Library Website ತೆರೆಯಲು ಈ QR Code ಸ್ಕ್ಯಾನ್ ಮಾಡಿ.</p><a class="att-btn" href="https://aihs-dls.github.io/aihs-library-and-information-center/">Open Website</a></div><img class="qr-image" src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&amp;data=https%3A%2F%2Faihs-dls.github.io%2Faihs-library-and-information-center%2F" alt="Website QR Code"></div>
     </div>
 
     <div class="rules-board">
@@ -1135,15 +1153,7 @@ const byNew=(a,b)=>((b.createdAt&&b.createdAt.seconds)||0)-((a.createdAt&&a.crea
       });
     }
   }catch(e){}
-  /* Latest resources: titles are public, files need login */
-  try{
-    const s=await getDocs(collection(db,"resources")),rs=s.docs.map(d=>d.data()).sort(byNew).slice(0,8);
-    if(rs.length){
-      const w=el("div","rl");w.appendChild(el("h3",null,"Latest resources"));
-      rs.forEach(r=>{const a=el("div","res-item");a.appendChild(el("span","res-cat",r.category));a.appendChild(el("b",null,r.title));a.appendChild(el("small",null,(r.dept||"")+" \u00b7 "+(r.cls||"")));a.appendChild(el("span","res-go","Login to open \u2192"));w.appendChild(a);});
-      document.getElementById("resources").appendChild(w);
-    }
-  }catch(e){}
+  /* Latest resources section removed by request. */
   /* Events */
   try{
     const s=await getDocs(collection(db,"events")),ev=s.docs.map(d=>d.data()).sort(byNew).slice(0,6);
