@@ -1190,7 +1190,7 @@ const byNew=(a,b)=>((b.createdAt&&b.createdAt.seconds)||0)-((a.createdAt&&a.crea
       const sec=document.getElementById("events"),cards=[],photoReady=[];
       ev.forEach(e=>{
         const w=el("div","event"),left=el("div"),fr=el("div","event-photo-frame");
-        const imgs=(e.photos||[e.photo1,e.photo2,e.photo3].filter(Boolean).join("\n")).split("\n").map(x=>x.trim()).map(u=>DR.test(u)?thumb(u):(/^https:\/\//i.test(u)||u.startsWith("/")||u.startsWith("events/")||u.startsWith("images/")||/^[\w./-]+\.(?:jpg|jpeg|png|webp)$/i.test(u)?u:null)).filter(Boolean).slice(0,6);
+        const imgs=(e.photos||[e.photo1,e.photo2,e.photo3].filter(Boolean).join("\n")).split("\n").map(x=>x.trim()).map(u=>{if(DR.test(u))return thumb(u);if(/^https:\/\//i.test(u))return u;const clean=u.split(/[?#]/)[0],leaf=clean.split("/").pop();if(/^event[123]\.(?:jpg|jpeg|png|webp)$/i.test(leaf))return leaf;return (u.startsWith("/")||u.startsWith("events/")||u.startsWith("images/")||/^[\w./-]+\.(?:jpg|jpeg|png|webp)$/i.test(u))?u:null;}).filter(Boolean).slice(0,6);\n        if(!imgs.length && /quiz competition/i.test(e.title||""))imgs.push("event1.jpg","event2.jpg","event3.jpg");
         imgs.forEach((u,i)=>{
           const im=el("img","event-photo"+(i?"":" active"));
           im.alt=e.title;im.loading="eager";im.decoding="async";
