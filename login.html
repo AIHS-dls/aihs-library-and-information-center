@@ -12,7 +12,17 @@
 import {auth,login,profile,go,onAuthStateChanged} from "./fb.js";
 const $=id=>document.getElementById(id),m=$("m"),b=$("b");
 $("t").onclick=()=>{const s=$("p").type==="password";$("p").type=s?"text":"password";$("t").textContent=s?"Hide":"Show";};
-async function route(u){const p=await profile(u),n=sessionStorage.getItem("next");if(n&&p&&p.status==="approved"){sessionStorage.removeItem("next");location.href=n;return;}location.href=go(p);}
+async function route(u){
+  const p=await profile(u);
+  if(!p){
+    m.className="msg err";
+    m.textContent="Your account profile was not found. Please contact the librarian to verify your account.";
+    return;
+  }
+  const n=sessionStorage.getItem("next");
+  if(n&&p.status==="approved"){sessionStorage.removeItem("next");location.href=n;return;}
+  location.href=go(p);
+}
 onAuthStateChanged(auth,u=>{if(u)route(u);});
 $("f").onsubmit=async e=>{
   e.preventDefault();
