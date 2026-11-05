@@ -1143,7 +1143,7 @@ addEventListener("keydown",e=>{if(e.key==="Escape")closeLogin();});
 @media(max-width:700px){.res-item{grid-template-columns:1fr;gap:4px}}
 </style>
 <script type="module">
-import {db,collection,getDocs,doc,getDoc,onSnapshot,esc} from "./fb.js";
+import {db,collection,getDocs,doc,getDoc,onSnapshot,query,where,esc} from "./fb.js";
 const DR=/^https:\/\/(drive|docs)\.google\.com\//;
 function thumb(u){const m=u.match(/\/d\/([\w-]+)/)||u.match(/[?&]id=([\w-]+)/);return m?"https://drive.google.com/thumbnail?id="+m[1]+"&sz=w1400":null;}
 function el(t,c,x){const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e;}
@@ -1182,7 +1182,7 @@ const byNew=(a,b)=>((b.createdAt&&b.createdAt.seconds)||0)-((a.createdAt&&a.crea
   }catch(e){}
   /* Latest resources section removed by request. */
   /* Events: live Firestore listener. Admin edits appear here without stale static text. */
-  onSnapshot(collection(db,"events"),async snap=>{
+  onSnapshot(query(collection(db,"events"),where("published","==",true)),async snap=>{
     try{
       const ev=snap.docs.map(d=>({id:d.id,...d.data()})).sort(byNew).slice(0,6);
       if(!ev.length)return;
