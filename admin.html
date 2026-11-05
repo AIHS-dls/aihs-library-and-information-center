@@ -613,11 +613,11 @@ function crud(root,coll,title,fields,cols){
 
     // Keep the existing website's photos field compatible.
     if(coll==="events"){
-      d.photos=[d.photo1,d.photo2,d.photo3].filter(Boolean).join("\\n");
+      d.photos=[d.photo1,d.photo2,d.photo3].filter(Boolean).join("\n");
     }
 
     try{
-      if(eid){
+      if(eid && eid!=="__demo_event__"){
         await updateDoc(doc(db,coll,eid),d);
       }else{
         await addDoc(collection(db,coll),{
@@ -641,6 +641,20 @@ function crud(root,coll,title,fields,cols){
     list=s.docs.map(d=>({id:d.id,...d.data()})).sort((x,y)=>
       ((y.createdAt&&y.createdAt.seconds)||0)-((x.createdAt&&x.createdAt.seconds)||0)
     );
+
+    // Show the current homepage demo event in Admin until a real Firestore event is saved.
+    if(coll==="events" && !list.length){
+      list=[{
+        id:"__demo_event__",
+        title:"Quiz Competition",
+        date:"12 August 2026 · 9:30 AM",
+        status:"Completed",
+        desc:"A total of 21 final-year students participated in 7 teams. Winners received medals and certificates.",
+        photo1:"events/quiz-competition-1.jpg",
+        photo2:"events/quiz-competition-2.jpg",
+        photo3:"events/quiz-competition-3.jpg"
+      }];
+    }
 
     const tb=q("tbody");
     tb.innerHTML="";
@@ -763,9 +777,9 @@ function initContent(){
     {k:"date",l:"Date and time (shown as typed)",ph:"12 August 2026 · 9:30 AM"},
     {k:"status",l:"Status",t:"select",o:["Completed","Upcoming"]},
     {k:"desc",l:"Description",t:"area"},
-    {k:"photo1",l:"Event Photo 1 — Google Drive Link",t:"url",drive:1,ph:"Paste first photo Drive link"},
-    {k:"photo2",l:"Event Photo 2 — Google Drive Link",t:"url",drive:1,ph:"Paste second photo Drive link"},
-    {k:"photo3",l:"Event Photo 3 — Google Drive Link",t:"url",drive:1,ph:"Paste third photo Drive link"}
+    {k:"photo1",l:"Event Photo 1 — Image URL or path",ph:"e.g. events/quiz-competition-1.jpg"},
+    {k:"photo2",l:"Event Photo 2 — Image URL or path",ph:"e.g. events/quiz-competition-2.jpg"},
+    {k:"photo3",l:"Event Photo 3 — Image URL or path",ph:"e.g. events/quiz-competition-3.jpg"}
   ],[["title","Title"],["date","Date"],["status","Status"]]);
 
   crud($("p-bu"),"bestUsers","Best User",[
