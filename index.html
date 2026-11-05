@@ -776,13 +776,13 @@ footer .brand-copy{display:block}
     <div>
       <div class="event-photo-frame" id="eventPhotoFrame">
         <img class="event-photo active"
-             src="event1.jpg"
+             src="images/event1.jpg"
              alt="Original Quiz Competition photo 1">
         <img class="event-photo"
-             src="event2.jpg"
+             src="images/event2.jpg"
              alt="Original Quiz Competition photo 2">
         <img class="event-photo"
-             src="event3.jpg"
+             src="images/event3.jpg"
              alt="Original Quiz Competition photo 3">
         <div class="event-photo-missing" id="eventPhotoMissing">
           <strong>Library Event Photos</strong>
@@ -1182,30 +1182,46 @@ const byNew=(a,b)=>((b.createdAt&&b.createdAt.seconds)||0)-((a.createdAt&&a.crea
     }
   }catch(e){}
   /* Latest resources section removed by request. */
-  /* Events */
+  /* Events: build the updated cards first, then swap them in only after
+     their lead photos finish loading. This prevents the refresh-time flash. */
   try{
-    const s=await getDocs(collection(db,"events")),ev=s.docs.map(d=>d.data()).sort(byNew).slice(0,6);
+    const snap=await getDocs(collection(db,"events")),ev=snap.docs.map(d=>d.data()).sort(byNew).slice(0,6);
     if(ev.length){
-      const sec=document.getElementById("events");sec.querySelectorAll(".event,.notice").forEach(x=>x.remove());
+      const sec=document.getElementById("events"),cards=[],photoReady=[];
       ev.forEach(e=>{
         const w=el("div","event"),left=el("div"),fr=el("div","event-photo-frame");
         const imgs=(e.photos||[e.photo1,e.photo2,e.photo3].filter(Boolean).join("\n")).split("\n").map(x=>x.trim()).map(u=>DR.test(u)?thumb(u):(/^https:\/\//i.test(u)||u.startsWith("/")||u.startsWith("events/")||u.startsWith("images/")||/^[\w./-]+\.(?:jpg|jpeg|png|webp)$/i.test(u)?u:null)).filter(Boolean).slice(0,6);
-        imgs.forEach((u,i)=>{const im=el("img","event-photo"+(i?"":" active"));im.src=u;im.alt=e.title;im.loading="lazy";fr.appendChild(im);});
+        imgs.forEach((u,i)=>{
+          const im=el("img","event-photo"+(i?"":" active"));
+          im.alt=e.title;im.loading="eager";im.decoding="async";
+          if(i===0){
+            photoReady.push(new Promise(resolve=>{
+              im.addEventListener("load",resolve,{once:true});
+              im.addEventListener("error",resolve,{once:true});
+              im.src=u;
+              if(im.complete)resolve();
+            }));
+          }else im.src=u;
+          fr.appendChild(im);
+        });
         if(!imgs.length){fr.style.cssText="display:grid;place-items:center;background:linear-gradient(135deg,#062847,#167d78);color:#fff;text-align:center;padding:20px";fr.appendChild(el("strong",null,e.title));}
         left.appendChild(fr);
         if(imgs.length>1){
           let i=0;const nav=el("div","ev-nav"),pr=el("button",null,"‹"),nx=el("button",null,"›");
           pr.type=nx.type="button";pr.setAttribute("aria-label","Previous photo");nx.setAttribute("aria-label","Next photo");
-          const show=n=>{const p=fr.querySelectorAll(".event-photo");p[i].classList.remove("active");i=(n+p.length)%p.length;p[i].classList.add("active");};
+          const show=n=>{const p=fr.querySelectorAll(".event-photo");if(!p.length)return;p[i].classList.remove("active");i=(n+p.length)%p.length;p[i].classList.add("active");};
           pr.onclick=()=>show(i-1);nx.onclick=()=>show(i+1);nav.appendChild(pr);nav.appendChild(nx);left.appendChild(nav);
         }
-        const r=el("div","event-details");
-        r.appendChild(el("div","eyebrow","Library Event"));r.appendChild(el("h2",null,e.title));
-        if(e.date)r.appendChild(el("p","event-date",e.date));
-        if(e.desc)r.appendChild(el("p",null,e.desc));
-        if(e.status){const p=el("p");p.appendChild(el("strong",null,"Status: "));p.appendChild(document.createTextNode(e.status));r.appendChild(p);}
-        w.appendChild(left);w.appendChild(r);sec.appendChild(w);
+        const details=el("div","event-details");
+        details.appendChild(el("div","eyebrow","Library Event"));details.appendChild(el("h2",null,e.title));
+        if(e.date)details.appendChild(el("p","event-date",e.date));
+        if(e.desc)details.appendChild(el("p",null,e.desc));
+        if(e.status){const p=el("p");p.appendChild(el("strong",null,"Status: "));p.appendChild(document.createTextNode(e.status));details.appendChild(p);}
+        w.appendChild(left);w.appendChild(details);cards.push(w);
       });
+      await Promise.all(photoReady);
+      sec.querySelectorAll(".event,.notice").forEach(x=>x.remove());
+      cards.forEach(card=>sec.appendChild(card));
     }
   }catch(e){}
 })();
