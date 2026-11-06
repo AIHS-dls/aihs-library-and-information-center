@@ -617,7 +617,12 @@ footer .brand-copy{display:block}
       <p>Academic journals and research resources.</p>
     </a>
   </div>
-  <p class="notice">Online resource downloads and account access may require separate setup.</p>
+  <div class="rl" id="externalResourceSection" hidden>
+    <h3>Journals & Databases</h3>
+    <p>Open the official website to search and download available research articles.</p>
+    <div id="externalResourceList"></div>
+  </div>
+  <p class="notice">Some journal and database websites may require institutional access or an individual account.</p>
 </section>
 
 <section class="about-section" id="about">
@@ -1140,6 +1145,11 @@ addEventListener("keydown",e=>{if(e.key==="Escape")closeLogin();});
 .res-item b{color:#062847;font-size:15px}
 .res-item small{color:#5b6b75}
 .res-go{font-size:12px;font-weight:800;color:#062847}
+.external-resource-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px}
+.external-resource-card{display:flex;flex-direction:column;gap:8px;padding:16px 18px;background:#fff;border:1px solid #e3e9ec;border-left:4px solid #167d78;border-radius:10px;text-decoration:none;transition:transform .2s,box-shadow .2s}
+.external-resource-card:hover{transform:translateY(-3px);box-shadow:0 10px 24px rgba(6,40,71,.1)}
+.external-resource-card b{color:#062847;font-size:15px}
+.external-resource-card small{color:#167d78;font-weight:800}
 @media(max-width:700px){.res-item{grid-template-columns:1fr;gap:4px}}
 </style>
 <script type="module">
@@ -1180,6 +1190,27 @@ const byNew=(a,b)=>((b.createdAt&&b.createdAt.seconds)||0)-((a.createdAt&&a.crea
       });
     }
   }catch(e){}
+  /* Journals and databases: title + official external website only; no PDF upload. */
+  onSnapshot(collection(db,"externalResources"),snap=>{
+    const list=snap.docs.map(d=>({id:d.id,...d.data()}))
+      .filter(x=>x.title && /^https?:\\/\\//i.test(x.url||""))
+      .sort((a,b)=>(a.type||"").localeCompare(b.type||"") || (a.title||"").localeCompare(b.title||""));
+    const section=document.getElementById("externalResourceSection");
+    const target=document.getElementById("externalResourceList");
+    target.innerHTML="";
+    section.hidden=!list.length;
+    list.forEach(item=>{
+      const link=el("a","external-resource-card");
+      link.href=item.url;
+      link.target="_blank";
+      link.rel="noopener noreferrer";
+      link.appendChild(el("small",null,item.type==="Database"?"DATABASE":"JOURNAL"));
+      link.appendChild(el("b",null,item.title));
+      link.appendChild(el("span","res-go","Open official website ↗"));
+      target.appendChild(link);
+    });
+  },err=>console.error("Journals / Databases loading error:",err));
+
   /* Latest resources section removed by request. */
   /* Events: live Firestore listener. Admin edits appear here without stale static text. */
   onSnapshot(query(collection(db,"events"),where("published","==",true)),async snap=>{
