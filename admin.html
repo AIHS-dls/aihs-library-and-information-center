@@ -24,6 +24,7 @@
 <div class="mt" id="mt">
   <button data-t="users" class="on">Registrations</button>
   <button data-t="res">Resources</button>
+  <button data-t="jr">Journals & Databases</button>
   <button data-t="ev">Events</button>
   <button data-t="bu">Best Users</button>
   <button data-t="ab">About Library</button>
@@ -55,7 +56,7 @@
 <div class="full"><label for="t">Title</label><input id="t" required maxlength="150"></div>
 <div><label for="c">Category</label>
 <select id="c">
-<option>E-Books</option><option>Study Notes</option><option>Question Papers</option><option>eJournals</option>
+<option>E-Books</option><option>Study Notes</option><option>Question Papers</option>
 </select></div>
 <div><label for="d">Department</label>
 <select id="d">
@@ -96,6 +97,7 @@
 </div>
 </div>
 
+<div id="p-jr" hidden></div>
 <div id="p-ev" hidden></div>
 <div id="p-bu" hidden></div>
 <div id="p-ab" hidden></div>
@@ -186,7 +188,7 @@ $("mt").onclick=e=>{
   const t=e.target.dataset.t;
   if(!t)return;
 
-  ["users","res","ev","bu","ab","at","nu"].forEach(k=>{
+  ["users","res","jr","ev","bu","ab","at","nu"].forEach(k=>{
     $("p-"+k).hidden=k!==t;
   });
 
@@ -789,6 +791,12 @@ function initContent(){
     {k:"photo2",l:"Event Photo 2 — Image URL or path",ph:"e.g. events/quiz-competition-2.jpg"},
     {k:"photo3",l:"Event Photo 3 — Image URL or path",ph:"e.g. events/quiz-competition-3.jpg"}
   ],[["title","Title"],["date","Date"],["status","Status"]]);
+
+  crud($("p-jr"),"externalResources","Journal / Database",[
+    {k:"type",l:"Type",t:"select",o:["Journal","Database"]},
+    {k:"title",l:"Journal / Database name",req:1},
+    {k:"url",l:"Official website link",t:"url",req:1}
+  ],[["type","Type"],["title","Name"],["url","Website link"]]);
 
   crud($("p-bu"),"bestUsers","Best User",[
     {k:"dept",l:"Department",t:"select",o:["BPT · PHYSIOTHERAPY","BMLT","BMIT","MHA","Other"]},
