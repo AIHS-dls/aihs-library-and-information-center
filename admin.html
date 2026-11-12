@@ -618,6 +618,7 @@ function crud(root,coll,title,fields,cols){
       // Keep both legacy and current description field names in sync.
       d.description=d.desc;
       d.details=d.desc;
+      d.eventDescription=d.desc;
       d.published=true;
       d.photos=[d.photo1,d.photo2,d.photo3].filter(Boolean).join("\n");
     }
@@ -688,7 +689,7 @@ function crud(root,coll,title,fields,cols){
       b1.onclick=()=>{
         eid=r.id;
         fields.forEach(f=>{
-          inp[f.k].value=(f.k==="desc"?(r.desc||r.description||r.details||""):(r[f.k]||""));
+          inp[f.k].value=(f.k==="desc"?(r.description||r.details||r.eventDescription||r.desc||""):(r[f.k]||""));
         });
         h.textContent="Edit "+title;
         cx.hidden=false;
