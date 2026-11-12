@@ -22,6 +22,12 @@
 .top{gap:14px}.top .profile-block{min-width:0}.top .profile-block b{font-size:22px;line-height:1.25;display:block}.top .profile-block small{font-size:13px;line-height:1.6}.top .profile-block small{text-transform:none;letter-spacing:0;color:#ffe0a0;font-size:11px;line-height:1.5}.top .top-actions{display:flex;align-items:center;gap:9px;margin-left:auto}.top .pw-toggle{background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.35);box-shadow:none}.top .pw-toggle:hover{background:rgba(255,255,255,.18);box-shadow:none}
 .pw-panel{display:none;margin:18px 0 0}.pw-panel.open{display:block}.pw-panel .panel{padding:22px}.pw-panel h2{margin-bottom:8px}
 .resource-section{margin:24px 0 8px}.resource-section h2{font-size:25px;margin:0 0 12px;padding-bottom:8px;border-bottom:2px solid #e9eef0;color:#062847}.book-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:18px;margin:14px 0 26px}.book-card{min-width:0;background:#fff;border:1px solid #e3e9ec;border-radius:14px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 2px 8px rgba(6,40,71,.05);transition:transform .18s,box-shadow .18s}.book-card:hover{transform:translateY(-3px);box-shadow:0 12px 26px rgba(6,40,71,.12)}.book-cover{width:100%;aspect-ratio:3/4;background:linear-gradient(135deg,#edf2f4,#dfe8eb);display:flex;align-items:center;justify-content:center;overflow:hidden}.book-cover img{width:100%;height:100%;object-fit:cover}.book-cover .no-cover{font-size:14px;color:#667985;padding:15px;text-align:center}.book-info{padding:18px;display:flex;flex-direction:column;gap:7px;flex:1}.book-info h3{font-size:20px;line-height:1.45;margin:0;color:#102b4c;overflow-wrap:anywhere}.book-info p{font-size:14px;color:#687985;line-height:1.4;margin:0}.book-info a{margin-top:auto;display:inline-block;text-align:center;padding:11px 12px;border-radius:8px;background:#062847;color:white;font-size:15px;font-weight:800}.book-info a:hover{background:#167d78}.department-filter{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.department-filter button{border:1px solid #cbd8d7;background:#fff;border-radius:18px;padding:7px 13px;font:800 12px Manrope,Arial,sans-serif;cursor:pointer}.department-filter button.on{background:#167d78;color:#fff;border-color:#167d78}.empty-state{padding:22px;background:#f7f9fa;border:1px dashed #cbd8d7;border-radius:12px;color:#5b6b75}
+.external-resource-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.external-resource-card{display:flex;flex-direction:column;gap:8px;padding:18px;background:#fff;border:1px solid #dce6eb;border-left:4px solid #167d78;border-radius:12px;text-decoration:none;transition:transform .2s,box-shadow .2s}
+.external-resource-card:hover{transform:translateY(-3px);box-shadow:0 10px 24px rgba(6,40,71,.1)}
+.external-resource-card b{color:#062847;font-size:16px;overflow-wrap:anywhere}
+.external-resource-card small{color:#167d78;font-weight:800;font-size:11px;letter-spacing:.7px}
+.external-resource-card span{color:#5b6b75;font-size:13px}
 @media(max-width:900px){.top{flex-wrap:wrap}.top .top-actions{gap:6px}}
 @media(max-width:600px){.book-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.top{padding:10px 3%;gap:8px}.top img{width:38px;height:38px}.top .top-actions{width:100%;justify-content:flex-end}.top .top-actions a{margin-right:auto}.panel{padding:18px}}
 </style></head>
@@ -47,8 +53,8 @@ onAuthStateChanged(auth,async u=>{
  const b=$("box");
  if(p.status==="pending"){b.innerHTML="<h2>Waiting for approval</h2><p>Your registration is with the library admin. You can open resources once it is approved. Please check again later.</p><span class='badge pending'>Pending</span>";return;}
  if(p.status==="rejected"){b.innerHTML="<h2>Registration not approved</h2><p>Please contact the librarian: librarian@aihs.ac.in</p><span class='badge rejected'>Rejected</span>";return;}
- b.innerHTML="<h2 style='font-size:28px;line-height:1.25;margin-bottom:10px'>Welcome, "+esc(p.name||"Library Member")+"</h2><p style='margin:0 0 12px;color:#5b6b75'>"+esc(p.dept||"")+" · "+esc(p.cls||"")+"</p><div class='tabs' id='ct'></div><input id='rq' placeholder='Search e-books, notes, question papers, journals' style='margin-bottom:6px'><div id='deptFilters' class='department-filter' style='display:none'></div><div id='resourceResults'></div>";
- const CATS=["All","E-Books","Study Notes","Question Papers","eJournals"];let cat="All",list=[],links={},deptChoice="All";
+ b.innerHTML="<h2 style='font-size:28px;line-height:1.25;margin-bottom:10px'>Welcome, "+esc(p.name||"Library Member")+"</h2><p style='margin:0 0 12px;color:#5b6b75'>"+esc(p.dept||"")+" · "+esc(p.cls||"")+"</p><div class='tabs' id='ct'></div><input id='rq' placeholder='Search e-books, notes, question papers, journals' style='margin-bottom:6px'><div id='deptFilters' class='department-filter' style='display:none'></div><div id='resourceResults'></div><section class='resource-section' id='externalResourcePanel' hidden><h2>Journals &amp; Databases</h2><p style='color:#5b6b75;margin:0 0 14px'>Open the official website to explore and download available research articles.</p><div id='externalResourceResults' class='external-resource-list'></div></section>";
+ const CATS=["All","E-Books","Study Notes","Question Papers"];let cat="All",list=[],links={},externalResources=[],deptChoice="All";
  function getDept(r){return String(r.dept||"Other departments").trim()||"Other departments";}
  function resourceLink(r){return driveFile(r.link||r.pdfLink||links[r.id]||"");}
  function coverLink(r){return driveImage(r.coverLink||r.coverURL||r.cover||"");}
@@ -68,6 +74,31 @@ onAuthStateChanged(auth,async u=>{
   }
  }
  $("rq").oninput=draw;
+ function drawExternalResources(){
+  const panel=$("externalResourcePanel"),target=$("externalResourceResults");
+  target.innerHTML="";
+  const q=$("rq").value.trim().toLowerCase();
+  const shown=externalResources.filter(x=>(x.title+" "+(x.type||"")).toLowerCase().includes(q));
+  panel.hidden=!shown.length;
+  shown.forEach(item=>{
+   const a=document.createElement("a");a.className="external-resource-card";a.href=item.url;a.target="_blank";a.rel="noopener noreferrer";
+   const type=document.createElement("small");type.textContent=item.type==="Database"?"DATABASE":"JOURNAL";
+   const title=document.createElement("b");title.textContent=item.title;
+   const open=document.createElement("span");open.textContent="Open official website ↗";
+   a.append(type,title,open);target.appendChild(a);
+  });
+ }
+ $("rq").addEventListener("input",drawExternalResources);
+ onSnapshot(collection(db,"externalResources"),s=>{
+  externalResources=s.docs.map(d=>({id:d.id,...d.data()}))
+   .filter(x=>x.title && /^https?:\/\//i.test(x.url||""))
+   .sort((a,b)=>(a.type||"").localeCompare(b.type||"") || a.title.localeCompare(b.title));
+  drawExternalResources();
+ },err=>{
+  console.error("Journals / Databases loading error:",err);
+  $("externalResourcePanel").hidden=false;
+  $("externalResourceResults").innerHTML="<div class='empty-state'>Journals and databases could not be loaded. Please contact the librarian.</div>";
+ });
  onSnapshot(collection(db,"resources"),s=>{list=s.docs.map(d=>({id:d.id,...d.data()}));draw();},err=>{console.error(err);$("resourceResults").innerHTML="<div class='empty-state'>Resources could not be loaded. Please contact the librarian.</div>";});
  onSnapshot(collection(db,"resourceLinks"),s=>{links={};s.docs.forEach(d=>{links[d.id]=d.data().link;});draw();},err=>console.warn("Resource links unavailable",err));
 });
