@@ -700,6 +700,8 @@ footer .brand-copy{display:block}
     <article class="visitor-card" style="--vc:#d69b35"><div class="visitor-ring" id="visitorBMLT"><b>0</b></div><h3>BMLT</h3><small>Medical Laboratory Technology</small></article>
     <article class="visitor-card" style="--vc:#3976bd"><div class="visitor-ring" id="visitorBMIT"><b>0</b></div><h3>BMIT</h3><small>Medical Imaging Technology</small></article>
     <article class="visitor-card" style="--vc:#9865b5"><div class="visitor-ring" id="visitorMHA"><b>0</b></div><h3>MHA</h3><small>Hospital Administration</small></article>
+    <article class="visitor-card" style="--vc:#d16b4c"><div class="visitor-ring" id="visitorMPT"><b>0</b></div><h3>MPT</h3><small>Master of Physiotherapy</small></article>
+    <article class="visitor-card" style="--vc:#568b45"><div class="visitor-ring" id="visitorATOT"><b>0</b></div><h3>ATOT</h3><small>Applied Technology / OT</small></article>
   </div>
   <p class="visitor-total">Total visitors today <b id="visitorGrandTotal">0</b></p>
 </section>
@@ -1326,9 +1328,10 @@ const today=new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Kolkata",year:"numer
 try{
  const snap=await getDoc(doc(db,"site","visitorCounts"));
  const data=snap.exists()?snap.data():{};
- const counts=(data.date===today&&data.counts)?data.counts:{BPT:0,BMLT:0,BMIT:0,MHA:0};
- const total=["BPT","BMLT","BMIT","MHA"].reduce((n,k)=>n+(Number(counts[k])||0),0);
- ["BPT","BMLT","BMIT","MHA"].forEach(k=>{
+ const counts=(data.date===today&&data.counts)?data.counts:{BPT:0,BMLT:0,BMIT:0,MHA:0,MPT:0,ATOT:0};
+ const depts=["BPT","BMLT","BMIT","MHA","MPT","ATOT"];
+ const total=depts.reduce((n,k)=>n+(Number(counts[k])||0),0);
+ depts.forEach(k=>{
   const value=Number(counts[k])||0,ring=document.getElementById("visitor"+k);
   ring.style.setProperty("--angle",(total?value/total*360:0)+"deg");
   ring.querySelector("b").textContent=value.toLocaleString("en-IN");
