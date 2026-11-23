@@ -54,24 +54,37 @@ onAuthStateChanged(auth,async u=>{
  if(p.status==="pending"){b.innerHTML="<h2>Waiting for approval</h2><p>Your registration is with the library admin. You can open resources once it is approved. Please check again later.</p><span class='badge pending'>Pending</span>";return;}
  if(p.status==="rejected"){b.innerHTML="<h2>Registration not approved</h2><p>Please contact the librarian: librarian@aihs.ac.in</p><span class='badge rejected'>Rejected</span>";return;}
  b.innerHTML="<h2 style='font-size:28px;line-height:1.25;margin-bottom:10px'>Welcome, "+esc(p.name||"Library Member")+"</h2><p style='margin:0 0 12px;color:#5b6b75'>"+esc(p.dept||"")+" · "+esc(p.cls||"")+"</p><div class='tabs' id='ct'></div><input id='rq' placeholder='Search e-books, notes, question papers, journals' style='margin-bottom:6px'><div id='deptFilters' class='department-filter' style='display:none'></div><div id='resourceResults'></div><section class='resource-section' id='externalResourcePanel' hidden><h2>Journals &amp; Databases</h2><p style='color:#5b6b75;margin:0 0 14px'>Open the official website to explore and download available research articles.</p><div id='externalResourceResults' class='external-resource-list'></div></section>";
- const CATS=["All","E-Books","Study Notes","Question Papers"];let cat="All",list=[],links={},externalResources=[],deptChoice="All";
+ const CATS=["E-Books","Study Notes","Question Papers"];let cat="E-Books",list=[],links={},externalResources=[],deptChoice="All departments";
  function getDept(r){return String(r.dept||"Other departments").trim()||"Other departments";}
  function resourceLink(r){return driveFile(r.link||r.pdfLink||links[r.id]||"");}
  function coverLink(r){return driveImage(r.coverLink||r.coverURL||r.cover||"");}
  function card(r){const l=resourceLink(r),cover=coverLink(r),d=document.createElement("article");d.className="book-card";const visual=document.createElement("div");visual.className="book-cover";if(cover){const im=document.createElement("img");im.src=cover;im.alt=r.title||"Book cover";im.loading="lazy";im.onerror=()=>{visual.innerHTML="<div class='no-cover'>Cover image unavailable</div>";};visual.appendChild(im);}else visual.innerHTML="<div class='no-cover'>Cover page not added</div>";const info=document.createElement("div");info.className="book-info";const h=document.createElement("h3");h.textContent=r.title||"Untitled resource";const meta=document.createElement("p");meta.textContent=getDept(r)+(r.cls?" · "+r.cls:"");info.append(h,meta);if(l){const a=document.createElement("a");a.href=l;a.target="_blank";a.rel="noopener";a.textContent="Open / Read";info.appendChild(a);}d.append(visual,info);return d;}
  function draw(){
-  const ct=$("ct");ct.innerHTML="";CATS.forEach(c=>{const x=document.createElement("button");x.textContent=c;x.className=c===cat?"on":"";x.onclick=()=>{cat=c;deptChoice="All";draw();};ct.appendChild(x);});
-  const q=$("rq").value.toLowerCase();const v=list.filter(r=>(cat==="All"||r.category===cat)&&((r.title||"")+" "+(r.desc||"")+" "+(r.dept||"")+" "+(r.cls||"")).toLowerCase().includes(q)).sort((a,b)=>(a.title||"").localeCompare(b.title||""));
+  const ct=$("ct");ct.innerHTML="";
+  CATS.forEach(c=>{const x=document.createElement("button");x.textContent=c;x.className=c===cat?"on":"";x.onclick=()=>{cat=c;deptChoice="All departments";draw();};ct.appendChild(x);});
+  const q=$("rq").value.toLowerCase();
+  const v=list.filter(r=>{
+   const category=String(r.category||"").trim().toLowerCase();
+   const wanted=cat.toLowerCase();
+   return category===wanted && ((r.title||"")+" "+(r.desc||"")+" "+(r.dept||"")+" "+(r.cls||"")).toLowerCase().includes(q);
+  }).sort((a,b)=>(a.title||"").localeCompare(b.title||""));
   const results=$("resourceResults"),df=$("deptFilters");results.innerHTML="";
-  if(cat==="E-Books"){
-   const depts=[...new Set(v.map(getDept))].sort((a,b)=>a.localeCompare(b));df.style.display=depts.length?"flex":"none";df.innerHTML="";
-   ["All",...depts].forEach(dep=>{const btn=document.createElement("button");btn.textContent=dep;btn.className=deptChoice===dep?"on":"";btn.onclick=()=>{deptChoice=dep;draw();};df.appendChild(btn);});
-   const selected=deptChoice==="All"?v:v.filter(r=>getDept(r)===deptChoice);const groups=deptChoice==="All"?depts:[deptChoice];
-   if(!selected.length){results.innerHTML="<div class='empty-state'>No E-Books found for this department.</div>";return;}
-   groups.forEach(dep=>{const books=selected.filter(r=>getDept(r)===dep);if(!books.length)return;const sec=document.createElement("section");sec.className="resource-section";const title=document.createElement("h2");title.textContent=dep;const grid=document.createElement("div");grid.className="book-grid";books.forEach(r=>grid.appendChild(card(r)));sec.append(title,grid);results.appendChild(sec);});
-  }else{
-   df.style.display="none";if(!v.length){results.innerHTML="<div class='empty-state'>No resources found.</div>";return;}const grid=document.createElement("div");grid.className="book-grid";v.forEach(r=>grid.appendChild(card(r)));results.appendChild(grid);
-  }
+  const depts=[...new Set(v.map(getDept))].sort((a,b)=>a.localeCompare(b));
+  df.style.display=depts.length?"flex":"none";df.innerHTML="";
+  ["All departments",...depts.filter(d=>d!=="All departments")].forEach(dep=>{
+   const btn=document.createElement("button");btn.textContent=dep;btn.className=deptChoice===dep?"on":"";btn.onclick=()=>{deptChoice=dep;draw();};df.appendChild(btn);
+  });
+  const selected=deptChoice==="All departments"?v:v.filter(r=>getDept(r)===deptChoice);
+  const groups=deptChoice==="All departments"?depts:[deptChoice];
+  if(!selected.length){results.innerHTML="<div class='empty-state'>ಈ ವಿಭಾಗದಲ್ಲಿ "+cat+" ಲಭ್ಯವಿಲ್ಲ.</div>";return;}
+  groups.forEach(dep=>{
+   const items=selected.filter(r=>getDept(r)===dep);if(!items.length)return;
+   const sec=document.createElement("section");sec.className="resource-section";
+   const title=document.createElement("h2");title.textContent=dep;
+   const grid=document.createElement("div");grid.className="book-grid";
+   items.forEach(r=>grid.appendChild(card(r)));
+   sec.append(title,grid);results.appendChild(sec);
+  });
  }
  $("rq").oninput=draw;
  function drawExternalResources(){
