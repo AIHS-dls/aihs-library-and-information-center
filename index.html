@@ -553,6 +553,22 @@ footer .brand-copy{display:block}
 @media(max-width:900px){.visitor-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:520px){.visitor-grid{gap:12px}.visitor-card{padding:18px 8px}.visitor-ring{width:112px;height:112px}.visitor-ring b{font-size:29px}}
 
+/* WEBSITE USERS COUNTER */
+.website-count-section{padding:56px 7%;background:linear-gradient(135deg,#082d46,#0d5360);color:#fff}
+.website-count-section .section-head{text-align:center;margin:0 auto 28px}
+.website-count-section .section-head h2{color:#fff}
+.website-count-section .section-head p{color:#d8e6e9}
+.website-count-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px;max-width:760px;margin:auto}
+.website-count-card{padding:26px 20px;text-align:center;border:1px solid #ffffff35;border-radius:20px;background:linear-gradient(145deg,#ffffff1c,#ffffff0b);box-shadow:0 18px 40px #00172255;backdrop-filter:blur(8px)}
+.website-count-ring{width:132px;height:132px;margin:0 auto 14px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(#ffcc69 0deg,#ffcc69 var(--angle,0deg),#ffffff28 var(--angle,0deg) 360deg);box-shadow:0 12px 25px #00172255;transform:rotateX(12deg)}
+.website-count-ring:before{content:"";position:absolute;width:106px;height:106px;border-radius:50%;background:linear-gradient(145deg,#123e54,#082d46);box-shadow:inset 0 4px 12px #00172280}
+.website-count-ring b{position:relative;z-index:1;font:800 30px "Fraunces",Georgia,serif;color:#fff}
+.website-count-card h3{margin:6px 0;color:#ffcc69;font:800 18px "Manrope",Arial,sans-serif}
+.website-count-card p{margin:0;color:#d8e6e9;font-size:13px;font-weight:600}
+.website-count-note{text-align:center;margin:18px 0 0;color:#c6d8dc;font-size:12px}
+@media(max-width:560px){.website-count-grid{grid-template-columns:1fr}.website-count-section{padding:48px 6%}.website-count-ring{width:116px;height:116px}.website-count-ring:before{width:92px;height:92px}.website-count-ring b{font-size:27px}}
+
+
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -701,6 +717,27 @@ footer .brand-copy{display:block}
     <article class="visitor-card" style="--vc:#9865b5"><div class="visitor-ring" id="visitorMHA"><b>0</b></div><h3>MHA</h3><small>Hospital Administration</small></article>
   </div>
   <p class="visitor-total">Total visitors today <b id="visitorGrandTotal">0</b></p>
+</section>
+
+<section class="website-count-section" id="websiteUsers">
+  <div class="section-head">
+    <div class="eyebrow">Digital Library Reach</div>
+    <h2>Library Website Users</h2>
+    <p>Website visits counted automatically from this browser.</p>
+  </div>
+  <div class="website-count-grid">
+    <article class="website-count-card">
+      <div class="website-count-ring" id="websiteTotalRing"><b id="websiteTotalCount">0</b></div>
+      <h3>Total Website Users</h3>
+      <p>Unique browsers counted since tracking began</p>
+    </article>
+    <article class="website-count-card">
+      <div class="website-count-ring" id="websiteTodayRing"><b id="websiteTodayCount">0</b></div>
+      <h3>Today's Website Users</h3>
+      <p>Unique browsers counted today</p>
+    </article>
+  </div>
+  <p class="website-count-note">Counts are approximate unique browser visits, not verified individual people.</p>
 </section>
 
 <section class="services-section" id="services">
@@ -1320,8 +1357,13 @@ const byNew=(a,b)=>((b.createdAt&&b.createdAt.seconds)||0)-((a.createdAt&&a.crea
 </script>
 
 <script type="module">
-import {db,doc,getDoc} from "./fb.js";
+import {db,doc,getDoc,setDoc,collection,query,where,getCountFromServer,serverTimestamp} from "./fb.js";
 const today=new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Kolkata",year:"numeric",month:"2-digit",day:"2-digit"}).format(new Date());
+function animateNumber(node,value){
+ const start=performance.now(),duration=950;
+ function frame(now){const p=Math.min(1,(now-start)/duration);node.textContent=Math.round(value*(1-Math.pow(1-p,3))).toLocaleString("en-IN");if(p<1)requestAnimationFrame(frame);}
+ requestAnimationFrame(frame);
+}
 try{
  const snap=await getDoc(doc(db,"site","visitorCounts"));
  const data=snap.exists()?snap.data():{};
@@ -1334,6 +1376,30 @@ try{
  });
  document.getElementById("visitorGrandTotal").textContent=total.toLocaleString("en-IN");
 }catch(e){console.warn("Visitor counts unavailable",e);}
+
+/* One count per browser for lifetime and one per browser per India date. */
+try{
+ let visitorId=localStorage.getItem("aihs_library_website_visitor_id");
+ if(!visitorId){visitorId=crypto.randomUUID();localStorage.setItem("aihs_library_website_visitor_id",visitorId);}
+ const visitorRef=doc(db,"websiteVisitors",visitorId);
+ const visitorSnap=await getDoc(visitorRef);
+ if(!visitorSnap.exists()){
+  try{await setDoc(visitorRef,{createdAt:serverTimestamp()});}catch(writeError){console.warn("Total visitor registration:",writeError);}
+ }
+ const dailyId=today+"_"+visitorId;
+ const dailyRef=doc(db,"websiteDailyVisits",dailyId);
+ const dailySnap=await getDoc(dailyRef);
+ if(!dailySnap.exists()){
+  try{await setDoc(dailyRef,{date:today,createdAt:serverTimestamp()});}catch(writeError){console.warn("Daily visitor registration:",writeError);}
+ }
+ const totalSnap=await getCountFromServer(collection(db,"websiteVisitors"));
+ const todaySnap=await getCountFromServer(query(collection(db,"websiteDailyVisits"),where("date","==",today)));
+ const totalUsers=totalSnap.data().count||0,todayUsers=todaySnap.data().count||0;
+ animateNumber(document.getElementById("websiteTotalCount"),totalUsers);
+ animateNumber(document.getElementById("websiteTodayCount"),todayUsers);
+ document.getElementById("websiteTotalRing").style.setProperty("--angle",(totalUsers?300:0)+"deg");
+ document.getElementById("websiteTodayRing").style.setProperty("--angle",(todayUsers?300:0)+"deg");
+}catch(e){console.warn("Website user counter unavailable. Check Firestore rules.",e);}
 </script>
 </body>
 </html>
