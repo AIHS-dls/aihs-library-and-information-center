@@ -61,7 +61,7 @@
 </select></div>
 <div><label for="d">Department</label>
 <select id="d">
-<option>All departments</option><option>BPT (Physiotherapy)</option><option>BMLT (Medical Laboratory)</option><option>BMIT (Medical Imaging)</option><option>MHA (Hospital Administration)</option><option>Other</option>
+<option>All departments</option><option>BPT (Physiotherapy)</option><option>BMLT (Medical Laboratory)</option><option>BMIT (Medical Imaging)</option><option>MHA (Hospital Administration)</option><option>MPT (Master of Physiotherapy)</option><option>ATOT (Anaesthesia and Operation Theatre Technology)</option><option>Other</option>
 </select></div>
 <div><label for="k">Class</label>
 <select id="k">
@@ -802,7 +802,7 @@ function initContent(){
   ],[["type","Type"],["title","Name"],["url","Website link"]]);
 
   crud($("p-bu"),"bestUsers","Best User",[
-    {k:"dept",l:"Department",t:"select",o:["BPT · PHYSIOTHERAPY","BMLT","BMIT","MHA","Other"]},
+    {k:"dept",l:"Department",t:"select",o:["BPT · PHYSIOTHERAPY","BMLT","BMIT","MHA","MPT","ATOT","Other"]},
     {k:"name",l:"Student name",req:1},
     {k:"cls",l:"Class / details",ph:"Medical Laboratory Technology · 3rd Year"}
   ],[["name","Name"],["dept","Department"],["cls","Details"]]);
