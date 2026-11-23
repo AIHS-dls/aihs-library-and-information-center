@@ -54,21 +54,23 @@ onAuthStateChanged(auth,async u=>{
  if(p.status==="pending"){b.innerHTML="<h2>Waiting for approval</h2><p>Your registration is with the library admin. You can open resources once it is approved. Please check again later.</p><span class='badge pending'>Pending</span>";return;}
  if(p.status==="rejected"){b.innerHTML="<h2>Registration not approved</h2><p>Please contact the librarian: librarian@aihs.ac.in</p><span class='badge rejected'>Rejected</span>";return;}
  b.innerHTML="<h2 style='font-size:28px;line-height:1.25;margin-bottom:10px'>Welcome, "+esc(p.name||"Library Member")+"</h2><p style='margin:0 0 12px;color:#5b6b75'>"+esc(p.dept||"")+" · "+esc(p.cls||"")+"</p><div class='tabs' id='ct'></div><input id='rq' placeholder='Search e-books, notes, question papers, journals' style='margin-bottom:6px'><div id='deptFilters' class='department-filter' style='display:none'></div><div id='resourceResults'></div><section class='resource-section' id='externalResourcePanel' hidden><h2>Journals &amp; Databases</h2><p style='color:#5b6b75;margin:0 0 14px'>Open the official website to explore and download available research articles.</p><div id='externalResourceResults' class='external-resource-list'></div></section>";
- const CATS=["E-Books","Study Notes","Question Papers"];let cat="E-Books",list=[],links={},externalResources=[],deptChoice="All departments";
+ const CATS=["E-Books","Study Notes","Question Papers","Journals & Databases"];let cat="E-Books",list=[],links={},externalResources=[],deptChoice="All departments";
  function getDept(r){return String(r.dept||"Other departments").trim()||"Other departments";}
  function resourceLink(r){return driveFile(r.link||r.pdfLink||links[r.id]||"");}
  function coverLink(r){return driveImage(r.coverLink||r.coverURL||r.cover||"");}
  function card(r){const l=resourceLink(r),cover=coverLink(r),d=document.createElement("article");d.className="book-card";const visual=document.createElement("div");visual.className="book-cover";if(cover){const im=document.createElement("img");im.src=cover;im.alt=r.title||"Book cover";im.loading="lazy";im.onerror=()=>{visual.innerHTML="<div class='no-cover'>Cover image unavailable</div>";};visual.appendChild(im);}else visual.innerHTML="<div class='no-cover'>Cover page not added</div>";const info=document.createElement("div");info.className="book-info";const h=document.createElement("h3");h.textContent=r.title||"Untitled resource";const meta=document.createElement("p");meta.textContent=getDept(r)+(r.cls?" · "+r.cls:"");info.append(h,meta);if(l){const a=document.createElement("a");a.href=l;a.target="_blank";a.rel="noopener";a.textContent="Open / Read";info.appendChild(a);}d.append(visual,info);return d;}
  function draw(){
   const ct=$("ct");ct.innerHTML="";
-  CATS.forEach(c=>{const x=document.createElement("button");x.textContent=c;x.className=c===cat?"on":"";x.onclick=()=>{cat=c;deptChoice="All departments";draw();};ct.appendChild(x);});
+  CATS.forEach(c=>{const x=document.createElement("button");x.textContent=c;x.className=c===cat?"on":"";x.onclick=()=>{cat=c;deptChoice="All departments";draw();drawExternalResources();};ct.appendChild(x);});
+  const results=$("resourceResults"),df=$("deptFilters");
+  if(cat==="Journals & Databases"){results.innerHTML="";df.style.display="none";df.innerHTML="";drawExternalResources();return;}
   const q=$("rq").value.toLowerCase();
   const v=list.filter(r=>{
    const category=String(r.category||"").trim().toLowerCase();
    const wanted=cat.toLowerCase();
    return category===wanted && ((r.title||"")+" "+(r.desc||"")+" "+(r.dept||"")+" "+(r.cls||"")).toLowerCase().includes(q);
   }).sort((a,b)=>(a.title||"").localeCompare(b.title||""));
-  const results=$("resourceResults"),df=$("deptFilters");results.innerHTML="";
+  results.innerHTML="";
   const depts=[...new Set(v.map(getDept))].sort((a,b)=>a.localeCompare(b));
   df.style.display=depts.length?"flex":"none";df.innerHTML="";
   ["All departments",...depts.filter(d=>d!=="All departments")].forEach(dep=>{
@@ -92,7 +94,8 @@ onAuthStateChanged(auth,async u=>{
   target.innerHTML="";
   const q=$("rq").value.trim().toLowerCase();
   const shown=externalResources.filter(x=>(x.title+" "+(x.type||"")).toLowerCase().includes(q));
-  panel.hidden=!shown.length;
+  panel.hidden=cat!=="Journals & Databases";
+  if(cat==="Journals & Databases"&&!shown.length){target.innerHTML="<div class='empty-state'>No journals or databases found.</div>";return;}
   shown.forEach(item=>{
    const a=document.createElement("a");a.className="external-resource-card";a.href=item.url;a.target="_blank";a.rel="noopener noreferrer";
    const type=document.createElement("small");type.textContent=item.type==="Database"?"DATABASE":"JOURNAL";
