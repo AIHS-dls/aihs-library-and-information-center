@@ -817,157 +817,35 @@ function istDate(){
 
 async function attendance(root){
   root.innerHTML=
-  "<div class='panel'><h2>Entrance QR code</h2>"+
-  "<p style='margin:0;color:#5b6b75'>Print this QR and stick it at the library entrance. Students scan it, sign in and their entry is recorded.</p>"+
+  "<div class='panel'><h2>Library Entrance QR Code</h2>"+
+  "<p style='margin:0;color:#5b6b75'>Print this QR code and place it at the library entrance. First scan records In Time; the second scan records Out Time on the same device.</p>"+
   "<div id='qr' style='margin:16px 0;display:inline-block;padding:12px;background:#fff;border:1px solid #e3e9ec;border-radius:10px'></div>"+
-  "<p><button class='btn' id='qd'>Download QR</button> "+
-  "<button class='btn' id='qn' style='background:#fde0de;color:#a3241b'>New QR (old one stops working)</button></p>"+
-  "<p class='msg' id='qm'></p></div>"+
-  "<div class='panel' style='margin-top:18px'><h2>Attendance register</h2>"+
-  "<div style='display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:10px 0'>"+
-  "<input type='date' id='ad' style='width:auto'><b id='ac'></b>"+
-  "<button class='btn' id='ax' style='margin-left:auto'>Export CSV</button></div>"+
-  "<div class='tw'><table><thead><tr><th>#</th><th>Name</th><th>ID</th><th>Dept / Class</th><th>Role</th><th>Time</th></tr></thead>"+
-  "<tbody id='ar'></tbody></table></div></div>";
-
-  const kref=doc(db,"private","attendanceKey");
-  let key="";
-
-  function drawQR(){
-    const el=$("qr");
-    el.innerHTML="";
-    new QRCode(el,{
-      text:new URL("attend.html?k="+key,location.href).href,
-      width:220,
-      height:220,
-      correctLevel:QRCode.CorrectLevel.M
-    });
-  }
-
-  async function loadKey(fresh){
-    try{
-      if(!fresh){
-        const s=await getDoc(kref);
-        if(s.exists())key=s.data().key;
-      }
-
-      if(!key||fresh){
-        const b=new Uint8Array(12);
-        crypto.getRandomValues(b);
-        key=Array.from(b,x=>x.toString(16).padStart(2,"0")).join("");
-        await setDoc(kref,{key,updatedAt:serverTimestamp()});
-      }
-
-      drawQR();
-
-    }catch(e){
-      $("qm").className="msg err";
-      $("qm").textContent="Could not prepare the QR: "+(e.code||e.message)+". Check the Firestore rules.";
-    }
-  }
-
+  "<p><button class='btn' id='qd'>Download QR</button> <button class='btn' id='qn' style='background:#fde0de;color:#a3241b'>Generate new QR</button></p><p class='msg' id='qm'></p></div>"+
+  "<div class='panel' style='margin-top:18px'><h2>Daily Library Visitors Register</h2>"+
+  "<div style='display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:10px 0'><input type='date' id='ad' style='width:auto'><b id='ac'></b><button class='btn' id='ax' style='margin-left:auto'>Export CSV</button></div>"+
+  "<div class='tw'><table><thead><tr><th>SL No.</th><th>Name</th><th>Department</th><th>Class</th><th>Book Number</th><th>In Time</th><th>Out Time</th></tr></thead><tbody id='ar'></tbody></table></div></div>";
+  const kref=doc(db,"private","attendanceKey");let key="";
+  function drawQR(){const el=$("qr");el.innerHTML="";new QRCode(el,{text:new URL("attend.html?k="+key,location.href).href,width:220,height:220,correctLevel:QRCode.CorrectLevel.M});}
+  async function loadKey(fresh){try{if(!fresh){const s=await getDoc(kref);if(s.exists())key=s.data().key;}if(!key||fresh){const b=new Uint8Array(12);crypto.getRandomValues(b);key=Array.from(b,x=>x.toString(16).padStart(2,"0")).join("");await setDoc(kref,{key,updatedAt:serverTimestamp()});}drawQR();}catch(e){$("qm").className="msg err";$("qm").textContent="QR setup failed: "+(e.code||e.message)+". Check Firestore Rules.";}}
   loadKey(false);
-
-  $("qn").onclick=()=>{
-    if(confirm("Create a new QR? The printed one will stop working.")){
-      loadKey(true);
-    }
-  };
-
-  $("qd").onclick=()=>{
-    const c=$("qr").querySelector("canvas");
-    if(!c)return;
-
-    const o=document.createElement("canvas");
-    o.width=o.height=270;
-
-    const x=o.getContext("2d");
-    x.fillStyle="#fff";
-    x.fillRect(0,0,270,270);
-    x.drawImage(c,25,25);
-
-    const a=document.createElement("a");
-    a.href=o.toDataURL("image/png");
-    a.download="aihs-library-entry-qr.png";
-    a.click();
-  };
-
-  let unsub=null;
-  let list=[];
-
+  $("qn").onclick=()=>{if(confirm("Generate a new QR code? The old QR code will stop working.")){key="";loadKey(true);}};
+  $("qd").onclick=()=>{const c=$("qr").querySelector("canvas");if(!c)return;const o=document.createElement("canvas");o.width=o.height=270;const x=o.getContext("2d");x.fillStyle="#fff";x.fillRect(0,0,270,270);x.drawImage(c,25,25);const a=document.createElement("a");a.href=o.toDataURL("image/png");a.download="aihs-library-visitor-qr.png";a.click();};
+  let unsub=null,list=[];
+  const fmt=v=>v&&v.toDate?v.toDate().toLocaleTimeString("en-IN",{timeZone:"Asia/Kolkata",hour:"2-digit",minute:"2-digit"}):"—";
+  async function publishCounts(){
+    const counts={BPT:0,BMLT:0,BMIT:0,MHA:0};list.forEach(r=>{if(Object.prototype.hasOwnProperty.call(counts,r.dept))counts[r.dept]++;});
+    try{await setDoc(doc(db,"site","visitorCounts"),{date:$("ad").value,counts,updatedAt:serverTimestamp()},{merge:true});}catch(e){console.warn("Public visitor count update failed",e);}
+  }
   function drawA(){
-    $("ac").textContent=list.length+" entries";
-
-    const tb=$("ar");
-    tb.innerHTML="";
-
-    if(!list.length){
-      tb.innerHTML="<tr><td colspan='6'>No entries for this date.</td></tr>";
-      return;
-    }
-
-    list.forEach((r,i)=>{
-      const tr=document.createElement("tr");
-
-      [
-        i+1,
-        r.name,
-        r.idNo,
-        (r.dept||"")+" / "+(r.cls||""),
-        r.role,
-        r.ts?r.ts.toDate().toLocaleTimeString("en-IN",{hour:"2-digit",minute:"2-digit"}):""
-      ].forEach(v=>{
-        const td=document.createElement("td");
-        td.textContent=v;
-        tr.appendChild(td);
-      });
-
-      tb.appendChild(tr);
-    });
+    $("ac").textContent=list.length+" visitors";
+    const tb=$("ar");tb.innerHTML="";
+    if(!list.length){tb.innerHTML="<tr><td colspan='7'>No visitors recorded for this date.</td></tr>";}
+    list.forEach((r,i)=>{const tr=document.createElement("tr");[i+1,r.name||"",r.dept||"",r.cls||"",r.bookNumber||"—",fmt(r.entryAt||r.ts),fmt(r.outAt)].forEach(v=>{const td=document.createElement("td");td.textContent=v;tr.appendChild(td);});tb.appendChild(tr);});
+    publishCounts();
   }
-
-  function watch(){
-    if(unsub)unsub();
-
-    unsub=onSnapshot(
-      query(collection(db,"attendance"),where("date","==",$("ad").value)),
-      s=>{
-        list=s.docs.map(d=>d.data()).sort((a,b)=>
-          ((a.ts&&a.ts.seconds)||0)-((b.ts&&b.ts.seconds)||0)
-        );
-        drawA();
-      },
-      err=>{
-        console.error("Attendance loading error:",err);
-        $("ar").innerHTML="<tr><td colspan='6'>Could not load attendance. Check Firestore rules.</td></tr>";
-      }
-    );
-  }
-
-  $("ad").value=istDate();
-  $("ad").onchange=watch;
-  watch();
-
-  $("ax").onclick=()=>{
-    const q=v=>'"'+String(v==null?"":v).replace(/"/g,'""')+'"';
-
-    const data=[
-      ["No","Name","ID","Department","Class","Role","Time"]
-    ].concat(list.map((r,i)=>[
-      i+1,r.name,r.idNo,r.dept,r.cls,r.role,
-      r.ts?r.ts.toDate().toLocaleTimeString("en-IN"):""
-    ]));
-
-    const b=new Blob(
-      [data.map(r=>r.map(q).join(",")).join("\n")],
-      {type:"text/csv"}
-    );
-
-    const a=document.createElement("a");
-    a.href=URL.createObjectURL(b);
-    a.download="attendance-"+$("ad").value+".csv";
-    a.click();
-  };
+  function watch(){if(unsub)unsub();unsub=onSnapshot(query(collection(db,"attendance"),where("date","==",$("ad").value)),s=>{list=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>((a.entryAt||a.ts)?.seconds||0)-((b.entryAt||b.ts)?.seconds||0));drawA();},err=>{$("ar").innerHTML="<tr><td colspan='7'>Could not load register: "+esc(err.message)+"</td></tr>";});}
+  $("ad").value=istDate();$("ad").onchange=watch;watch();
+  $("ax").onclick=()=>{const q=v=>'"'+String(v==null?"":v).replace(/"/g,'""')+'"';const data=[["SL No.","Name","Department","Class","Book Number","In Time","Out Time"]].concat(list.map((r,i)=>[i+1,r.name,r.dept,r.cls,r.bookNumber||"",fmt(r.entryAt||r.ts),fmt(r.outAt)]));const b=new Blob([data.map(r=>r.map(q).join(",")).join("\n")],{type:"text/csv;charset=utf-8"});const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="aihs-library-visitors-"+$("ad").value+".csv";a.click();};
 }
 
 /* ---------- CSV parser ---------- */
