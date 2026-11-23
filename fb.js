@@ -1,11 +1,11 @@
 import {initializeApp} from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
 import {getAuth,signInWithEmailAndPassword,createUserWithEmailAndPassword,signOut,onAuthStateChanged,EmailAuthProvider,reauthenticateWithCredential,updatePassword} from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
-import {getFirestore,doc,getDoc,getDocs,setDoc,updateDoc,deleteDoc,addDoc,collection,query,where,onSnapshot,serverTimestamp} from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+import {getFirestore,doc,getDoc,getDocs,getCountFromServer,setDoc,updateDoc,deleteDoc,addDoc,collection,query,where,onSnapshot,serverTimestamp} from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
 
 const cfg={apiKey:"AIzaSyBjRud7T49JmDfhkwUrNLeY1IcvXqW_W1Y",authDomain:"aihs-digital-library.firebaseapp.com",projectId:"aihs-digital-library",storageBucket:"aihs-digital-library.firebasestorage.app",messagingSenderId:"1032446713158",appId:"1:1032446713158:web:4f679abd8787cc759e9947"};
 export const MAIL_URL="";   /* paste your Apps Script web app URL here (see mailer.gs) */
 export const app=initializeApp(cfg), auth=getAuth(app), db=getFirestore(app);
-export {query,where,signOut,onAuthStateChanged,doc,getDoc,getDocs,setDoc,updateDoc,deleteDoc,addDoc,collection,onSnapshot,serverTimestamp};
+export {query,where,signOut,onAuthStateChanged,doc,getDoc,getDocs,getCountFromServer,setDoc,updateDoc,deleteDoc,addDoc,collection,onSnapshot,serverTimestamp};
 
 /* College ID is the user id. Firebase needs an email, so the ID is turned into one. */
 export const idKey=id=>String(id).trim().toLowerCase().replace(/[^a-z0-9._-]/g,"-");
