@@ -772,6 +772,16 @@ footer .brand-copy{display:block}
       <h3>To be announced</h3>
       <p>Master of Hospital Administration</p>
     </div>
+    <div class="user-card">
+      <div class="rank">MPT</div>
+      <h3>To be announced</h3>
+      <p>Master of Physiotherapy</p>
+    </div>
+    <div class="user-card">
+      <div class="rank">ATOT</div>
+      <h3>To be announced</h3>
+      <p>Anaesthesia and Operation Theatre Technology</p>
+    </div>
   </div>
 </section>
 
@@ -1217,13 +1227,23 @@ const byNew=(a,b)=>((b.createdAt&&b.createdAt.seconds)||0)-((a.createdAt&&a.crea
   try{
     const s=await getDocs(collection(db,"bestUsers")),us=s.docs.map(d=>d.data());
     if(us.length){
-      const order=["BPT · PHYSIOTHERAPY","BMLT","BMIT","MHA","Other"],g=document.getElementById("bestGrid");g.innerHTML="";
-      order.forEach(dp=>{
-        const l=us.filter(u=>u.dept===dp).sort((a,b)=>a.name.localeCompare(b.name));if(!l.length)return;
-        const c=el("div","user-card");c.appendChild(el("div","rank",dp));
-        l.forEach((u,i)=>{if(i)c.appendChild(document.createElement("hr"));c.appendChild(el("h3",null,u.name));if(u.cls)c.appendChild(el("p",null,u.cls));});
+      const groups=[
+        {key:"BPT · PHYSIOTHERAPY",aliases:["BPT · PHYSIOTHERAPY","BPT","BPT (Physiotherapy)"],detail:"Physiotherapy"},
+        {key:"BMLT",aliases:["BMLT","BMLT (Medical Laboratory)"],detail:"Medical Laboratory Technology"},
+        {key:"BMIT",aliases:["BMIT","BMIT (Medical Imaging)"],detail:"Medical Imaging Technology"},
+        {key:"MHA",aliases:["MHA","MHA (Hospital Administration)"],detail:"Master of Hospital Administration"},
+        {key:"MPT",aliases:["MPT","MPT (Physiotherapy)"],detail:"Master of Physiotherapy"},
+        {key:"ATOT",aliases:["ATOT","ATOT (Anaesthesia and Operation Theatre Technology)"],detail:"Anaesthesia and Operation Theatre Technology"}
+      ],g=document.getElementById("bestGrid");g.innerHTML="";
+      groups.forEach(dp=>{
+        const l=us.filter(u=>dp.aliases.includes(u.dept)).sort((a,b)=>(a.name||"").localeCompare(b.name||""));
+        const c=el("div","user-card");c.appendChild(el("div","rank",dp.key));
+        if(!l.length){c.appendChild(el("h3",null,"To be announced"));c.appendChild(el("p",null,dp.detail));}
+        else l.forEach((u,i)=>{if(i)c.appendChild(document.createElement("hr"));c.appendChild(el("h3",null,u.name||""));if(u.cls)c.appendChild(el("p",null,u.cls));else c.appendChild(el("p",null,dp.detail));});
         g.appendChild(c);
       });
+      const other=us.filter(u=>!groups.some(dp=>dp.aliases.includes(u.dept))&&u.dept==="Other");
+      if(other.length){const c=el("div","user-card");c.appendChild(el("div","rank","Other"));other.forEach((u,i)=>{if(i)c.appendChild(document.createElement("hr"));c.appendChild(el("h3",null,u.name||""));if(u.cls)c.appendChild(el("p",null,u.cls));});g.appendChild(c);}
     }
   }catch(e){}
   /* Journals and databases: title + official external website only; no PDF upload. */
