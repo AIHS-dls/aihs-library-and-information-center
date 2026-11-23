@@ -836,7 +836,7 @@ async function attendance(root){
   let unsub=null,list=[];
   const fmt=v=>v&&v.toDate?v.toDate().toLocaleTimeString("en-IN",{timeZone:"Asia/Kolkata",hour:"2-digit",minute:"2-digit"}):"—";
   async function publishCounts(){
-    const counts={BPT:0,BMLT:0,BMIT:0,MHA:0};list.forEach(r=>{if(Object.prototype.hasOwnProperty.call(counts,r.dept))counts[r.dept]++;});
+    const counts={BPT:0,BMLT:0,BMIT:0,MHA:0,MPT:0,ATOT:0};list.forEach(r=>{if(Object.prototype.hasOwnProperty.call(counts,r.dept))counts[r.dept]++;});
     try{await setDoc(doc(db,"site","visitorCounts"),{date:$("ad").value,counts,updatedAt:serverTimestamp()},{merge:true});}catch(e){console.warn("Public visitor count update failed",e);}
   }
   function drawA(){
