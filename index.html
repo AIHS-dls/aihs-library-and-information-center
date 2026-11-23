@@ -536,6 +536,23 @@ footer .brand-copy{display:block}
 .rules-board li{padding:8px 0;font-size:14px}
 @media(max-width:760px){.about-section{padding-top:58px;padding-bottom:58px}.rules-board{height:auto;padding:20px}#hardBox{padding:20px}}
 
+
+/* TODAY'S LIBRARY VISITORS */
+.visitor-section{background:linear-gradient(135deg,#f4f7f7,#fff 55%,#eef5f3);position:relative;overflow:hidden}
+.visitor-section .section-head{text-align:center;margin:0 auto 34px}
+.visitor-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:22px;max-width:1200px;margin:auto}
+.visitor-card{--vc:#167d78;background:#fff;border:1px solid #dfe9e8;border-radius:22px;padding:24px 16px;text-align:center;box-shadow:0 14px 32px #092d4312;position:relative;overflow:hidden}
+.visitor-card:before{content:"";position:absolute;inset:0 0 auto;height:5px;background:var(--vc)}
+.visitor-ring{width:142px;height:142px;margin:8px auto 14px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--vc) 0deg,var(--vc) var(--angle,0deg),#e8eeee var(--angle,0deg) 360deg);box-shadow:inset 0 5px 12px #092d4320,0 12px 18px #092d4320;position:relative;transform:rotateX(10deg)}
+.visitor-ring:before{content:"";position:absolute;inset:13px;border-radius:50%;background:linear-gradient(145deg,#fff,#edf2f2);box-shadow:inset 0 3px 9px #092d4318}
+.visitor-ring b{position:relative;z-index:1;font:800 35px "Fraunces",Georgia,serif;color:#092d43}
+.visitor-card h3{margin:4px 0;color:#092d43;font:800 17px "Manrope",Arial,sans-serif}
+.visitor-card small{color:#687780;font-size:12px;font-weight:700}
+.visitor-total{text-align:center;margin:28px auto 0;color:#52666f;font-weight:700}
+.visitor-total b{font:800 27px "Fraunces",Georgia,serif;color:#092d43;margin-left:8px}
+@media(max-width:900px){.visitor-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:520px){.visitor-grid{gap:12px}.visitor-card{padding:18px 8px}.visitor-ring{width:112px;height:112px}.visitor-ring b{font-size:29px}}
+
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -667,7 +684,23 @@ footer .brand-copy{display:block}
         <li>Maintain cleanliness and cooperate with library staff.</li>
       </ol>
     </div>
+  
+</div>
+</section>
+
+<section class="visitor-section" id="todayVisitors">
+  <div class="section-head">
+    <div class="eyebrow">Library Activity</div>
+    <h2>Today's Library Visitors</h2>
+    <p>Department-wise visitor count for today.</p>
   </div>
+  <div class="visitor-grid">
+    <article class="visitor-card" style="--vc:#167d78"><div class="visitor-ring" id="visitorBPT"><b>0</b></div><h3>BPT</h3><small>Physiotherapy</small></article>
+    <article class="visitor-card" style="--vc:#d69b35"><div class="visitor-ring" id="visitorBMLT"><b>0</b></div><h3>BMLT</h3><small>Medical Laboratory Technology</small></article>
+    <article class="visitor-card" style="--vc:#3976bd"><div class="visitor-ring" id="visitorBMIT"><b>0</b></div><h3>BMIT</h3><small>Medical Imaging Technology</small></article>
+    <article class="visitor-card" style="--vc:#9865b5"><div class="visitor-ring" id="visitorMHA"><b>0</b></div><h3>MHA</h3><small>Hospital Administration</small></article>
+  </div>
+  <p class="visitor-total">Total visitors today <b id="visitorGrandTotal">0</b></p>
 </section>
 
 <section class="services-section" id="services">
@@ -1284,6 +1317,23 @@ const byNew=(a,b)=>((b.createdAt&&b.createdAt.seconds)||0)-((a.createdAt&&a.crea
     note.textContent="Event updates are unavailable. Firestore events read permission needs to be enabled.";
   });
 })();
+</script>
+
+<script type="module">
+import {db,doc,getDoc} from "./fb.js";
+const today=new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Kolkata",year:"numeric",month:"2-digit",day:"2-digit"}).format(new Date());
+try{
+ const snap=await getDoc(doc(db,"site","visitorCounts"));
+ const data=snap.exists()?snap.data():{};
+ const counts=(data.date===today&&data.counts)?data.counts:{BPT:0,BMLT:0,BMIT:0,MHA:0};
+ const total=["BPT","BMLT","BMIT","MHA"].reduce((n,k)=>n+(Number(counts[k])||0),0);
+ ["BPT","BMLT","BMIT","MHA"].forEach(k=>{
+  const value=Number(counts[k])||0,ring=document.getElementById("visitor"+k);
+  ring.style.setProperty("--angle",(total?value/total*360:0)+"deg");
+  ring.querySelector("b").textContent=value.toLocaleString("en-IN");
+ });
+ document.getElementById("visitorGrandTotal").textContent=total.toLocaleString("en-IN");
+}catch(e){console.warn("Visitor counts unavailable",e);}
 </script>
 </body>
 </html>
