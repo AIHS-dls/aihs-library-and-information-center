@@ -29,6 +29,7 @@
   <button data-t="bu">Best Users</button>
   <button data-t="ab">About Library</button>
   <button data-t="at">Attendance</button>
+  <button data-t="wv">Website Visitors</button>
   <button data-t="nu">Add Users</button>
 </div>
 
@@ -102,6 +103,7 @@
 <div id="p-bu" hidden></div>
 <div id="p-ab" hidden></div>
 <div id="p-at" hidden></div>
+<div id="p-wv" hidden></div>
 <div id="p-nu" hidden></div>
 </div>
 
@@ -188,7 +190,7 @@ $("mt").onclick=e=>{
   const t=e.target.dataset.t;
   if(!t)return;
 
-  ["users","res","jr","ev","bu","ab","at","nu"].forEach(k=>{
+  ["users","res","jr","ev","bu","ab","at","wv","nu"].forEach(k=>{
     $("p-"+k).hidden=k!==t;
   });
 
@@ -807,6 +809,7 @@ function initContent(){
 
   aboutForm($("p-ab"));
   attendance($("p-at"));
+  websiteVisitors($("p-wv"));
   addUsers($("p-nu"));
 }
 
@@ -846,6 +849,45 @@ async function attendance(root){
   function watch(){if(unsub)unsub();unsub=onSnapshot(query(collection(db,"attendance"),where("date","==",$("ad").value)),s=>{list=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>((a.entryAt||a.ts)?.seconds||0)-((b.entryAt||b.ts)?.seconds||0));drawA();},err=>{$("ar").innerHTML="<tr><td colspan='7'>Could not load register: "+esc(err.message)+"</td></tr>";});}
   $("ad").value=istDate();$("ad").onchange=watch;watch();
   $("ax").onclick=()=>{const q=v=>'"'+String(v==null?"":v).replace(/"/g,'""')+'"';const data=[["SL No.","Name","Department","Class","Book Number","In Time","Out Time"]].concat(list.map((r,i)=>[i+1,r.name,r.dept,r.cls,r.bookNumber||"",fmt(r.entryAt||r.ts),fmt(r.outAt)]));const b=new Blob([data.map(r=>r.map(q).join(",")).join("\n")],{type:"text/csv;charset=utf-8"});const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="aihs-library-visitors-"+$("ad").value+".csv";a.click();};
+}
+
+/* ---------- website visitors: admin only ---------- */
+function websiteVisitors(root){
+  root.innerHTML=
+  "<div class='panel'><h2>Library Website Visitors</h2>"+
+  "<p style='margin:0;color:#5b6b75'>These statistics are visible only in the Admin Panel. Counts are based on unique browsers, not verified individual people.</p>"+
+  "<div class='fg' style='margin-top:18px'>"+
+  "<div><label>Total Website Users</label><div id='wvt' style='font-size:34px;font-weight:800;color:#167d78'>—</div></div>"+
+  "<div><label>Today's Website Users</label><div id='wvd' style='font-size:34px;font-weight:800;color:#167d78'>—</div></div>"+
+  "</div><p class='msg' id='wvm'>Loading website visitor statistics…</p></div>"+
+  "<div class='panel' style='margin-top:18px'><h2>Daily Website Visitors</h2>"+
+  "<div style='display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:10px 0'><label for='wdate'>Select date</label><input type='date' id='wdate' style='width:auto'></div>"+
+  "<b id='wvc'></b><p style='margin:6px 0 0;color:#5b6b75'>Unique browsers that visited the website on the selected date.</p></div>";
+  const today=istDate();
+  const totalEl=root.querySelector("#wvt"),dailyEl=root.querySelector("#wvd");
+  const msg=root.querySelector("#wvm"),dateEl=root.querySelector("#wdate");
+  const dailyCount=root.querySelector("#wvc");
+  dateEl.value=today;
+  onSnapshot(collection(db,"websiteVisitors"),snap=>{
+    totalEl.textContent=snap.size.toLocaleString("en-IN");
+    msg.className="msg ok";msg.textContent="Website visitor statistics are updating live.";
+  },err=>{
+    msg.className="msg err";msg.textContent="Could not load total website users: "+err.message;
+  });
+  let dailyUnsub=null;
+  function watchDaily(){
+    if(dailyUnsub)dailyUnsub();
+    dailyUnsub=onSnapshot(query(collection(db,"websiteDailyVisits"),where("date","==",dateEl.value)),snap=>{
+      const n=snap.size;
+      dailyCount.textContent=n.toLocaleString("en-IN")+" website users";
+      if(dateEl.value===today)dailyEl.textContent=n.toLocaleString("en-IN");
+    },err=>{
+      dailyCount.textContent="Could not load: "+err.message;
+      if(dateEl.value===today)dailyEl.textContent="—";
+    });
+  }
+  dateEl.onchange=watchDaily;
+  watchDaily();
 }
 
 /* ---------- CSV parser ---------- */
